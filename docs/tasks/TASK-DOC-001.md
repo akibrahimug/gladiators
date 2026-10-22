@@ -2,14 +2,14 @@
 
 | Field | Value |
 | --- | --- |
-| Work state / type | In progress / Documentation |
+| Work state / type | Verified / Documentation |
 | Phase / gates | P00 preparation; contributes REQ-011/012 evidence without passing G00 |
 | Components | Cross-project documentation; CMP-11 audit |
 | Inputs | This workspace; user working agreement in [Claude workflow](../working-with-claude.md) |
 | Dependencies | None for local inspection |
 | Coordinator / workers | Claude Code main session, claimed 2026-10-22: coordinator and sole writer of this card, its board row, the report and the DEC-009 row. `gladiator-spec-reader`: read-only source/gate/instruction inspection. `gladiator-reviewer`: read-only review of the report and this card |
 | Repository / base / branch | akibrahimug/gladiators (default `master`); base `master` @ `cc357bccd1800348ba5e45b3fd362a3ceef40c13`; branch `task/TASK-DOC-001-handoff-inspection` |
-| PR state / URL | Not yet opened; a draft PR is due under [DEC-009](../decisions/README.md) (user instruction, 2026-10-22: a branch and PR per task). Becomes Draft with its real URL once created, or Blocked if creation fails. Replaces the earlier "Not requested" default |
+| PR state / URL | Draft — [#1](https://github.com/akibrahimug/gladiators/pull/1), opened 2026-10-22 under [DEC-009](../decisions/README.md) (user instruction: a branch and PR per task). Tested head `25e722624537c8136f5e029811fcff75b569ff9f`; the next commit records this metadata only. Replaces the earlier "Not requested" default. Human review and merge pending |
 
 ## Objective and scope
 
@@ -33,13 +33,13 @@ Scope amendment, 2026-10-22 ([DEC-009](../decisions/README.md)): the user asked 
 
 ## Acceptance criteria
 
-- [ ] Report identifies whether Claude discovered the three named agents; unavailable runtime capability is recorded as a blocker rather than a pass.
-- [ ] Report confirms original v1.0 remains missing, G00 pending and later code tasks unready.
-- [ ] All local Markdown link targets resolve or failures are listed with paths.
-- [ ] The three captured files match `docs/sources/captured/SHA256SUMS`; captured files remain unchanged.
-- [ ] Repository/remote/base/auth prerequisites are recorded with observed values or precise missing inputs.
-- [ ] Independent reviewer findings are recorded and material errors corrected.
-- [ ] PR field records the DEC-009 draft PR with its real URL and tested head. The report identifies the prerequisites and remaining scope for TASK-DOC-002. (Amended under DEC-009; the original criterion was "PR field correctly records local inspection only".)
+- [x] Report identifies whether Claude discovered the three named agents; unavailable runtime capability is recorded as a blocker rather than a pass.
+- [x] Report confirms original v1.0 remains missing, G00 pending and later code tasks unready.
+- [x] All local Markdown link targets resolve or failures are listed with paths.
+- [x] The three captured files match `docs/sources/captured/SHA256SUMS`; captured files remain unchanged.
+- [x] Repository/remote/base/auth prerequisites are recorded with observed values or precise missing inputs.
+- [x] Independent reviewer findings are recorded and material errors corrected.
+- [x] PR field records the DEC-009 draft PR with its real URL and tested head. The report identifies the prerequisites and remaining scope for TASK-DOC-002. (Amended under DEC-009; the original criterion was "PR field correctly records local inspection only".)
 
 ## Verification methods
 
@@ -53,3 +53,6 @@ Current observations and results: run by Claude on 2026-10-22 at base `cc357bc` 
 | Fix verification (same reviewer) | `1417bc0..695a7f6` | No blocker or material error. M1, M2 and m2–m7 resolved, m1 partly. 3 new minor findings (N1–N3) addressed in the following wording-only commit, with no further review round |
 | Link check | `695a7f6` | 49 tracked files, 46 Markdown, 429 local links, 0 failures (coordinator and reviewer) |
 | Captured checksums | `695a7f6` | 3/3 OK; no diff under `docs/sources/` since base (reviewer) |
+| Link check | `25e7226` (tested head) | 49 tracked files, 46 Markdown, 433 local links, 0 failures (coordinator) |
+| Captured checksums | `25e7226` (tested head) | 3/3 OK (coordinator) |
+| Draft PR | `25e7226` | [#1](https://github.com/akibrahimug/gladiators/pull/1) opened against `master`; no earlier PR existed for this branch |
