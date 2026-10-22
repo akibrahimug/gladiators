@@ -2,14 +2,14 @@
 
 | Field | Value |
 | --- | --- |
-| Work state / type | Ready / Documentation |
+| Work state / type | In progress / Documentation |
 | Phase / gates | P00 preparation; contributes REQ-011/012 evidence without passing G00 |
 | Components | Cross-project documentation; CMP-11 audit |
 | Inputs | This workspace; user working agreement in [Claude workflow](../working-with-claude.md) |
 | Dependencies | None for local inspection |
-| Coordinator / workers | Unassigned; spec-reader and reviewer may inspect independently |
-| Repository / base / branch | Existing origin: akibrahimug/gladiators; remote default origin/master; task branch/base SHA unassigned |
-| PR state / URL | Not requested — local inspection only; initial publication is separate TASK-DOC-002 |
+| Coordinator / workers | Claude Code main session, claimed 2026-10-22: coordinator and sole writer of this card, its board row and the report. `gladiator-spec-reader`: read-only source/gate/instruction inspection. `gladiator-reviewer`: read-only review of the report and this card |
+| Repository / base / branch | akibrahimug/gladiators (default `master`); base `master` @ `cc357bccd1800348ba5e45b3fd362a3ceef40c13`; branch `task/TASK-DOC-001-handoff-inspection` |
+| PR state / URL | Draft requested by the user on 2026-10-22 (one branch and PR per task); URL unset until created. Supersedes the earlier "Not requested" default, which assumed an uncommitted handoff baseline |
 
 ## Objective and scope
 
