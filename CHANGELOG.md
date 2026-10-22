@@ -5,7 +5,7 @@
 - Claude Code ran TASK-DOC-001. The [handoff report](docs/validation/claude-handoff.md) records agent discovery, links, captured-source checksums, repository/publishing readiness and two rounds of independent review.
 - Recorded DEC-009: each task gets its own branch and draft PR.
 - TASK-DOC-002 refreshed statements that predated the committed Git documentation baseline (`cc357bc`) and catalogued the report. It also removed a stray second README heading.
-- Open: the reviewer agent ran without its declared Glob and Grep tools (F14), and the implementer has not yet run.
+- Recorded DEC-010: the reviewer agent ran without its declared Glob and Grep tools (F14), and Bash-based search is accepted as equivalent. The implementer has not yet run; its permissions and worktree isolation are verified before its first coding task.
 - No application code. Captured sources are unchanged; G00 remains pending.
 
 ## 0.2 — 2026-10-22

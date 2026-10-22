@@ -32,7 +32,7 @@ When Git/worktree support is unavailable, run one writer at a time in a clearly 
 
 At the first inspection this folder was not a Git repository. During documentation editing an existing repository appeared, with origin [akibrahimug/gladiators](https://github.com/akibrahimug/gladiators) and remote default `origin/master`. These settings were observed, not created or changed by this handoff. The user then committed and pushed the handoff documents to `master` at `cc357bc`. On 2026-10-22, TASK-DOC-001 verified that committed baseline and authenticated `gh` access to the repository ([report](validation/claude-handoff.md#repository-and-publishing-readiness)).
 
-Before the first PR, Claude must establish:
+Before a task's first PR to a repository, Claude must establish:
 
 - The user-selected repository destination, visibility, permitted remote and base branch.
 - A valid repository and committed baseline containing these instructions and the task card.
@@ -65,13 +65,13 @@ A root `CLAUDE.md` supplies project instructions ([official memory documentation
 On 2026-10-22 the runtime discovered all three agents ([report](validation/claude-handoff.md#agent-discovery)):
 
 - the spec-reader ran with its declared tools;
-- the reviewer received Read and Bash but not its declared Glob and Grep (open finding F14);
-- the implementer has not yet run.
+- the reviewer received Read and Bash but not its declared Glob and Grep (finding F14). [DEC-010](decisions/README.md) accepts Bash-based search as equivalent;
+- the implementer has not yet run. Verify its permissions and worktree isolation before its first coding task (DEC-010).
 
 Claude documents PR creation as a supported workflow ([official common workflows](https://code.claude.com/docs/en/common-workflows)). These references confirm file formats and capabilities; task ownership and delivery rules above are this project's working agreement.
 
 ## First-session prompt
 
-The bootstrap tasks TASK-DOC-001 and TASK-DOC-002 have run. For a later session:
+After the bootstrap tasks (TASK-DOC-001 readiness inspection, TASK-DOC-002 post-baseline refresh), a later session can start with:
 
 > Read CLAUDE.md and the task board. Work only on Ready tasks. Give each one its own `task/<TASK-ID>-<short-scope>` branch and draft PR (DEC-009), and use gladiator-spec-reader and gladiator-reviewer as its card requires. Keep application implementation unstarted while G00 is pending. Record real task/PR states and precise blockers.

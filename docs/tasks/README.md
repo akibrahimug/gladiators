@@ -15,7 +15,7 @@ Two bootstrap documentation tasks come first: **TASK-DOC-001**, the readiness in
 
 A card is the task's authoritative record. The coordinator updates this index when its state changes. Owner, branch, commit, evidence and actual PR URL are kept on the card.
 
-**Bootstrap publication — TASK-DOC-002:** the board first planned TASK-DOC-002 as the first publication of the inspected handoff. Two things changed that plan:
+**Bootstrap refresh — TASK-DOC-002:** the board first planned TASK-DOC-002 as the first publication of the inspected handoff. Two things changed that plan:
 
 - the user had already pushed the initial Git documentation baseline to `master` at `cc357bc`;
 - [DEC-009](../decisions/README.md) gives every task its own branch and PR, so TASK-DOC-001 opened its own draft PR.
