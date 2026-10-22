@@ -26,6 +26,8 @@ A separate documentation review checked phase ownership, gate dependencies, sour
 
 Edition 0.2 adds the user's working split: Codex for brainstorming/design; Claude Code for assigned wiring, implementation and PR delivery. The [Claude workflow](../working-with-claude.md) and [task board](../tasks/README.md) keep task verification, PR state and gate acceptance separate. TASK-DOC-001 remains Ready for Claude's own runtime/readiness inspection; these static checks do not complete it on Claude's behalf. No Git commit, remote modification, Claude session or PR was made by this setup.
 
+An independent handoff review checked the entry point, task readiness, worker context/isolation and PR scope. It identified and then verified corrections separating local bootstrap inspection from later publication, allowing dated file snapshots before the first committed handoff baseline, and permitting the coordinator's own task-board metadata update. No actionable contradiction remained in those reviewed fixes. All 381 local documentation links resolve; captured-source checksums remain unchanged.
+
 ## Outstanding source gap
 
 Original v1.0 architecture/specifications imported: **0**. The [source register](../sources/README.md) describes the partial chat-reader capture, local search and browser sign-in limitation. The [source intake](../sources/originals/README.md) and [open backlog](../backlog.md) record the recovery and reconciliation work.
