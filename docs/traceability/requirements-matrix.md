@@ -1,0 +1,33 @@
+# Requirement traceability matrix
+
+[Requirements](../requirements.md) · [Components](components.md) · [Milestones](../milestones.md) · [Source map](../sources/source-map.md)
+
+**Status:** proposed relationships for the documentation scaffold. Every requirement is mapped; no original v1.0 spec has been mapped because none was recovered. “Coverage” below means planning coverage, not implementation or verified compliance.
+
+| Requirement | Provenance / interpretation | Components | Phase(s) | Gate(s) | Planned evidence / scenarios |
+| --- | --- | --- | --- | --- | --- |
+| REQ-001 event-first | SRC-001 + SRC-002 order-flow intent | CMP-02/03/06 | [P02](../phases/02-event-capture/README.md), [P03](../phases/03-market-state-and-ledger/README.md), [P04](../phases/04-features-and-context/README.md) | G02/G03/G04 | Event lineage, supported feed fixtures, feature definitions; VAL-002/005 |
+| REQ-002 visibility bounds | Proposed clarification of SRC-002; EXT-001/002 | CMP-01/05 | [P01](../phases/01-research-and-data-access/README.md), [P04](../phases/04-features-and-context/README.md) | G01/G04 | Source coverage/blind spots and availability; VAL-002/007 |
+| REQ-003 provenance | Proposed design; preservation explicit in SRC-001 | CMP-01/02/05/11 | [P00](../phases/00-baseline/README.md), [P01](../phases/01-research-and-data-access/README.md), [P02](../phases/02-event-capture/README.md) | G00/G01/G02 | Original manifest/checksums and raw source lineage; VAL-001/002 |
+| REQ-004 causal time/replay | Proposed support for SRC-002 event focus | CMP-02/03/05/06/11 | [P02](../phases/02-event-capture/README.md), [P03](../phases/03-market-state-and-ledger/README.md), [P04](../phases/04-features-and-context/README.md), [P06](../phases/06-simulation-and-validation/README.md) | G02/G03/G04/G06 | Event contracts, deterministic replay, point-in-time context; VAL-003/004/007/013 |
+| REQ-005 integrity | Proposed reliability interpretation of SRC-002 | CMP-02/03/04/06/09/11 | [P02](../phases/02-event-capture/README.md), [P03](../phases/03-market-state-and-ledger/README.md), [P04](../phases/04-features-and-context/README.md), [P05](../phases/05-core-judges-and-managers/README.md), [P07](../phases/07-paper-readiness/README.md) | G02/G03/G04/G05/G07 | Gap, duplicate, stale, recovery and invalidation records; VAL-004/005/006/008/011/014 |
+| REQ-006 account ledger | Proposed interpretation; original ledger meaning unresolved | CMP-04/09/10 | [P03](../phases/03-market-state-and-ledger/README.md), [P05](../phases/05-core-judges-and-managers/README.md), [P06](../phases/06-simulation-and-validation/README.md) | G03/G05/G06 | Accounting convention, fixture reconciliation and simulator integration; VAL-006/011/013 |
+| REQ-007 algorithm/roles research | SRC-002 role names and research intent; role boundaries proposed | CMP-07/08 | [P01](../phases/01-research-and-data-access/README.md), [P05](../phases/05-core-judges-and-managers/README.md), [P06](../phases/06-simulation-and-validation/README.md) | G01/G05/G06 | Cited alternatives, hypotheses, role contracts and validation; VAL-009/010/012 |
+| REQ-008 context/regimes | SRC-002 market-change intent; design proposed | CMP-05/06/07 | [P04](../phases/04-features-and-context/README.md), [P05](../phases/05-core-judges-and-managers/README.md) | G04/G05 | Availability/revision rules, regime hypotheses and uncertainty; VAL-007/008 |
+| REQ-009 risk/abstain | Proposed reliability interpretation | CMP-08/09 plus CMP-04 state | [P05](../phases/05-core-judges-and-managers/README.md), [P06](../phases/06-simulation-and-validation/README.md), [P07](../phases/07-paper-readiness/README.md) | G05/G06/G07 | Policy and independent limits, invalid-input/disagreement/stop evidence; VAL-004/006/008/010/011/014 |
+| REQ-010 simulation | Proposed evaluation requirement | CMP-07/10 | [P05](../phases/05-core-judges-and-managers/README.md), [P06](../phases/06-simulation-and-validation/README.md) | G05/G06 | Pre-registered held-out evaluation, execution assumptions and sensitivity; VAL-009/012/013 |
+| REQ-011 trace/audit | SRC-001 explicit mapping; runtime extension proposed | CMP-04/07/08/10/11 and all handoffs | [P00](../phases/00-baseline/README.md) through [P07](../phases/07-paper-readiness/README.md) | G00–G07 | Source/requirement/component/phase mappings; decision/run lineage; VAL-001/002/010/012/013/014/015 |
+| REQ-012 docs only/live excluded | SRC-001 explicit current constraint | All documentation; CMP-09/10/11 future boundary | [P00](../phases/00-baseline/README.md), [P07](../phases/07-paper-readiness/README.md); constraint across all phases | Setup check; G00/G07 | Workspace inspection and paper-only scope; VAL-001/014/015 |
+
+All VAL identifiers resolve to the [acceptance scenario register](../validation/acceptance-scenarios.md). Gate evidence is absent except for the separate [documentation setup check](../validation/setup-report.md).
+
+## Original-spec coverage
+
+For execution, extend each relevant mapping with the [task packet](../tasks/README.md), its actual branch/base/head revisions, PR URL and evidence. Keep proposed candidates separate from assigned tasks; no implementation mapping is Verified today. The [Claude workflow](../working-with-claude.md) defines ownership and publication. Gate acceptance remains in the milestone register.
+
+| Source collection | Imported originals | Section mappings | Completeness status |
+| --- | --- | --- | --- |
+| SRC-003 latest v1.0 architecture/specs | 0 | 0 | Unknown; source unavailable |
+| SRC-002 accessible conversation capture | 1 reader response; 5 user messages and 5 markers | [Source map](../sources/source-map.md) | Complete for this returned capture only |
+
+When originals arrive, add one row per actual specification section with exact source path/section, version/hash, original ID, workspace alias, requirement, component, phase, gate and evidence. Record confirmed, conflicting, absent and superseded relationships explicitly. Every unmatched original must have a disposition before G00 can pass.
