@@ -8,7 +8,7 @@ Two bootstrap documentation tasks come first: **TASK-DOC-001**, the readiness in
 
 | Task packet | Work state | Prerequisite | PR state |
 | --- | --- | --- | --- |
-| [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Verified | None; no accepted architecture required | Draft — [#1](https://github.com/akibrahimug/gladiators/pull/1) |
+| [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Verified | None; no accepted architecture required | Open — [#1](https://github.com/akibrahimug/gladiators/pull/1) |
 | [TASK-DOC-002 — Refresh handoff after the published baseline](TASK-DOC-002.md) | In progress | TASK-DOC-001 Verified | Not yet opened; draft due under DEC-009 |
 | [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | Blocked | Actual original specification input | Blocked — original source input missing |
 | [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | Blocked | TASK-P00-001 Verified and source sections available | Blocked — dependencies missing |
