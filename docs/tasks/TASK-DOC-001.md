@@ -9,7 +9,7 @@
 | Dependencies | None for local inspection |
 | Coordinator / workers | Claude Code main session, claimed 2026-10-22: coordinator and sole writer of this card, its board row, the report and the DEC-009 row. `gladiator-spec-reader`: read-only source/gate/instruction inspection. `gladiator-reviewer`: read-only review of the report and this card |
 | Repository / base / branch | akibrahimug/gladiators (default `master`); base `master` @ `cc357bccd1800348ba5e45b3fd362a3ceef40c13`; branch `task/TASK-DOC-001-handoff-inspection` |
-| PR state / URL | Draft — [#1](https://github.com/akibrahimug/gladiators/pull/1), opened 2026-10-22 under [DEC-009](../decisions/README.md) (user instruction: a branch and PR per task). Tested head `25e722624537c8136f5e029811fcff75b569ff9f`; the next commit records this metadata only. Replaces the earlier "Not requested" default. Human review and merge pending |
+| PR state / URL | Open — [#1](https://github.com/akibrahimug/gladiators/pull/1). Opened as a draft on 2026-10-22 under [DEC-009](../decisions/README.md) (user instruction: a branch and PR per task); the user marked it ready for review at 2026-10-22T21:31:44Z. Tested head `25e722624537c8136f5e029811fcff75b569ff9f`; later commits record PR metadata and the DEC-010 decision only. Replaces the earlier "Not requested" default. Human review and merge pending |
 
 ## Objective and scope
 
@@ -49,10 +49,12 @@ Current observations and results: run by Claude on 2026-10-22 at base `cc357bc` 
 
 | Check | Revision | Result |
 | --- | --- | --- |
-| Independent review (`gladiator-reviewer`) | `cc357bc..1417bc0` | No blocker; 2 material and 7 minor findings. Report corrections made in `695a7f6`. F14 stays open as a user decision |
+| Independent review (`gladiator-reviewer`) | `cc357bc..1417bc0` | No blocker; 2 material and 7 minor findings. Report corrections made in `695a7f6`. F14 later resolved by user decision DEC-010 |
 | Fix verification (same reviewer) | `1417bc0..695a7f6` | No blocker or material error. M1, M2 and m2–m7 resolved, m1 partly. 3 new minor findings (N1–N3) addressed in the following wording-only commit, with no further review round |
 | Link check | `695a7f6` | 49 tracked files, 46 Markdown, 429 local links, 0 failures (coordinator and reviewer) |
 | Captured checksums | `695a7f6` | 3/3 OK; no diff under `docs/sources/` since base (reviewer) |
 | Link check | `25e7226` (tested head) | 49 tracked files, 46 Markdown, 433 local links, 0 failures (coordinator) |
 | Captured checksums | `25e7226` (tested head) | 3/3 OK (coordinator) |
 | Draft PR | `25e7226` | [#1](https://github.com/akibrahimug/gladiators/pull/1) opened against `master`; no earlier PR existed for this branch |
+| PR state change | — | User marked [#1](https://github.com/akibrahimug/gladiators/pull/1) ready for review at 2026-10-22T21:31:44Z (PR timeline `ready_for_review` event): Draft → Open |
+| F14 decision | — | User decision recorded as [DEC-010](../decisions/README.md): Bash-based search accepted as equivalent; implementer permissions and worktree isolation to be verified before its first coding task |

@@ -12,12 +12,12 @@ Scope: documentation and repository readiness only. This report does not pass G0
 
 | Acceptance criterion | Result |
 | --- | --- |
-| Agent discovery | All 3 named agents discovered. The spec-reader ran with exactly its declared tools. The reviewer did not receive its declared Glob and Grep. As criterion 1 requires, that is recorded as a blocker (F14), not a pass: it blocks any claim that the reviewer matches its definition, though not this task's deliverables. The implementer was not launched. See [agent discovery](#agent-discovery) |
+| Agent discovery | All 3 named agents discovered. The spec-reader ran with exactly its declared tools. The reviewer did not receive its declared Glob and Grep. As criterion 1 requires, that is recorded as a blocker (F14), not a pass: it blocks any claim that the reviewer matches its definition, though not this task's deliverables. The user later resolved it by accepting Bash-based search as equivalent ([DEC-010](../decisions/README.md)). The implementer was not launched. See [agent discovery](#agent-discovery) |
 | Original v1.0, G00 and task readiness | Confirmed: no original v1.0 imported, G00 Pending, G01–G07 Not started, no implementation task Ready |
 | Local Markdown links | 0 failures at every checked revision; see [local Markdown links](#local-markdown-links) |
 | Captured-source checksums | 3 of 3 files match `SHA256SUMS`; unchanged since added in `25462ca` |
 | Repository, remote, base and auth | Remote, base, working tree, auth and duplicate-PR checks satisfied. Visibility is observed (public), but no record shows the user choosing it. See [repository readiness](#repository-and-publishing-readiness) |
-| Independent review | No blocker. 2 material and 7 minor findings, with report corrections made; fix verification found 3 more minor items, also addressed. F14 stays open as a user decision. See [independent review](#independent-review) |
+| Independent review | No blocker. 2 material and 7 minor findings, with report corrections made; fix verification found 3 more minor items, also addressed. F14 was later resolved by user decision DEC-010. See [independent review](#independent-review) |
 | PR record and publication prerequisites | PR scope amended by [DEC-009](../decisions/README.md); TASK-DOC-002 prerequisites and remaining scope are listed below. The PR URL is recorded on the [task card](../tasks/TASK-DOC-001.md) |
 
 ## Agent discovery
@@ -112,7 +112,7 @@ Spec-reader findings F1–F12 come from its inspection of `51a4a46`. F13 and F14
 | F11 | Minor | [CHANGELOG](../../CHANGELOG.md) 0.2; [setup report](setup-report.md) | Dated statements now superseded: verification still pending, no Git commit made, earlier file counts | Deferred to TASK-DOC-002 as a new change-log entry. The dated records stay unchanged |
 | F12 | Minor | [Catalog](../catalog.md); [documentation index](../README.md) | This report is not yet catalogued or indexed | Deferred to TASK-DOC-002 |
 | F13 | Material | [Workflow](../working-with-claude.md#repository-and-pr-readiness) Repository and PR readiness, final paragraph ("TASK-DOC-001 is local inspection only…"); [workflow first-session prompt](../working-with-claude.md#first-session-prompt); [task board](../tasks/README.md#start-here) TASK-DOC-002 candidate paragraph | These still describe a local-only TASK-DOC-001 and a first publication under TASK-DOC-002, contradicting DEC-009 and the amended card | Deferred to TASK-DOC-002 and listed in DEC-009's impact. This task updated its own board row's prerequisite cell |
-| F14 | Material | [Reviewer definition](../../.claude/agents/reviewer.md) frontmatter vs. runtime | Declared `Read, Glob, Grep, Bash`; the runtime provided Read and Bash only | Open blocker, recorded as criterion 1 requires. It blocks claiming that the reviewer matches its definition, not this task's deliverables; the review itself was not hampered. Owner: user decision, raised in the TASK-DOC-001 handoff. Options: accept Bash-based search as the reviewer's and implementer's search path, or align their frontmatter with the runtime. Check the implementer at its first dispatch either way |
+| F14 | Material | [Reviewer definition](../../.claude/agents/reviewer.md) frontmatter vs. runtime | Declared `Read, Glob, Grep, Bash`; the runtime provided Read and Bash only | Resolved by user decision [DEC-010](../decisions/README.md), 2026-10-22: Bash-based search is accepted as equivalent to the declared Glob and Grep, with no agent-definition change. The implementer's permissions and worktree isolation must be verified before its first coding task |
 
 ## Independent review
 
@@ -159,7 +159,7 @@ Proposed remaining scope: a post-baseline documentation refresh. Its job is to:
 - add this report to the catalog and index (F12);
 - record that the initial Git documentation baseline was established by `cc357bc`.
 
-It authorises no application code and leaves captured and original sources unchanged. F14 is a separate decision about agent definitions and is not part of that scope.
+It authorises no application code and leaves captured and original sources unchanged. F14 is not part of that scope; the user resolved it separately as DEC-010.
 
 ## Limits
 
