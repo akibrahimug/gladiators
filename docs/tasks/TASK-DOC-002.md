@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Work state | In progress |
+| Work state | Verified |
 | Type | Documentation |
 | Phase / gate contribution | P00 preparation; contributes REQ-011/012 evidence without passing G00 |
 | Requirement / component IDs | REQ-011, REQ-012; CMP-11 audit |
@@ -11,8 +11,8 @@
 | Coordinator / workers | Claude Code main session, claimed 2026-10-22: coordinator and sole writer of every allowed path below. `gladiator-reviewer`: read-only review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-DOC-001-handoff-inspection` @ `17f7d320d94fdf698aded1ba45a97ac23c82621f`. This branch is stacked on [PR #1](https://github.com/akibrahimug/gladiators/pull/1); retarget to `master` once that merges |
 | Task branch / worker worktrees | `task/TASK-DOC-002-baseline-refresh`; single writer in the main checkout, so no worker worktrees |
-| PR state / URL | Not yet opened; a draft PR is due under DEC-009. Becomes Draft with its real URL once created, or Blocked if creation fails |
-| Tested head revision / evidence | Unset until observed |
+| PR state / URL | Draft — [#2](https://github.com/akibrahimug/gladiators/pull/2), opened 2026-10-22 under DEC-009 against `task/TASK-DOC-001-handoff-inspection` (stacked on #1). Human review and merge pending |
+| Tested head revision / evidence | `a74d2a77d69ffcef0c54cde8e787a08c28c60948`; the next commit records PR metadata only. Evidence: verification table below |
 
 ## Objective and observable result
 
@@ -64,15 +64,15 @@ Excluded scope:
 
 ## Acceptance criteria
 
-- [ ] No allowed-path document still claims the baseline is uncommitted, publishing access is unverified, Claude has not run, or agent discovery is unverified. Each corrected statement is consistent with the TASK-DOC-001 report. (F3, F7, F9, F10)
-- [ ] The workflow's TASK-DOC-001/TASK-DOC-002 paragraph, its first-session prompt and the board's TASK-DOC-002 text agree with DEC-009 and the actual task sequence. (F13)
-- [ ] TASK-P00-001 and TASK-P00-002 remain Blocked, with the missing source as the only stated reason.
-- [ ] CHANGELOG has a 0.3 entry; the 0.2 entry and the setup report are unchanged. (F11)
-- [ ] The catalog lists exactly the tracked files, including the TASK-DOC-001 report and this card. The documentation and evidence indexes link the report. (F12)
-- [ ] The README's stray second H1 is removed. (F8)
-- [ ] All local Markdown links resolve; captured checksums match; the diff touches only allowed paths.
-- [ ] Independent reviewer findings are recorded and material ones resolved.
-- [ ] The draft PR's real URL and tested head are recorded on this card.
+- [x] No allowed-path document still claims the baseline is uncommitted, publishing access is unverified, Claude has not run, or agent discovery is unverified. Each corrected statement is consistent with the TASK-DOC-001 report. (F3, F7, F9, F10)
+- [x] The workflow's TASK-DOC-001/TASK-DOC-002 paragraph, its first-session prompt and the board's TASK-DOC-002 text agree with DEC-009 and the actual task sequence. (F13)
+- [x] TASK-P00-001 and TASK-P00-002 remain Blocked, with the missing source as the only stated reason.
+- [x] CHANGELOG has a 0.3 entry; the 0.2 entry and the setup report are unchanged. (F11)
+- [x] The catalog lists exactly the tracked files, including the TASK-DOC-001 report and this card. The documentation and evidence indexes link the report. (F12)
+- [x] The README's stray second H1 is removed. (F8)
+- [x] All local Markdown links resolve; captured checksums match; the diff touches only allowed paths.
+- [x] Independent reviewer findings are recorded and material ones resolved.
+- [x] The draft PR's real URL and tested head are recorded on this card.
 
 ## Verification and independent review
 
@@ -91,4 +91,4 @@ None blocking. The README's trailing `# gladiators` line came from the repositor
 
 ## PR and completion record
 
-Unset until the draft PR exists.
+Draft PR [#2](https://github.com/akibrahimug/gladiators/pull/2); base `task/TASK-DOC-001-handoff-inspection`, tested head `a74d2a7`. Merge #1 first; GitHub then retargets #2 to `master`. Gate evidence contributed: documentation-readiness only; G00 stays Pending.
