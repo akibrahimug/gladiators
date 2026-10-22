@@ -12,12 +12,12 @@ Scope: documentation and repository readiness only. This report does not pass G0
 
 | Acceptance criterion | Result |
 | --- | --- |
-| Agent discovery | All 3 named agents discovered. The spec-reader ran with exactly its declared tools. The reviewer did not receive its declared Glob and Grep: an open discrepancy (F14), not a pass. The implementer was not launched. See [agent discovery](#agent-discovery) |
+| Agent discovery | All 3 named agents discovered. The spec-reader ran with exactly its declared tools. The reviewer did not receive its declared Glob and Grep. As criterion 1 requires, that is recorded as a blocker (F14), not a pass: it blocks any claim that the reviewer matches its definition, though not this task's deliverables. The implementer was not launched. See [agent discovery](#agent-discovery) |
 | Original v1.0, G00 and task readiness | Confirmed: no original v1.0 imported, G00 Pending, G01–G07 Not started, no implementation task Ready |
 | Local Markdown links | 0 failures at every checked revision; see [local Markdown links](#local-markdown-links) |
 | Captured-source checksums | 3 of 3 files match `SHA256SUMS`; unchanged since added in `25462ca` |
 | Repository, remote, base and auth | Remote, base, working tree, auth and duplicate-PR checks satisfied. Visibility is observed (public), but no record shows the user choosing it. See [repository readiness](#repository-and-publishing-readiness) |
-| Independent review | No blocker; 2 material and 7 minor findings, all resolved. See [independent review](#independent-review) |
+| Independent review | No blocker. 2 material and 7 minor findings, with report corrections made; fix verification found 3 more minor items, also addressed. F14 stays open as a user decision. See [independent review](#independent-review) |
 | PR record and publication prerequisites | PR scope amended by [DEC-009](../decisions/README.md); TASK-DOC-002 prerequisites and remaining scope are listed below. The PR URL is recorded on the [task card](../tasks/TASK-DOC-001.md) |
 
 ## Agent discovery
@@ -56,13 +56,15 @@ Method: a read-only Python script, kept outside the repository, lists tracked fi
 
 Later revisions are recorded on the [task card](../tasks/TASK-DOC-001.md). The [file catalog](../catalog.md) lists exactly the 48 files tracked at `51a4a46`. It does not yet list this report (F12).
 
-The [setup report](setup-report.md)'s Codex checks appear to have used `validate_docs.py`. That script sits outside the repository, at `../../work/validate_docs.py` from the repository root. The setup report does not name it; the attribution rests on the script's location and content. When run, the script:
+The [setup report](setup-report.md)'s Codex checks appear to have used `validate_docs.py`. That script sits outside the repository, at `../../work/validate_docs.py` from the repository root. The setup report does not name it; the attribution rests on the script's location and content.
+
+The script's target is fixed by its own location: `outputs/GLADIATOR` beside its parent folder, which is this checkout. It writes there whatever directory it is run from. When run, it:
 
 - overwrites `docs/catalog.md` before any check, so the catalog is clobbered even if the run aborts;
-- recomputes and rewrites `docs/sources/captured/SHA256SUMS`, after first aborting if the digests differ;
+- aborts if the captured digests differ from `SHA256SUMS`, and otherwise rewrites that file, or creates it if it is missing;
 - creates `docs/validation/setup-report.md` if it is missing.
 
-This inspection did not run it. Do not run it in a checkout whose catalog or checksums must be preserved.
+This inspection did not run it. Running it in isolation needs a copy placed in a mirror of that directory layout.
 
 ## Captured-source preservation
 
@@ -89,7 +91,7 @@ Prerequisites from [Repository and PR readiness](../working-with-claude.md#repos
 | Git/hosting client and authenticated access | `gh` logged in as `akibrahimug` (keyring, HTTPS); token scopes `gist`, `read:org`, `repo`, `workflow`; repository permission `ADMIN` | `gh auth status`; `gh repo view --json viewerPermission` | Satisfied |
 | No duplicate PR for the task branch | No PRs in any state | `gh pr list --state all` | Satisfied |
 
-The history (`21e82ce`, `25462ca`, `cc357bc`) and the `origin/master` reflog show the handoff was committed and pushed directly to `master` before this task's branch was created. That meets TASK-DOC-002's original purpose of establishing the initial Git documentation baseline. It happened outside the DOC-002 workflow and without a PR; the setup report in `cc357bc` records Codex's handoff review. A baseline PR would now have an empty diff against `master`. This is not G00's accepted baseline.
+The history (`21e82ce`, `25462ca`, `cc357bc`) and the `origin/master` reflog show the handoff was committed and pushed directly to `master` before this task's branch was created. That meets TASK-DOC-002's original purpose of establishing the initial Git documentation baseline. It happened outside the DOC-002 workflow and without a PR. The setup report, as updated in `cc357bc`, records an independent handoff review without naming the reviewer. A baseline PR would now have an empty diff against `master`. This is not G00's accepted baseline.
 
 ## Findings
 
@@ -109,8 +111,8 @@ Spec-reader findings F1–F12 come from its inspection of `51a4a46`. F13 and F14
 | F10 | Minor | [IDE guide](../ide-guide.md); workflow format references | Agent discovery and PR access are described as still to be verified | Deferred to TASK-DOC-002; this report records the observed results |
 | F11 | Minor | [CHANGELOG](../../CHANGELOG.md) 0.2; [setup report](setup-report.md) | Dated statements now superseded: verification still pending, no Git commit made, earlier file counts | Deferred to TASK-DOC-002 as a new change-log entry. The dated records stay unchanged |
 | F12 | Minor | [Catalog](../catalog.md); [documentation index](../README.md) | This report is not yet catalogued or indexed | Deferred to TASK-DOC-002 |
-| F13 | Material | Workflow, Repository and PR readiness final paragraph ("TASK-DOC-001 is local inspection only…"); workflow First-session prompt; task board TASK-DOC-002 candidate paragraph | These still describe a local-only TASK-DOC-001 and a first publication under TASK-DOC-002, contradicting DEC-009 and the amended card | Deferred to TASK-DOC-002 and listed in DEC-009's impact. This task updated its own board row's prerequisite cell |
-| F14 | Material | [Reviewer definition](../../.claude/agents/reviewer.md) frontmatter vs. runtime | Declared `Read, Glob, Grep, Bash`; the runtime provided Read and Bash only | Open. The review was not hampered. Proposed decision: accept Bash-based search, or align the reviewer and implementer frontmatter with the runtime. Check the implementer at its first dispatch |
+| F13 | Material | [Workflow](../working-with-claude.md#repository-and-pr-readiness) Repository and PR readiness, final paragraph ("TASK-DOC-001 is local inspection only…"); [workflow first-session prompt](../working-with-claude.md#first-session-prompt); [task board](../tasks/README.md#start-here) TASK-DOC-002 candidate paragraph | These still describe a local-only TASK-DOC-001 and a first publication under TASK-DOC-002, contradicting DEC-009 and the amended card | Deferred to TASK-DOC-002 and listed in DEC-009's impact. This task updated its own board row's prerequisite cell |
+| F14 | Material | [Reviewer definition](../../.claude/agents/reviewer.md) frontmatter vs. runtime | Declared `Read, Glob, Grep, Bash`; the runtime provided Read and Bash only | Open blocker, recorded as criterion 1 requires. It blocks claiming that the reviewer matches its definition, not this task's deliverables; the review itself was not hampered. Owner: user decision, raised in the TASK-DOC-001 handoff. Options: accept Bash-based search as the reviewer's and implementer's search path, or align their frontmatter with the runtime. Check the implementer at its first dispatch either way |
 
 ## Independent review
 
@@ -130,7 +132,15 @@ The reviewer re-ran the checksums, the link checker (in the checkout and on expo
 | m6 | Minor | The card's ownership field omitted the DEC-009 row | Fixed |
 | m7 | Minor | The summary said "all satisfied" despite the visibility row; the implementer limitation did not say what it blocks | Fixed |
 
-Fix verification: see the [task card](../tasks/TASK-DOC-001.md).
+Fix verification: the same reviewer checked `1417bc0..695a7f6`. It found no blocker or material error. M1, M2 and m2–m7 were resolved and m1 partly resolved. It raised three new minor findings:
+
+| ID | Finding | Disposition |
+| --- | --- | --- |
+| N1 | The report pointed to card results (later link checks, fix verification) that the card did not yet contain | Fixed: the card's verification section now records them |
+| N2 | F14 was open and Material but had no owner, while summaries said "all resolved" | Fixed: F14 is a recorded blocker owned by a user decision; summaries say F14 stays open |
+| N3 | The advice on `validate_docs.py` implied it could be pointed at another checkout; its target is fixed | Fixed: see [local Markdown links](#local-markdown-links) |
+
+The commit addressing N1–N3 changes wording only and had no further review round. The per-revision checks are on the [task card](../tasks/TASK-DOC-001.md).
 
 ## Follow-up for TASK-DOC-002
 

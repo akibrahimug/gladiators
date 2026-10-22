@@ -45,4 +45,11 @@ Scope amendment, 2026-10-22 ([DEC-009](../decisions/README.md)): the user asked 
 
 Use Claude's discovered agent list to check the three names. Resolve relative Markdown targets from their containing files. Compare source files to the recorded SHA-256 digests; on macOS, `shasum -a 256 -c SHA256SUMS` from the captured directory performs that check. Inspect Git state with `git rev-parse --show-toplevel`, `git status --short` and remote/base information only when a repository exists. Check authentication only against the user-selected hosting service.
 
-Current observations and results: run by Claude on 2026-10-22 at base `cc357bc` and claim commit `51a4a46`, with methods and evidence in the [handoff report](../validation/claude-handoff.md). The independent review of `cc357bc..1417bc0` found no blocker; its 2 material and 7 minor findings are resolved in the report. The earlier Codex checks are in the [setup report](../validation/setup-report.md).
+Current observations and results: run by Claude on 2026-10-22 at base `cc357bc` and claim commit `51a4a46`, with methods and evidence in the [handoff report](../validation/claude-handoff.md). The earlier Codex checks are in the [setup report](../validation/setup-report.md).
+
+| Check | Revision | Result |
+| --- | --- | --- |
+| Independent review (`gladiator-reviewer`) | `cc357bc..1417bc0` | No blocker; 2 material and 7 minor findings. Report corrections made in `695a7f6`. F14 stays open as a user decision |
+| Fix verification (same reviewer) | `1417bc0..695a7f6` | No blocker or material error. M1, M2 and m2–m7 resolved, m1 partly. 3 new minor findings (N1–N3) addressed in the following wording-only commit, with no further review round |
+| Link check | `695a7f6` | 49 tracked files, 46 Markdown, 429 local links, 0 failures (coordinator and reviewer) |
+| Captured checksums | `695a7f6` | 3/3 OK; no diff under `docs/sources/` since base (reviewer) |
