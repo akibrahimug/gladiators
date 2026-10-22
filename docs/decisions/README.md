@@ -14,6 +14,7 @@ No original architecture decision records were recovered. The entries below desc
 | DEC-006 | Do not select venue, stack, models or numerical targets without original specs and research | Pending baseline decisions | Original v1.0 unavailable | Record choices and alternatives in P00/P01 rather than guessing |
 | DEC-007 | End this roadmap at paper readiness | Confirmed current scope boundary; future roadmap proposal | SRC-001 no live trading yet | G07 cannot authorise capital deployment |
 | DEC-008 | Use Codex for brainstorming/design and Claude Code for implementation, wiring and PRs | Confirmed user preference, 2026-10-22 | User's follow-up instruction; [working agreement](../working-with-claude.md) | Claude follows bounded task packets and brings unresolved architecture decisions back to the user |
+| DEC-009 | Claude creates a task branch and opens a draft PR for each task it completes, including the TASK-DOC-001 inspection | Confirmed user instruction, 2026-10-22 | User's request to Claude Code: work in this repo "creating branches for each task and opening PR" | Replaces TASK-DOC-001's "PR Not requested" default ([card](../tasks/TASK-DOC-001.md)). The user pushed the handoff baseline to `master` at `cc357bc` before this instruction. A PR supplies evidence only; opening or merging it passes no gate |
 
 ## Record format for a future accepted decision
 
