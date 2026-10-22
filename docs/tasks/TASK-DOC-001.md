@@ -7,9 +7,9 @@
 | Components | Cross-project documentation; CMP-11 audit |
 | Inputs | This workspace; user working agreement in [Claude workflow](../working-with-claude.md) |
 | Dependencies | None for local inspection |
-| Coordinator / workers | Claude Code main session, claimed 2026-10-22: coordinator and sole writer of this card, its board row and the report. `gladiator-spec-reader`: read-only source/gate/instruction inspection. `gladiator-reviewer`: read-only review of the report and this card |
+| Coordinator / workers | Claude Code main session, claimed 2026-10-22: coordinator and sole writer of this card, its board row, the report and the DEC-009 row. `gladiator-spec-reader`: read-only source/gate/instruction inspection. `gladiator-reviewer`: read-only review of the report and this card |
 | Repository / base / branch | akibrahimug/gladiators (default `master`); base `master` @ `cc357bccd1800348ba5e45b3fd362a3ceef40c13`; branch `task/TASK-DOC-001-handoff-inspection` |
-| PR state / URL | Draft under [DEC-009](../decisions/README.md) (user instruction, 2026-10-22: a branch and PR per task); URL recorded after creation. Replaces the earlier "Not requested" default |
+| PR state / URL | Not yet opened; a draft PR is due under [DEC-009](../decisions/README.md) (user instruction, 2026-10-22: a branch and PR per task). Becomes Draft with its real URL once created, or Blocked if creation fails. Replaces the earlier "Not requested" default |
 
 ## Objective and scope
 
@@ -45,4 +45,4 @@ Scope amendment, 2026-10-22 ([DEC-009](../decisions/README.md)): the user asked 
 
 Use Claude's discovered agent list to check the three names. Resolve relative Markdown targets from their containing files. Compare source files to the recorded SHA-256 digests; on macOS, `shasum -a 256 -c SHA256SUMS` from the captured directory performs that check. Inspect Git state with `git rev-parse --show-toplevel`, `git status --short` and remote/base information only when a repository exists. Check authentication only against the user-selected hosting service.
 
-Current observations and results: run by Claude on 2026-10-22 against base `cc357bc`, with methods and evidence in the [handoff report](../validation/claude-handoff.md). Independent review is pending. The earlier Codex checks are in the [setup report](../validation/setup-report.md).
+Current observations and results: run by Claude on 2026-10-22 at base `cc357bc` and claim commit `51a4a46`, with methods and evidence in the [handoff report](../validation/claude-handoff.md). The independent review of `cc357bc..1417bc0` found no blocker; its 2 material and 7 minor findings are resolved in the report. The earlier Codex checks are in the [setup report](../validation/setup-report.md).
