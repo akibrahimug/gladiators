@@ -22,7 +22,7 @@ Claude can choose routine implementation details within the accepted task. For a
 
 Every assignment includes task ID/card; objective; source and accepted decision links; REQ/CMP/P/G IDs; allowed paths and reserved shared files; inputs from other workers; expected outputs/checks; and stop conditions. Implementation writers also require the exact committed base SHA. Workers receive the task context explicitly rather than relying on the coordinator's chat history.
 
-For TASK-DOC-001's read-only bootstrap inspections, use the observed checkout path, file manifest/hashes and inspection date while instructions are uncommitted. The coordinator alone writes the permitted report and task metadata. The reviewer can assess those concrete file snapshots against the task criteria without a committed diff. This exception does not authorise concurrent writers or implementation on an uncommitted baseline.
+A read-only inspection that must run before its instructions are committed may use the observed checkout path, file manifest/hashes and inspection date instead of a base SHA. The coordinator alone writes the permitted report and task metadata, and the reviewer assesses those concrete file snapshots against the task criteria. This exception does not authorise concurrent writers or implementation on an uncommitted baseline. TASK-DOC-001 did not need it: it ran against the committed baseline `cc357bc` ([report](validation/claude-handoff.md)).
 
 Use disjoint file ownership and isolated Git worktrees for concurrent writers. Ensure the task card and instructions are committed in the supplied base: uncommitted parent changes are not a worker baseline. Verify each writer's actual checkout path and starting SHA. Claude's worktree default may differ from the parent branch, so a mismatch must be corrected by the coordinator before edits begin. Recheck isolation if a delegation becomes an agent-team teammate.
 
@@ -30,7 +30,7 @@ When Git/worktree support is unavailable, run one writer at a time in a clearly 
 
 ## Repository and PR readiness
 
-At the first inspection this folder was not a Git repository. During documentation editing an existing repository appeared, with origin [akibrahimug/gladiators](https://github.com/akibrahimug/gladiators) and remote default `origin/master`. These settings were observed, not created or changed by this handoff. The new handoff documents are uncommitted; PR authentication has not been verified. The template is prepared, but publishing is not yet verified.
+At the first inspection this folder was not a Git repository. During documentation editing an existing repository appeared, with origin [akibrahimug/gladiators](https://github.com/akibrahimug/gladiators) and remote default `origin/master`. These settings were observed, not created or changed by this handoff. The user then committed and pushed the handoff documents to `master` at `cc357bc`. On 2026-10-22, TASK-DOC-001 verified that committed baseline and authenticated `gh` access to the repository ([report](validation/claude-handoff.md#repository-and-publishing-readiness)).
 
 Before the first PR, Claude must establish:
 
@@ -45,7 +45,12 @@ Use one bounded task per PR, with branch name `task/<TASK-ID>-<short-scope>`. Re
 
 Human review and merge remain separate from Claude's PR preparation. Gates retain the review requirements in the [milestone register](milestones.md).
 
-TASK-DOC-001 is local inspection only. Initial publication uses the board's separate Draft candidate TASK-DOC-002: materialise its task packet after inspection, list the exact inspected handoff files allowed in its baseline/PR, record repository/base/access and preserve unrelated changes. Then prepare its branch, commit and draft PR under that packet. This separates the read-only bootstrap from repository mutations and gives the first publication an explicit scope.
+The handoff originally planned TASK-DOC-001 as a local-only inspection, with the first publication under a separate TASK-DOC-002. Two things changed that plan:
+
+- the user pushed the initial Git documentation baseline directly to `master` at `cc357bc`;
+- [DEC-009](decisions/README.md) gives every task its own branch and PR.
+
+TASK-DOC-001 therefore opened its own draft PR. [TASK-DOC-002](tasks/TASK-DOC-002.md) became a refresh of the handoff documents that predated that baseline.
 
 ## State and traceability
 
@@ -55,10 +60,18 @@ Original v1.0 recovery remains a G00 prerequisite. This workflow does not conver
 
 ## Claude Code format references
 
-A root `CLAUDE.md` supplies project instructions ([official memory documentation](https://code.claude.com/docs/en/memory)). The three project agent definitions use Markdown with YAML frontmatter under `.claude/agents/`, and the implementer requests worktree isolation ([official subagent documentation](https://code.claude.com/docs/en/sub-agents)). Start a fresh Claude Code session after this project's first agents directory is created. Runtime agent loading and permissions still need verification in Claude.
+A root `CLAUDE.md` supplies project instructions ([official memory documentation](https://code.claude.com/docs/en/memory)). The three project agent definitions use Markdown with YAML frontmatter under `.claude/agents/`, and the implementer requests worktree isolation ([official subagent documentation](https://code.claude.com/docs/en/sub-agents)). Start a fresh Claude Code session after this project's first agents directory is created.
+
+On 2026-10-22 the runtime discovered all three agents ([report](validation/claude-handoff.md#agent-discovery)):
+
+- the spec-reader ran with its declared tools;
+- the reviewer received Read and Bash but not its declared Glob and Grep (open finding F14);
+- the implementer has not yet run.
 
 Claude documents PR creation as a supported workflow ([official common workflows](https://code.claude.com/docs/en/common-workflows)). These references confirm file formats and capabilities; task ownership and delivery rules above are this project's working agreement.
 
 ## First-session prompt
 
-> Read CLAUDE.md and complete the local inspection TASK-DOC-001 using gladiator-spec-reader and gladiator-reviewer. Keep application implementation unstarted. Then materialise the separate TASK-DOC-002 publication packet from the task board using the inspected handoff files. When its exact file scope, repository, base and access prerequisites are met, open its draft PR. Record real task/PR states and precise blockers.
+The bootstrap tasks TASK-DOC-001 and TASK-DOC-002 have run. For a later session:
+
+> Read CLAUDE.md and the task board. Work only on Ready tasks. Give each one its own `task/<TASK-ID>-<short-scope>` branch and draft PR (DEC-009), and use gladiator-spec-reader and gladiator-reviewer as its card requires. Keep application implementation unstarted while G00 is pending. Record real task/PR states and precise blockers.

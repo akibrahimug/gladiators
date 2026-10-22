@@ -27,6 +27,7 @@
 | [Decision register](decisions/README.md) | Confirmed task boundaries and proposed decisions |
 | [Evidence index](evidence/README.md) | Gate record format and evidence handling |
 | [Setup verification](validation/setup-report.md) | Checks of this documentation workspace only |
+| [Claude handoff readiness](validation/claude-handoff.md) | TASK-DOC-001 agent, link, checksum and repository/publishing checks |
 | [IDE guide](ide-guide.md) | Opening, searching and navigating the project |
 | [Change log](../CHANGELOG.md) | Documentation changes |
 
@@ -34,7 +35,7 @@
 
 Stable identifiers: `REQ-001` requirements; `CMP-01` components; `P00` phases; `G00` gates; `DEC-001` decisions; `VAL-001` acceptance scenarios; `SRC-001` user/source records; `EXT-001` external references.
 
-Execution uses `TASK-P00-001` task IDs and `TASK-DOC-001` for the handoff preparation task. Task cards own work state, branch/commit, evidence and PR references. The [task board](tasks/README.md) defines those states separately from gates.
+Execution uses `TASK-P00-001` task IDs, and `TASK-DOC-001`/`TASK-DOC-002` for the handoff preparation tasks. Task cards own work state, branch/commit, evidence and PR references. The [task board](tasks/README.md) defines those states separately from gates.
 
 Document states are **Captured source**, **Confirmed task constraint**, **Proposed**, **Pending source**, or **Accepted baseline**. An organised document is not evidence that its proposed system exists.
 

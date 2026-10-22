@@ -2,7 +2,7 @@
 
 Order-flow and ledger research system — documentation workspace.
 
-**Workspace edition:** 0.2, updated 22 October 2026 (Europe/London).  
+**Workspace edition:** 0.3, updated 22 October 2026 (Europe/London).  
 **Requested architecture baseline:** v1.0 — original specifications not yet recovered.  
 **Current activity:** documentation setup only. No trading software or connections are implemented.
 
@@ -20,7 +20,7 @@ Open **GLADIATOR.code-workspace** in Cursor or another compatible IDE. Relative 
 
 Use Codex for brainstorming and design discussion. Use Claude Code for assigned implementation, wiring, checks and PRs. Start Claude Code in this GLADIATOR folder; [CLAUDE.md](CLAUDE.md) points to the [task board](docs/tasks/README.md), [execution workflow](docs/working-with-claude.md), three project agents and PR template.
 
-The first Ready task is a bounded documentation/readiness inspection. Later implementation candidates remain Draft while the original baseline is missing. An existing [GitHub repository](https://github.com/akibrahimug/gladiators) is now attached, with its remote default recorded as `origin/master`. Claude must verify access and commit the handoff/task baseline before delegated implementation or PR publishing. The workflow is documented; this setup launched no Claude session or PR.
+The handoff is committed and pushed to the [GitHub repository](https://github.com/akibrahimug/gladiators) on `master`. Claude Code's readiness inspection, [TASK-DOC-001](docs/tasks/TASK-DOC-001.md), recorded agent discovery and verified publishing access ([report](docs/validation/claude-handoff.md)). Each task gets its own branch and draft PR ([DEC-009](docs/decisions/README.md)). Later implementation candidates remain Draft while the original baseline is missing.
 
 ## What is established
 
@@ -47,4 +47,3 @@ The retrieved chat contains five user turns; its assistant messages contain refe
 | Implementation and trading | Not started |
 
 See the [open backlog](docs/backlog.md), [decisions](docs/decisions/README.md) and [change log](CHANGELOG.md).
-# gladiators

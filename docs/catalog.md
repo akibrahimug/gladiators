@@ -46,11 +46,13 @@ Project documentation and handoff files are listed below; Git internals and runt
 | [docs/sources/source-map.md](sources/source-map.md) | Source-to-requirement map |
 | [docs/tasks/README.md](tasks/README.md) | Claude task board |
 | [docs/tasks/TASK-DOC-001.md](tasks/TASK-DOC-001.md) | TASK-DOC-001 — Check the Claude handoff and repository readiness |
+| [docs/tasks/TASK-DOC-002.md](tasks/TASK-DOC-002.md) | TASK-DOC-002 — Refresh handoff documents after the published baseline |
 | [docs/tasks/TASK-P00-001.md](tasks/TASK-P00-001.md) | TASK-P00-001 — Preserve the original v1.0 specifications |
 | [docs/tasks/TASK-P00-002.md](tasks/TASK-P00-002.md) | TASK-P00-002 — Reconcile specifications with the phased plan |
 | [docs/tasks/task-template.md](tasks/task-template.md) | TASK template — replace with a unique TASK-ID and outcome |
 | [docs/traceability/components.md](traceability/components.md) | Component responsibility and dependency register |
 | [docs/traceability/requirements-matrix.md](traceability/requirements-matrix.md) | Requirement traceability matrix |
 | [docs/validation/acceptance-scenarios.md](validation/acceptance-scenarios.md) | Proposed acceptance scenarios |
+| [docs/validation/claude-handoff.md](validation/claude-handoff.md) | Claude handoff and repository readiness |
 | [docs/validation/setup-report.md](validation/setup-report.md) | Documentation setup verification |
 | [docs/working-with-claude.md](working-with-claude.md) | Working with Claude Code |
