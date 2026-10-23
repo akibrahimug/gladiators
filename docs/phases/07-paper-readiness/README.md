@@ -19,9 +19,9 @@ Define whether the evaluated system is ready for a bounded paper or simulated ob
 
 ## Traceability
 
-**Requirements:** [REQ-003, REQ-005, REQ-006, REQ-009, REQ-010, REQ-011, REQ-012](../../requirements.md).
+**Requirements:** [REQ-003, REQ-005, REQ-006, REQ-009, REQ-010, REQ-011, REQ-012; Proposed REQ-015, REQ-018, REQ-019](../../requirements.md).
 
-**Components:** [CMP-01 source registry, CMP-02 ingest and raw log, CMP-04 own-account ledger, CMP-09 Managers/risk, CMP-10 simulation/paper, CMP-11 audit and operations](../../traceability/components.md).
+**Components:** [CMP-01 source registry, CMP-02 ingest and raw log, CMP-04 own-account ledger, CMP-09 Management, CMP-12 Gatekeeper, CMP-10 simulation/paper, CMP-11 audit and operations](../../traceability/components.md).
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G07 in the [milestone register](../../milestones.md).
 

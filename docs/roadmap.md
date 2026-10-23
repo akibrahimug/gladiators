@@ -7,13 +7,13 @@
 | Phase | Objective | Prerequisite | Exit gate | Main components |
 | --- | --- | --- | --- | --- |
 | [P00 Baseline](phases/00-baseline/README.md) | Recover, preserve and map every original spec | None for source recovery | G00 | All |
-| [P01 Research and data access](phases/01-research-and-data-access/README.md) | Bound the market, sources, access and research questions | G00 | G01 | CMP-01, CMP-05, CMP-07 |
+| [P01 Research and data access](phases/01-research-and-data-access/README.md) | Bound the market, sources, access and research questions | G00 | G01 | CMP-01, CMP-05, CMP-13 |
 | [P02 Event capture](phases/02-event-capture/README.md) | Specify and later verify event capture, provenance and integrity | G01 | G02 | CMP-02, CMP-11 |
 | [P03 Market state and ledger](phases/03-market-state-and-ledger/README.md) | Specify deterministic book reconstruction and separate account accounting | G02 | G03 | CMP-03, CMP-04 |
 | [P04 Features and context](phases/04-features-and-context/README.md) | Define causal features and regime/context validity | G03 | G04 | CMP-05, CMP-06 |
-| [P05 Core, Judges and Managers](phases/05-core-judges-and-managers/README.md) | Resolve roles, decision evidence and deterministic risk controls | G04 | G05 | CMP-07, CMP-08, CMP-09 |
+| [P05 Core, Judges and Managers](phases/05-core-judges-and-managers/README.md) | Resolve roles, decision evidence and deterministic risk controls | G04 | G05 | CMP-07, CMP-08, CMP-09, CMP-12, CMP-13, CMP-14 |
 | [P06 Simulation and validation](phases/06-simulation-and-validation/README.md) | Evaluate hypotheses with realistic costs and failure cases | G05 | G06 | CMP-10 and all decision inputs |
-| [P07 Paper readiness](phases/07-paper-readiness/README.md) | Define operational and paper-only readiness | G06 | G07 | CMP-09, CMP-10, CMP-11 |
+| [P07 Paper readiness](phases/07-paper-readiness/README.md) | Define operational and paper-only readiness | G06 | G07 | CMP-09, CMP-10, CMP-11, CMP-12 |
 
 Dependency chain: **G00 → G01 → G02 → G03 → G04 → G05 → G06 → G07**.
 

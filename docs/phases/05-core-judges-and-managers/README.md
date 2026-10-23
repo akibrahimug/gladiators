@@ -2,13 +2,13 @@
 
 Claude Code handoff: [P05 task packets and candidates](../../tasks/README.md#p05) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: PROPOSED; not started.** The names and responsibilities below require reconciliation with the original v1.0 architecture.
+**Status: PROPOSED; not started.** The role model follows [DEC-014](../../decisions/README.md) (2026-10-23): Gladiators (CMP-13), Arena (CMP-14), Core decision kernel (CMP-07), Judges (CMP-08), Management (CMP-09) and Gatekeeper (CMP-12). The phase title keeps its original wording.
 
 **Dependencies:** accepted G04 and the input definitions from [P04](../04-features-and-context/README.md).
 
 ## Objective
 
-Define research decision contracts for Core, Judges, and Managers and their evidence trail. The proposed separation is Core research output, Judge assessment, and Manager constraints/risk handling. It is a working proposal until the original specifications establish the intended boundaries. Any decision pathway must have a deterministic means to abstain when its required evidence is missing or invalid.
+Define research decision contracts for Core, Judges, and Managers and their evidence trail. The source separation, per DEC-014, is: Gladiators forecast; the Core kernel decides, sizes and issues intents; the Gatekeeper alone approves them under deterministic policy; Judges and the Arena evaluate; and Management promotes and budgets. The contracts stay proposals until G05. Reinstated sections L-017 (Core invariants), L-018 (Arena policy) and L-021 (Gatekeeper market policy) apply ([baseline record](../../evidence/P00/baseline-decision.md#reinstated-sections)). Any decision pathway must have a deterministic means to abstain when its required evidence is missing or invalid.
 
 ## Documentation deliverables
 
@@ -20,9 +20,9 @@ Define research decision contracts for Core, Judges, and Managers and their evid
 
 ## Traceability
 
-**Requirements:** [REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-010, REQ-011, REQ-012](../../requirements.md).
+**Requirements:** [REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-010, REQ-011, REQ-012; Proposed REQ-013, REQ-014, REQ-016, REQ-017, REQ-018, REQ-019](../../requirements.md).
 
-**Components:** [CMP-04 own-account ledger, CMP-06 features/regimes, CMP-07 Core research, CMP-08 Judges, CMP-09 Managers/risk, CMP-11 audit and operations](../../traceability/components.md).
+**Components:** [CMP-04 own-account ledger, CMP-06 features/regimes, CMP-07 Core decision kernel, CMP-08 Judges, CMP-09 Management, CMP-12 Gatekeeper, CMP-13 Gladiators, CMP-14 Arena, CMP-11 audit and operations](../../traceability/components.md).
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G05 in the [milestone register](../../milestones.md).
 

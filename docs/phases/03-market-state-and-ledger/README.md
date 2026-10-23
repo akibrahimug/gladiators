@@ -21,7 +21,7 @@ Specify reproducible market state from the observations actually available and k
 
 **Requirements:** [REQ-001, REQ-002, REQ-004, REQ-005, REQ-006, REQ-009, REQ-011](../../requirements.md).
 
-**Components:** [CMP-02 ingest and raw log, CMP-03 book/replay, CMP-04 own-account ledger, CMP-09 Managers/risk, CMP-11 audit and operations](../../traceability/components.md).
+**Components:** [CMP-02 ingest and raw log, CMP-03 book/replay, CMP-04 own-account ledger, CMP-07 Core and CMP-12 Gatekeeper as ledger consumers, CMP-11 audit and operations](../../traceability/components.md).
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G03 in the [milestone register](../../milestones.md).
 

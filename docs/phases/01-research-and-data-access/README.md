@@ -16,14 +16,16 @@ Determine which observations are available, what each observation represents, an
 - A source registry covering the selected scope, access route, permitted use, update semantics, coverage, timestamps, known delays, limitations, and verification references; future evidence: `../../evidence/P01/source-registry.md`.
 - An observability map distinguishing observed events, derived state, inference, unavailable data, and the system's own account records; future evidence: `../../evidence/P01/observability-map.md`.
 - An approved data evaluation plan and access decision, including a representative sample plan and source-dependent acceptance criteria; future evidence: `../../evidence/P01/data-access-decision.md`.
-- A cited algorithm-research agenda linking candidate algorithm families, reference baselines, required observations and falsifiable hypotheses to Core research; future evidence: `../../evidence/P01/research-agenda.md`.
+- A cited algorithm-research agenda linking candidate algorithm families, reference baselines, required observations and falsifiable hypotheses to Gladiator research (CMP-13; the Core is the decision kernel, DEC-014); future evidence: `../../evidence/P01/research-agenda.md`.
 - A workload and acceptance-objective register defining selected instrument/event scope, latency measurement points and percentiles, clock uncertainty, quality/recovery targets and evaluation methods before measurement; future evidence: `../../evidence/P01/acceptance-objectives.md`.
 
 ## Traceability
 
-**Requirements:** [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007](../../requirements.md).
+**Requirements:** [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007; Proposed REQ-015, REQ-020](../../requirements.md).
 
-**Components:** [CMP-01 source registry, CMP-02 ingest and raw log, CMP-03 book/replay, CMP-04 own-account ledger, CMP-05 context, CMP-07 Core research](../../traceability/components.md).
+**Components:** [CMP-01 source registry, CMP-02 ingest and raw log, CMP-03 book/replay, CMP-04 own-account ledger, CMP-05 context, CMP-13 Gladiators (research framing)](../../traceability/components.md).
+
+**Baseline inputs (2026-10-23):** P01 evaluates the original provisional defaults in the [baseline record](../../evidence/P00/baseline-decision.md#initial-research-scope-for-p01): events first where entitled (DEC-015), the market universe, the daily-first horizon and the £0 phase-1 budget. None is accepted (DEC-017). Reinstated sections L-010, L-024 and L-025 apply to source and connector scope.
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G01 in the [milestone register](../../milestones.md).
 
