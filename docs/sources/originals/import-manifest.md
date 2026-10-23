@@ -16,7 +16,7 @@ The [preservation review](../../evidence/P00/preservation-review.md) (TASK-P00-0
 
 - The only in-file v1.0 statement is the header of component 27 in the v10 release. The v1.0 conversation heading and download control quoted above are not preserved in the repository (PF-02).
 - No release explicitly supersedes another (PF-03).
-- Releases are not cumulative: v0.4 component amendments exist only in v4 (v5 is v3 plus v0.5 sections); v0.5 amendments and v5's `audit/` code exist only in v5; v6 onward builds on the v3 component text; v10 lacks v9's amendment to component 23 (PF-05). All releases remain authoritative inputs for TASK-P00-002.
+- Releases are not cumulative: v0.4 component amendments exist only in v4 (v5 is the v3 text with v0.5 sections added to most components); v0.5 amendments and v5's `audit/` code exist only in v5; v6 onward builds on the v3 component text; v10 lacks v9's amendment to component 23 (PF-05). All releases remain authoritative inputs for TASK-P00-002.
 
 ## Remaining review
 
