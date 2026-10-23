@@ -11,7 +11,7 @@
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-001-preservation-review` @ `2f6b7c54a0a7dce79b303feb5060c593d32be19f` (stacked on PR #4) |
 | Task branch / worker worktrees | `task/TASK-P00-002a-docs-mapping`; read-only workers need no worktree |
-| PR state / URL | Not yet opened; draft due under DEC-009 |
+| PR state / URL | Not requested; a draft is due under DEC-009 (recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1), not yet merged into this branch's base) |
 | Tested head revision / evidence | Unset until observed |
 
 Part of [TASK-P00-002](TASK-P00-002.md), split by [DEC-012](../decisions/README.md).
@@ -24,7 +24,7 @@ Section set: `README.md` and `docs/01-product-charter.md` … `docs/14-core-engi
 
 ## Scope and ownership
 
-Allowed paths: `docs/evidence/P00/v1.0-reconciliation-a.md` (new); this card; the TASK-P00-002 umbrella card; the TASK-P00-002/002a–c board rows; DEC-011 and DEC-012 rows in `docs/decisions/README.md`; one catalog row per new file. Preserved originals, archives, checksum files, the inventory and captured sources remain unchanged. Requirement, traceability and phase edits are integrated once, in TASK-P00-002c. Original IDs and terminology take precedence; CMP IDs stay provisional aliases.
+Allowed paths: `docs/evidence/P00/v1.0-reconciliation-a.md` (new); this card and the new TASK-P00-002b/002c cards (created under DEC-012); the TASK-P00-002 umbrella card; the TASK-P00-002/002a–c board rows; DEC-011 and DEC-012 rows in `docs/decisions/README.md`; one catalog row per new file. Preserved originals, archives, checksum files, the inventory and captured sources remain unchanged. Requirement, traceability and phase edits are integrated once, in TASK-P00-002c. Original IDs and terminology take precedence; CMP IDs stay provisional aliases.
 
 ## Plan and delegation
 
