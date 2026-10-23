@@ -4,17 +4,23 @@
 
 ## Start here
 
-Claude starts with **TASK-DOC-001**, the bounded documentation/readiness inspection. Original v1.0 recovery blocks the two P00 source tasks and all later implementation. Candidate rows below are a decomposition guide, not dispatchable task packets.
+Two bootstrap documentation tasks come first: **TASK-DOC-001**, the readiness inspection, and **TASK-DOC-002**, the post-baseline refresh. Original v1.0 recovery blocks the two P00 source tasks and all later implementation. Candidate rows below are a decomposition guide, not dispatchable task packets.
 
 | Task packet | Work state | Prerequisite | PR state |
 | --- | --- | --- | --- |
 | [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Verified | None; no accepted architecture required | Open — [#1](https://github.com/akibrahimug/gladiators/pull/1) |
-| [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | In progress | Originals recovered; preservation review pending | Blocked — source and publishing readiness missing |
+| [TASK-DOC-002 — Refresh handoff after the published baseline](TASK-DOC-002.md) | Verified | TASK-DOC-001 Verified | Draft — [#2](https://github.com/akibrahimug/gladiators/pull/2) |
+| [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | In progress | Originals recovered; preservation review pending | Merged — [#3](https://github.com/akibrahimug/gladiators/pull/3) |
 | [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | Blocked | TASK-P00-001 Verified and source sections available | Blocked — dependencies missing |
 
 A card is the task's authoritative record. The coordinator updates this index when its state changes. Owner, branch, commit, evidence and actual PR URL are kept on the card.
 
-**Bootstrap publication candidate — TASK-DOC-002 (Draft):** after TASK-DOC-001 is Verified, create a separate task packet from the template to publish the inspected handoff. It must list the exact allowed files from the project catalog plus the inspection report, preserve unrelated changes, identify the existing remote/base and verify publishing access. Its scope may establish the initial documentation baseline and draft PR; it authorises no application code. It remains a candidate until a concrete packet meets Ready criteria.
+**Bootstrap refresh — TASK-DOC-002:** the board first planned TASK-DOC-002 as the first publication of the inspected handoff. Two things changed that plan:
+
+- the user had already pushed the initial Git documentation baseline to `master` at `cc357bc`;
+- [DEC-009](../decisions/README.md) gives every task its own branch and PR, so TASK-DOC-001 opened its own draft PR.
+
+[TASK-DOC-002](TASK-DOC-002.md) was materialised instead as a refresh of the handoff documents that predated that baseline. Neither task authorises application code.
 
 ## Readiness and state rules
 
