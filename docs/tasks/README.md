@@ -8,7 +8,7 @@ Claude starts with **TASK-DOC-001**, the bounded documentation/readiness inspect
 
 | Task packet | Work state | Prerequisite | PR state |
 | --- | --- | --- | --- |
-| [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Ready | Local inspection only; no accepted architecture required | Not requested — inspection only |
+| [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Verified | None; no accepted architecture required | Open — [#1](https://github.com/akibrahimug/gladiators/pull/1) |
 | [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | In progress | Originals recovered; preservation review pending | Blocked — source and publishing readiness missing |
 | [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | Blocked | TASK-P00-001 Verified and source sections available | Blocked — dependencies missing |
 
