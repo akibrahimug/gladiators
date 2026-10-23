@@ -24,7 +24,7 @@ Section set: `core-engine/components/14-COSTS-AND-OPERATIONS.md` … `27-ORDER-F
 
 ## Scope and ownership
 
-Allowed paths: `docs/evidence/P00/v1.0-reconciliation-c.md` (new, with the lineage annex); integration edits allowed by the TASK-P00-002 umbrella card (`docs/requirements.md`, `docs/architecture/*.md`, `docs/traceability/*.md`, `docs/phases/*/README.md`, `docs/roadmap.md`, `docs/backlog.md`, `docs/decisions/README.md`, `docs/sources/source-map.md`, the task board and these cards); a draft G00 gate record under `docs/evidence/P00/` with decision Pending; milestone-register edits limited to linking evidence; catalog rows. Preserved originals, archives, checksum files, the inventory and captured sources remain unchanged. This packet integrates packets a–c into the shared planning documents. Original IDs and terminology take precedence; CMP IDs stay provisional aliases.
+Allowed paths: `docs/evidence/P00/v1.0-reconciliation-c.md` (new, with the lineage annex); integration edits allowed by the TASK-P00-002 umbrella card, plus a pointer paragraph in `docs/phases/README.md` (recorded at review, 2026-10-23) (`docs/requirements.md`, `docs/architecture/*.md`, `docs/traceability/*.md`, `docs/phases/*/README.md`, `docs/roadmap.md`, `docs/backlog.md`, `docs/decisions/README.md`, `docs/sources/source-map.md`, the task board and these cards); a draft G00 gate record under `docs/evidence/P00/` with decision Pending; milestone-register edits limited to linking evidence; catalog rows. Preserved originals, archives, checksum files, the inventory and captured sources remain unchanged. This packet integrates packets a–c into the shared planning documents. Original IDs and terminology take precedence; CMP IDs stay provisional aliases.
 
 ## Plan and delegation
 
