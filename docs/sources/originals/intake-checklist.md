@@ -8,7 +8,7 @@ This checklist is the source-recovery portion of baseline gate **G00**. Boxes be
 - [x] Preserve the raw export or original files byte for byte, with original filenames and relative paths recorded. Keep separate copies for conflicting versions.
 - [ ] Capture the source conversation, source-message and attachment IDs when available, together with the retrieval date and method. *(Partly met 2026-10-23: conversation ID, retrieval date and method recorded; per-archive message IDs and the v1.0 download evidence are not preserved — PF-02, PF-04.)*
 - [x] Record a SHA-256 digest for every preserved file in the import manifest and verify the digests after copying.
-- [x] Read each source and record its explicit version header. Identify the latest v1.0 architecture using source evidence; document uncertainty where the version cannot be established.
+- [x] Read each source and record its explicit version header. Identify the latest v1.0 architecture using source evidence; document uncertainty where the version cannot be established. *(Release-level, 2026-10-23; a per-file version-header inventory belongs to TASK-P00-002.)*
 - [x] Record each supersession relationship with evidence. Keep earlier sources available and identify any unresolved conflict rather than selecting a version silently.
 - [ ] Add every actual specification to the project catalog. Map it to requirements, phases and components, including cross-cutting specifications and documents that do not yet fit the scaffold.
 - [ ] Compare component names, boundaries, inputs, outputs, dependencies and ownership with the recovered architecture. Treat Core, Judges and Managers as provisional terms until their source contracts are confirmed.
