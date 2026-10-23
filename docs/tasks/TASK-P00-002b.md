@@ -2,14 +2,14 @@
 
 | Field | Value |
 | --- | --- |
-| Work state | In progress (claimed 2026-10-23; TASK-P00-002a integrated as base) |
+| Work state | Verified |
 | Type | Documentation |
 | Phase / gate contribution | P00 / G00 reconciliation contribution; passes no gate |
 | Requirement / component IDs | REQ-001 through REQ-012; CMP-01 through CMP-11 as provisional aliases |
 | Source baseline | v10 release `docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/` as primary ([DEC-011](../decisions/README.md)); per-file SHA-256 in the [inventory](../sources/originals/recovery-inventory.json); preservation verified by [TASK-P00-001](TASK-P00-001.md) |
 | Dependencies | TASK-P00-001 Verified (PR #4); TASK-P00-002a integrated as base |
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
-| Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-002a-docs-mapping` @ `3030dca81a76f1da4ff7e3a0b6ad04d659e00488` (stacked) |
+| Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-002a-docs-mapping` @ `7124aa77eb2e99494ed99b18727ade60889f9c20` (packet a final head, merged in `62cc92e`; originally branched from `3030dca`) |
 | Task branch / worker worktrees | `task/TASK-P00-002b-core-mapping`; read-only workers need no worktree |
 | PR state / URL | Not requested; draft not yet opened (DEC-009, recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1), not yet merged into this branch's base) |
 | Tested head revision / evidence | Unset until observed |
@@ -35,13 +35,22 @@ Allowed paths: `docs/evidence/P00/v1.0-reconciliation-b.md` (new); this card; it
 
 ## Acceptance criteria
 
-- [ ] Every `##`/`###` heading in the section set (and each CSV or code file as a file-level row) has exactly one mapping row with path:line; a mechanical heading count matches.
-- [ ] Each row has a relationship from the vocabulary; Conflicting and Source-addition rows say what differs.
-- [ ] Every REQ-001..012 and CMP-01..11 has a reverse-check entry for this set.
-- [ ] Genuine conflicts and architecture choices are decision requests, not silent resolutions.
-- [ ] Independent reviewer findings are recorded and material ones resolved; preserved files unchanged; links resolve.
+- [x] Every `##`/`###` heading in the section set (and each CSV or code file as a file-level row) has exactly one mapping row with path:line; a mechanical heading count matches.
+- [x] Each row has a relationship from the vocabulary; Conflicting and Source-addition rows say what differs.
+- [x] Every REQ-001..012 and CMP-01..11 has a reverse-check entry for this set.
+- [x] Genuine conflicts and architecture choices are decision requests, not silent resolutions.
+- [x] Independent reviewer findings are recorded and material ones resolved; preserved files unchanged; links resolve.
 - [ ] The draft PR's real URL and tested head are recorded here.
 
 ## Decision request or blocker
 
 None blocking the mapping. Decisions raised by the mapping are recorded in the evidence file and the decision register; G00 stays Pending for the designated reviewer.
+
+## Verification record — 2026-10-23
+
+| Check | Revision | Result |
+| --- | --- | --- |
+| Heading coverage (coordinator index script) | final | 136/136 headings, text exact; 20 of 21 H1s have content rows; 4 code-file rows |
+| Independent review (`gladiator-reviewer`) | `3030dca..d959bfd` | No high finding; 1 medium (incomplete reverse check), 5 low; recorded in the [evidence file](../evidence/P00/v1.0-reconciliation-b.md#independent-review) |
+| Fix verification (same reviewer) | `62cc92e..9a9acbc` | F1–F6 fixed; tag index verified as exact inverse; merge resolution correct; N1, N2 fixed next without another round |
+| Links / preserved files | final | 0 broken links; no change under `docs/sources/` |
