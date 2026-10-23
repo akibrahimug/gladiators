@@ -2,7 +2,7 @@
 
 Claude Code handoff: [P00 task packets and candidates](../../tasks/README.md#p00) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: PROPOSED; documentation preparation in progress. G00 is pending the original v1.0 specifications.**
+**Status: PROPOSED; documentation preparation in progress. G00 is pending reconciliation/review of the recovered v1.0 specifications.**
 
 **Dependencies:** none. This phase establishes the prerequisite for every later phase.
 

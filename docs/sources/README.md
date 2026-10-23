@@ -1,5 +1,7 @@
 # Source register and preservation
 
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+
 [Project home](../../README.md) · [Requirements](../requirements.md) · [Source map](source-map.md) · [Original-specification intake](originals/README.md)
 
 Status: **documentation scaffold; original v1.0 specification not recovered**. Access date: **22 October 2026, Europe/London**.

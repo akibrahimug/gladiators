@@ -1,5 +1,7 @@
 # GLADIATOR
 
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<docs/sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+
 Order-flow and ledger research system — documentation workspace.
 
 **Workspace edition:** 0.2, updated 22 October 2026 (Europe/London).  

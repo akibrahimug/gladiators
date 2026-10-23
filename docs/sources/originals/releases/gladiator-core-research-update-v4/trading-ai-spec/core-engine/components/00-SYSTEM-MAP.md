@@ -1,0 +1,40 @@
+# System map and build order
+
+Status: design specification; not a claim of implemented functionality.
+
+## Mission and boundary
+Build a reproducible, terminal-only trading research engine. Core is the deterministic decision kernel, **not** the arena, an LLM, or the broker. The system may run without any LLM. £500 is simulated initial equity; £10,000 is an aspiration, not an optimisation target.
+
+## Dataflow
+`Sources -> Connectors -> Raw vault -> Verification/Cleaning -> Point-in-time snapshots -> Qlib/features -> Gladiators -> Forecast registry -> Core kernel -> Gatekeeper -> Paper broker -> Reconciled ledger -> Evidence -> Judges/Arena -> Management -> next challenger training`.
+RAG branches from document/experiment storage into research gladiators; numeric market data goes directly to feature/model pipelines. Transport carries typed events; it does not make trading decisions.
+
+## Ownership and ordering
+1. DATA, CONNECTORS and TRANSPORT produce immutable causal snapshots.
+2. FEATURES and TRAINING generate versioned calibrated forecasts.
+3. CORE observes, reconciles, discovers, evaluates, sizes and issues intents.
+4. GATEKEEPER alone approves intents; EXECUTION simulates or routes permitted orders.
+5. LEDGER reconciles fills and outcomes; JUDGES evaluate; ARENA conducts fair comparisons.
+6. MANAGEMENT schedules, budgets and promotes; CODE-OF-CONDUCT governs all.
+
+## Phases
+P0 repository/contracts/fixtures; P1 free data+validation; P2 Qlib and 3 baselines; P3 decision kernel+simulation; P4 ten gladiators+arena; P5 RAG/local LLM experiments; P6 forward paper; P7 optional cloud challengers with explicit cost approval; P8 optional live gate after separate legal/technical approval. Each phase has tests and must pass before the next.
+
+## Interface rule
+Everything is importable Python with CLI wrappers. The kernel must accept a recorded JSON snapshot and return deterministic JSON/text with no network access. No frontend.
+
+## Operational invariants
+- Phase 1: zero paid external services, no live orders, no dashboard; terminal text/number output only. Use local files and explicit, free, permitted data sources. Network pulls require explicit invocation.
+- Every artifact includes `run_id`, UTC `as_of`, immutable `dataset_hash`, `code_version`, `config_hash`, and relevant `model_version`.
+- Reject missing, stale, future-dated, unlicensed or unverified inputs; `ABSTAIN` is valid and preferable to guessing.
+- Do not infer profitability from backtests. Keep chronological holdouts, realistic costs, and independent forward-paper validation.
+- No LLM, gladiator, or management agent may modify gatekeeper limits or access live broker credentials.
+
+---
+
+## October 2026 research decision (v0.4)
+- Keep **our Core Kernel** as the decision authority; Qlib is the research/model substrate, not the decision kernel.
+- Candidate discovery loop: RD-Agent (optional, gated) -> factor proposal -> Qlib training -> frozen validation -> Arena/Judges -> Core forecast registry. RD-Agent-generated code must be sandboxed and reviewed before execution.
+- FinRL-X/FinRL-Trading is an optional *alternative* allocation/policy adapter, not a second competing source of truth for ledger, risk or broker orders.
+- No dependency on cloud models, paid data or live brokerage in Phase 1. Daily bars first; 15-minute/1-hour live strategy remains deferred until appropriately licensed, sufficiently broad intraday data is obtained.
+- The simulator and Judges must be checked against independently implemented numerical reference tests, particularly first-period drawdown and volume-unit/participation calculations.
