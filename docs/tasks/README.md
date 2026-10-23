@@ -15,7 +15,7 @@ Two bootstrap documentation tasks came first: **TASK-DOC-001**, the readiness in
 | [TASK-P00-002a — Map README and docs 01–14](TASK-P00-002a.md) | Verified | TASK-P00-001 Verified | Merged — [#5](https://github.com/akibrahimug/gladiators/pull/5) |
 | [TASK-P00-002b — Map core-engine and components 00–13](TASK-P00-002b.md) | Verified | TASK-P00-002a (integrated as base) | [#6](https://github.com/akibrahimug/gladiators/pull/6) merged into packet a's branch after #5 had merged; carried to `master` by [#9](https://github.com/akibrahimug/gladiators/pull/9), merged |
 | [TASK-P00-002c — Map components 14–27, lineage annex, integrate](TASK-P00-002c.md) | Verified | TASK-P00-002b (integrated as base) | [#7](https://github.com/akibrahimug/gladiators/pull/7) merged into packet b's branch after #6 had merged; carried to `master` by [#9](https://github.com/akibrahimug/gladiators/pull/9), merged |
-| [TASK-P00-003 — Apply DR-01–DR-12 decisions and prepare G00](TASK-P00-003.md) | In progress | TASK-P00-002 Verified; user decisions recorded | Not requested yet |
+| [TASK-P00-003 — Apply DR-01–DR-12 decisions and prepare G00](TASK-P00-003.md) | Verified | TASK-P00-002 Verified; user decisions recorded | Not requested yet |
 
 A card is the task's authoritative record. The coordinator updates this index when its state changes. Owner, branch, commit, evidence and actual PR URL are kept on the card.
 
