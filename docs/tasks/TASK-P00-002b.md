@@ -11,7 +11,7 @@
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base TASK-P00-002a head (stacked) |
 | Task branch / worker worktrees | `task/TASK-P00-002b-core-mapping`; read-only workers need no worktree |
-| PR state / URL | Not requested; a draft is due under DEC-009 (recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1), not yet merged into this branch's base) |
+| PR state / URL | Not requested; draft not yet opened (DEC-009, recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1), not yet merged into this branch's base) |
 | Tested head revision / evidence | Unset until observed |
 
 Part of [TASK-P00-002](TASK-P00-002.md), split by [DEC-012](../decisions/README.md).

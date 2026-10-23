@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Work state | In progress |
+| Work state | Verified |
 | Type | Documentation |
 | Phase / gate contribution | P00 / G00 reconciliation contribution; passes no gate |
 | Requirement / component IDs | REQ-001 through REQ-012; CMP-01 through CMP-11 as provisional aliases |
@@ -11,7 +11,7 @@
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-001-preservation-review` @ `2f6b7c54a0a7dce79b303feb5060c593d32be19f` (stacked on PR #4) |
 | Task branch / worker worktrees | `task/TASK-P00-002a-docs-mapping`; read-only workers need no worktree |
-| PR state / URL | Not requested; a draft is due under DEC-009 (recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1), not yet merged into this branch's base) |
+| PR state / URL | Not requested; draft not yet opened (DEC-009, recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1), not yet merged into this branch's base) |
 | Tested head revision / evidence | Unset until observed |
 
 Part of [TASK-P00-002](TASK-P00-002.md), split by [DEC-012](../decisions/README.md).
@@ -35,13 +35,24 @@ Allowed paths: `docs/evidence/P00/v1.0-reconciliation-a.md` (new); this card and
 
 ## Acceptance criteria
 
-- [ ] Every `##`/`###` heading in the section set (and each CSV or code file as a file-level row) has exactly one mapping row with path:line; a mechanical heading count matches.
-- [ ] Each row has a relationship from the vocabulary; Conflicting and Source-addition rows say what differs.
-- [ ] Every REQ-001..012 and CMP-01..11 has a reverse-check entry for this set.
-- [ ] Genuine conflicts and architecture choices are decision requests, not silent resolutions.
-- [ ] Independent reviewer findings are recorded and material ones resolved; preserved files unchanged; links resolve.
+- [x] Every `##`/`###` heading in the section set (and each CSV or code file as a file-level row) has exactly one mapping row with path:line; a mechanical heading count matches.
+- [x] Each row has a relationship from the vocabulary; Conflicting and Source-addition rows say what differs.
+- [x] Every REQ-001..012 and CMP-01..11 has a reverse-check entry for this set.
+- [x] Genuine conflicts and architecture choices are decision requests, not silent resolutions.
+- [x] Independent reviewer findings are recorded and material ones resolved; preserved files unchanged; links resolve.
 - [ ] The draft PR's real URL and tested head are recorded here.
 
 ## Decision request or blocker
 
 None blocking the mapping. Decisions raised by the mapping are recorded in the evidence file and the decision register; G00 stays Pending for the designated reviewer.
+
+## Verification record — 2026-10-23
+
+| Check | Revision | Result |
+| --- | --- | --- |
+| Heading coverage (coordinator index script) | `3030dca`, re-run after fixes | 116/116 headings, heading text exact; 2 declared H1 rows |
+| Independent review (`gladiator-reviewer`) | `2f6b7c5..3030dca` | No blocker; 3 material, 9 minor findings; recorded in the [evidence file](../evidence/P00/v1.0-reconciliation-a.md#independent-review) |
+| Fix verification (same reviewer) | `3030dca..d0996d3` | All material findings resolved; criteria 1–5 sufficient once recorded; residues and N1–N3 fixed next without another round |
+| Links / preserved files | final commit | 0 broken links; no change under `docs/sources/` |
+
+Tested head and PR URL are recorded in the PR field after the draft PR opens.

@@ -11,7 +11,7 @@ Claude starts with **TASK-DOC-001**, the bounded documentation/readiness inspect
 | [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Ready | Local inspection only; no accepted architecture required | Not requested — inspection only |
 | [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | Verified | Originals recovered; preservation review complete | Import [#3](https://github.com/akibrahimug/gladiators/pull/3) merged; review Draft [#4](https://github.com/akibrahimug/gladiators/pull/4) |
 | [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | In progress (umbrella) | TASK-P00-001 Verified | Not requested (one draft per packet) |
-| [TASK-P00-002a — Map README and docs 01–14](TASK-P00-002a.md) | In progress | TASK-P00-001 Verified | Not requested (draft due under DEC-009) |
+| [TASK-P00-002a — Map README and docs 01–14](TASK-P00-002a.md) | Verified | TASK-P00-001 Verified | Not requested (draft not yet opened) |
 | [TASK-P00-002b — Map core-engine and components 00–13](TASK-P00-002b.md) | Blocked (until TASK-P00-002a is integrated as its base) | TASK-P00-002a | Not requested |
 | [TASK-P00-002c — Map components 14–27, lineage annex, integrate](TASK-P00-002c.md) | Blocked (until TASK-P00-002b is integrated as its base) | TASK-P00-002b | Not requested |
 
