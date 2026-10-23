@@ -1,10 +1,10 @@
 # Source register and preservation
 
-> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported. That release is not a complete superset of earlier ones; see the preservation review (PF-02, PF-05). See the [recovered document index](<originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
 
 [Project home](../../README.md) · [Requirements](../requirements.md) · [Source map](source-map.md) · [Original-specification intake](originals/README.md)
 
-Status: **documentation scaffold; original v1.0 specification not recovered**. Access date: **22 October 2026, Europe/London**.
+Status: **original releases recovered 2026-10-23; preservation reviewed by TASK-P00-001 (see the task card for its state); reconciliation (TASK-P00-002) and G00 review pending**. Original access date: **22 October 2026, Europe/London**; recovery: 23 October 2026.
 
 The referenced chat was inspected after the user confirmed that the specifications were created there. The available reader returned five recent turns, no attachments and no older-page cursor. The user messages are readable; every assistant response is a content-reference marker. Those markers do not contain the specification text. No original GLADIATOR specification was found in the local search. A direct browser attempt reached a sign-in screen; no sign-in was attempted.
 
@@ -16,7 +16,7 @@ This workspace preserves what was actually retrieved and distinguishes it from n
 | --- | --- | --- | --- |
 | SRC-001 | [Current request and clarification](captured/current-request.md) | User asks for GLADIATOR documentation, a phased plan, IDE navigation and preservation; clarifies that the specs were created in the referenced chat. | Authorizes the documentation work and excludes live trading implementation. |
 | SRC-002 | [Raw reader response](captured/conversation-reader.json) and [readable extraction](captured/recovered-user-messages.md) | Five user messages and five assistant reference markers recovered from conversation `6ad910c9-4a70-83ed-b819-7f12576a37c8`, “Day Trading Income Feasibility”. No attached files or older-page cursor returned. | Evidence of stated intent and terms such as Core, Judges and Managers. Does not establish their complete contracts. |
-| SRC-003 | Latest GLADIATOR v1.0 order-flow/ledger architecture and original Markdown specifications | **Missing.** No original specification text or files recovered. [Unresolved assistant-message references](source-map.md#unresolved-assistant-message-references) identify possible recovery targets. | Required to reconcile the scaffold, confirm completeness and pass G00. |
+| SRC-003 | Latest GLADIATOR v1.0 order-flow/ledger architecture and original Markdown specifications | **Recovered 2026-10-23** ([PR #3](https://github.com/akibrahimug/gladiators/pull/3)): 10 release archives and 405 members, preserved byte for byte and checked in the [preservation review](../evidence/P00/preservation-review.md). In-file v1.0 evidence is the header of component 27 only; the conversation evidence for the v1.0 download is not yet preserved (PF-02). Releases are not cumulative (PF-05). Before recovery this row read "Missing" | Required to reconcile the scaffold, confirm completeness and pass G00. |
 
 ## External technical references
 

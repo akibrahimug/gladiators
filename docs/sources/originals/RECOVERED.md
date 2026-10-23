@@ -10,7 +10,7 @@ Recovered 2026-10-23 from the original signed-in conversation **Day Trading Inco
 
 The original archives contain offline prototype Python files and bytecode. They are preserved only under this source archive; no imported code was executed, installed or wired into the application. No live trading is enabled.
 
-The v1.0 order-flow architecture supersedes earlier proposals as the recovered source to reconcile. G00 remains pending reconciliation and review; recovery alone does not approve a development baseline. Historical records saying the source was missing describe the earlier capture.
+The v1.0 order-flow architecture supersedes earlier proposals as the recovered source to reconcile. *(Qualified 2026-10-23: no release states this supersession explicitly, and v10 is not a superset of earlier releases; see the [preservation review](../../evidence/P00/preservation-review.md), PF-03 and PF-05.)* G00 remains pending reconciliation and review; recovery alone does not approve a development baseline. Historical records saying the source was missing describe the earlier capture.
 
 ## Latest v1.0 documents
 
