@@ -54,5 +54,6 @@ None blocking the mapping. Decisions raised by the mapping are recorded in the e
 | Independent review (`gladiator-reviewer`) | `2f6b7c5..3030dca` | No blocker; 3 material, 9 minor findings; recorded in the [evidence file](../evidence/P00/v1.0-reconciliation-a.md#independent-review) |
 | Fix verification (same reviewer) | `3030dca..d0996d3` | All material findings resolved; criteria 1–5 sufficient once recorded; residues and N1–N3 fixed next without another round |
 | Links / preserved files | final commit | 0 broken links; no change under `docs/sources/` |
+| PR #5 review feedback (user) | after `7124aa7` | Tag index REQ-012 row wrongly listed A-017 (index generated before the A-017 REQ fix). Regenerated: A-017 removed, count 28 → 27; no other row changed |
 
 Tested head and PR URL are recorded in the PR field after the draft PR opens.
