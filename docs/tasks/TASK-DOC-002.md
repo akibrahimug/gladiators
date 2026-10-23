@@ -11,7 +11,7 @@
 | Coordinator / workers | Claude Code main session, claimed 2026-10-22: coordinator and sole writer of every allowed path below. `gladiator-reviewer`: read-only review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-DOC-001-handoff-inspection` @ `17f7d320d94fdf698aded1ba45a97ac23c82621f`. This branch is stacked on [PR #1](https://github.com/akibrahimug/gladiators/pull/1); retarget to `master` once that merges |
 | Task branch / worker worktrees | `task/TASK-DOC-002-baseline-refresh`; single writer in the main checkout, so no worker worktrees |
-| PR state / URL | Draft — [#2](https://github.com/akibrahimug/gladiators/pull/2), opened 2026-10-22 under DEC-009 against `task/TASK-DOC-001-handoff-inspection` (stacked on #1). Human review and merge pending |
+| PR state / URL | [#2](https://github.com/akibrahimug/gladiators/pull/2) was merged at 2026-10-23T10:00:51Z into its stacked base `task/TASK-DOC-001-handoff-inspection`, 12 s after #1 had merged, so its changes did not reach `master`. A follow-up PR from this branch to `master` carries them (URL recorded after creation). Tested head of #2: `a74d2a77d69ffcef0c54cde8e787a08c28c60948` |
 | Tested head revision / evidence | `a74d2a77d69ffcef0c54cde8e787a08c28c60948`; the next commit records PR metadata only. Evidence: verification table below |
 
 ## Objective and observable result

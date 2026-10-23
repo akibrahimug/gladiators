@@ -1,10 +1,10 @@
 # Original specifications: preserved intake
 
-> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported. That release is not a complete superset of earlier ones; see the preservation review (PF-02, PF-05). See the [recovered document index](<RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
 
 [Project home](../../../README.md) · [Source register](../README.md) · [Import manifest](import-manifest.md) · [Intake checklist](intake-checklist.md)
 
-**No original GLADIATOR specification has been imported.** This directory currently contains intake documentation only. The latest v1.0 architecture and original Markdown specification bodies remain missing (SRC-003), so the baseline gate G00 is pending.
+**Original GLADIATOR releases were imported on 2026-10-23** (see the [recovered index](RECOVERED.md) and the [preservation review](../../evidence/P00/preservation-review.md)). Before then this directory held intake documentation only, and SRC-003 (the v1.0 architecture and original Markdown specifications) was missing. G00 remains pending reconciliation (TASK-P00-002) and review. The instructions below still govern any further imports.
 
 When the original files or full conversation exports become available, copy them here byte for byte. Preserve original filenames, directory relationships, version headers and attachments. If only a message body is recoverable, save the exact retrieved body and its source message ID; identify it as a message extraction rather than claiming it is an original Markdown file. Preserve the raw export separately when available.
 

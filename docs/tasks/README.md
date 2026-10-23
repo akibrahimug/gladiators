@@ -8,9 +8,9 @@ Two bootstrap documentation tasks come first: **TASK-DOC-001**, the readiness in
 
 | Task packet | Work state | Prerequisite | PR state |
 | --- | --- | --- | --- |
-| [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Verified | None; no accepted architecture required | Open — [#1](https://github.com/akibrahimug/gladiators/pull/1) |
-| [TASK-DOC-002 — Refresh handoff after the published baseline](TASK-DOC-002.md) | Verified | TASK-DOC-001 Verified | Draft — [#2](https://github.com/akibrahimug/gladiators/pull/2) |
-| [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | In progress | Originals recovered; preservation review pending | Merged — [#3](https://github.com/akibrahimug/gladiators/pull/3) |
+| [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Verified | None; no accepted architecture required | Merged — [#1](https://github.com/akibrahimug/gladiators/pull/1) |
+| [TASK-DOC-002 — Refresh handoff after the published baseline](TASK-DOC-002.md) | Verified | TASK-DOC-001 Verified | [#2](https://github.com/akibrahimug/gladiators/pull/2) merged into #1's branch after #1 had merged; carried to `master` by a follow-up PR (URL on card) |
+| [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | Verified | Originals recovered; preservation review complete | Import [#3](https://github.com/akibrahimug/gladiators/pull/3) and review [#4](https://github.com/akibrahimug/gladiators/pull/4) merged |
 | [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | Blocked | TASK-P00-001 Verified and source sections available | Blocked — dependencies missing |
 
 A card is the task's authoritative record. The coordinator updates this index when its state changes. Owner, branch, commit, evidence and actual PR URL are kept on the card.
