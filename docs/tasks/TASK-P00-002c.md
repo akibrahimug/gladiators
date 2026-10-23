@@ -11,8 +11,8 @@
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-002b-core-mapping` @ `fcf1775f4cbc16794027fcf4ac1a281f13fd8ab5` (packet b final head, merged in `a60fda2`; originally branched from `d959bfd`) |
 | Task branch / worker worktrees | `task/TASK-P00-002c-components-integration`; read-only workers need no worktree |
-| PR state / URL | Not requested; draft not yet opened (DEC-009, recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1)) |
-| Tested head revision / evidence | Unset until observed |
+| PR state / URL | Draft — [#7](https://github.com/akibrahimug/gladiators/pull/7), opened 2026-10-23 under DEC-009 ([PR #1](https://github.com/akibrahimug/gladiators/pull/1)); stacked on #6 |
+| Tested head revision / evidence | `95a57eaa92f70d9b5398019a88b7b038c86f08a2`; the next commit records PR metadata only |
 
 Part of [TASK-P00-002](TASK-P00-002.md), split by [DEC-012](../decisions/README.md).
 
@@ -41,7 +41,7 @@ Allowed paths: `docs/evidence/P00/v1.0-reconciliation-c.md` (new, with the linea
 - [x] Genuine conflicts and architecture choices are decision requests, not silent resolutions.
 - [x] Lineage annex lists content absent from v10 with a proposed disposition; shared planning documents reflect packets a–c; a draft G00 record exists with decision Pending.
 - [x] Independent reviewer findings are recorded and material ones resolved; preserved files unchanged; links resolve.
-- [ ] The draft PR's real URL and tested head are recorded here.
+- [x] The draft PR's real URL and tested head are recorded here.
 
 ## Decision request or blocker
 
