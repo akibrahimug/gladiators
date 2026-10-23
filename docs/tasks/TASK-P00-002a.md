@@ -11,7 +11,7 @@
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-001-preservation-review` @ `2f6b7c54a0a7dce79b303feb5060c593d32be19f` (stacked on PR #4) |
 | Task branch / worker worktrees | `task/TASK-P00-002a-docs-mapping`; read-only workers need no worktree |
-| PR state / URL | Draft — [#5](https://github.com/akibrahimug/gladiators/pull/5), opened 2026-10-23 under DEC-009 ([PR #1](https://github.com/akibrahimug/gladiators/pull/1)); stacked on #4 |
+| PR state / URL | Merged — [#5](https://github.com/akibrahimug/gladiators/pull/5) into `master` at 2026-10-23T19:12:17Z (opened under DEC-009, [PR #1](https://github.com/akibrahimug/gladiators/pull/1)) |
 | Tested head revision / evidence | `9d95f9c2839fb115f717890b87d74054acda817e`; the next commit records PR metadata only. Evidence: verification record below |
 
 Part of [TASK-P00-002](TASK-P00-002.md), split by [DEC-012](../decisions/README.md).

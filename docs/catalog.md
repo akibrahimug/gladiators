@@ -20,8 +20,12 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/backlog.md](<backlog.md>) |
 | [docs/catalog.md](<catalog.md>) |
 | [docs/decisions/README.md](<decisions/README.md>) |
+| [docs/evidence/P00/g00-gate-record.md](<evidence/P00/g00-gate-record.md>) |
 | [docs/evidence/P00/preservation-review.md](<evidence/P00/preservation-review.md>) |
 | [docs/evidence/P00/v1.0-reconciliation-a.md](<evidence/P00/v1.0-reconciliation-a.md>) |
+| [docs/evidence/P00/v1.0-reconciliation-b.md](<evidence/P00/v1.0-reconciliation-b.md>) |
+| [docs/evidence/P00/v1.0-reconciliation-c.md](<evidence/P00/v1.0-reconciliation-c.md>) |
+| [docs/evidence/P00/v1.0-reconciliation.md](<evidence/P00/v1.0-reconciliation.md>) |
 | [docs/evidence/README.md](<evidence/README.md>) |
 | [docs/evidence/gate-record-template.md](<evidence/gate-record-template.md>) |
 | [docs/ide-guide.md](<ide-guide.md>) |

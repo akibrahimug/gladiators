@@ -38,3 +38,5 @@ For every imported original, record its path, digest, source message and any exp
 ## Recovery update — 2026-10-23
 
 The original v1.0 download and earlier release archives have now been recovered from the signed-in browser. See [recovered documents](originals/RECOVERED.md). The marker limitations above describe the earlier reader capture only.
+
+Section-level mapping of the v10 release to REQ/CMP/P/G is in the [reconciliation summary](../evidence/P00/v1.0-reconciliation.md) and packets a–c (TASK-P00-002).
