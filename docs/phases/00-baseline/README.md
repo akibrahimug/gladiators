@@ -27,12 +27,14 @@ Establish which documents are authoritative, preserve their original contents, a
 
 ## Ordered tasks
 
-1. [ ] Retrieve the complete original v1.0 specifications and relevant attachments; record any unavailable items explicitly.
-2. [ ] Inventory and preserve the source documents without editing their contents; give each source a stable identity.
-3. [ ] Compare each proposed requirement and component with an exact source location, or mark it as a proposal with no source match.
+1. [x] Retrieve the complete original v1.0 specifications and relevant attachments; record any unavailable items explicitly.
+2. [x] Inventory and preserve the source documents without editing their contents; give each source a stable identity.
+3. [x] Compare each proposed requirement and component with an exact source location, or mark it as a proposal with no source match.
 4. [ ] Resolve architectural vocabulary, boundaries, conflicts, and intended revision precedence with the baseline reviewer.
 5. [ ] Select and document the initial research scope, decision owner, gate evidence format, and review criteria.
 6. [ ] Update the plan and traceability to match the accepted baseline, then record the G00 decision.
+
+Progress 2026-10-23: tasks 1–2 by [TASK-P00-001](../../tasks/TASK-P00-001.md) ([preservation review](../../evidence/P00/preservation-review.md)); task 3 by [TASK-P00-002](../../tasks/TASK-P00-002.md) ([reconciliation summary](../../evidence/P00/v1.0-reconciliation.md)). Tasks 4–6 need the user decisions DR-01–DR-12 and the G00 reviewer; the [draft G00 record](../../evidence/P00/g00-gate-record.md) is Pending.
 
 ## G00 — Exit gate
 

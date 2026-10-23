@@ -1,10 +1,12 @@
 # Architecture map — pending v1.0 source
 
-> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<../sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported; v10 is not a complete superset of earlier releases (PF-05). See the [recovered document index](<../sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
 
 [Documentation index](../README.md) · [Component register](../traceability/components.md) · [Contract checklist](contracts.md)
 
 **Status:** proposed navigation and responsibility map, created from the accessible brief. It is not the missing v1.0 architecture. Component names below are provisional workspace labels.
+
+> **Reconciliation, 2026-10-23:** this map is now compared section by section with the v10 release ([summary](../evidence/P00/v1.0-reconciliation.md)). The source component model differs (see DR-01); this map stays the proposal until that decision.
 
 ## Meaning of order flow and ledger
 

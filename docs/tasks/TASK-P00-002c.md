@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Work state | Ready (queued after TASK-P00-002b) |
+| Work state | In progress (claimed 2026-10-23; mapping and integration drafted; TASK-P00-002b to be merged as base after its review) |
 | Type | Documentation |
 | Phase / gate contribution | P00 / G00 reconciliation contribution; passes no gate |
 | Requirement / component IDs | REQ-001 through REQ-012; CMP-01 through CMP-11 as provisional aliases |
