@@ -44,6 +44,6 @@ Pass only when every supplied source is inventoried and preserved; every require
 
 **Failure and rework:** preserve unresolved sources and questions, keep G00 pending, and revise only the proposed documents. Re-run the mapping when additional originals arrive; do not silently overwrite or replace the source baseline.
 
-**Exact next step:** obtain the original v1.0 Markdown specifications and attachments, then create the source inventory with their actual identities and provenance.
+**Exact next step (updated 2026-10-23):** originals are recovered, inventoried and mapped (tasks 1–3). Next, the user decides DR-01–DR-12 ([decision requests](../../evidence/P00/v1.0-reconciliation.md#consolidated-decision-requests)) and designates the G00 reviewer, who completes the [draft gate record](../../evidence/P00/g00-gate-record.md). Earlier text: obtain the original v1.0 Markdown specifications and attachments, then create the source inventory with their actual identities and provenance.
 
 **Implementation boundary:** this phase organizes and reconciles documents. It does not authorize implementation or live trading.
