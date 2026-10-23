@@ -2,14 +2,14 @@
 
 | Field | Value |
 | --- | --- |
-| Work state | Ready (queued after TASK-P00-002a) |
+| Work state | In progress (claimed 2026-10-23) |
 | Type | Documentation |
 | Phase / gate contribution | P00 / G00 reconciliation contribution; passes no gate |
 | Requirement / component IDs | REQ-001 through REQ-012; CMP-01 through CMP-11 as provisional aliases |
 | Source baseline | v10 release `docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/` as primary ([DEC-011](../decisions/README.md)); per-file SHA-256 in the [inventory](../sources/originals/recovery-inventory.json); preservation verified by [TASK-P00-001](TASK-P00-001.md) |
 | Dependencies | TASK-P00-001 Verified (PR #4); TASK-P00-002a integrated as base |
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
-| Repository / base branch / base SHA | akibrahimug/gladiators; base TASK-P00-002a head (stacked) |
+| Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-002a-docs-mapping` @ `3030dca81a76f1da4ff7e3a0b6ad04d659e00488` (stacked) |
 | Task branch / worker worktrees | `task/TASK-P00-002b-core-mapping`; read-only workers need no worktree |
 | PR state / URL | Not yet opened; draft due under DEC-009 |
 | Tested head revision / evidence | Unset until observed |
