@@ -1,5 +1,7 @@
 # Open backlog
 
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+
 [Documentation index](README.md) · [Phase 00](phases/00-baseline/README.md) · [Source intake](sources/originals/README.md)
 
 This is the unresolved design/source backlog. Assigned execution work belongs on the [Claude task board](tasks/README.md): OPEN-001/002 feed TASK-P00-001; OPEN-003 feeds TASK-P00-002. Codex supports brainstorming; Claude Code carries accepted tasks into implementation and PRs.

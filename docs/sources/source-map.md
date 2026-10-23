@@ -34,3 +34,7 @@ The thread preview also returns the final marker above. It adds no specification
 ## Reconciliation after recovery
 
 For every imported original, record its path, digest, source message and any explicit version header in the [import manifest](originals/import-manifest.md). Then compare the original against each requirement and the phase/component traceability catalog. Mark each relationship as confirmed, conflicting, absent or superseded, with an evidence link. Unmatched specifications and unresolved conflicts keep G00 pending; do not silently rewrite either the source or the planning baseline.
+
+## Recovery update — 2026-10-23
+
+The original v1.0 download and earlier release archives have now been recovered from the signed-in browser. See [recovered documents](originals/RECOVERED.md). The marker limitations above describe the earlier reader capture only.

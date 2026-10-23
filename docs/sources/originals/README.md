@@ -1,5 +1,7 @@
 # Original specifications: preserved intake
 
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+
 [Project home](../../../README.md) · [Source register](../README.md) · [Import manifest](import-manifest.md) · [Intake checklist](intake-checklist.md)
 
 **No original GLADIATOR specification has been imported.** This directory currently contains intake documentation only. The latest v1.0 architecture and original Markdown specification bodies remain missing (SRC-003), so the baseline gate G00 is pending.

@@ -1,0 +1,415 @@
+bb50c0338439ee9f7c1d4c9c39972ca3665a12d80c728f89efb02be6fd00c348  archives/gladiator-algorithm-assurance-v8.zip
+188e82b44d58719efd95b3a9c3bd095c5df9c75262a72edc80398ae87e4b3ab3  archives/gladiator-competitive-intelligence-v7.zip
+482ba6bfb3ed87de54f973495a70ef85d8e8cdd41bb6038fd22fb3b516e7eb49  archives/gladiator-core-components-v3.zip
+d035cebfe01f8d73b03fe216d8bcc836a4ff113e6e3653f3dc1f35ae499b9e6d  archives/gladiator-core-research-update-v4.zip
+90df9c172546812a0260b83fca1abce1a60c36964cf082d95fe86d99aefbafe4  archives/gladiator-core-reviewed-v5.zip
+aba040ab3747b663468c3607b8d491f19352a4158bfb7d84b33bb8a241514745  archives/gladiator-market-awareness-v9.zip
+502c61404aac90979a73d712e7ff1e7601ba58ea1927351dbfe1d9ead5b3d810  archives/gladiator-order-flow-ledger-v10 (1).zip
+15c96793835b151a723d59c70f7b6e05ee18bcc73c14cfa6d49c5e26872d9365  archives/gladiator-upstream-issues-v6.zip
+6e48233fe5a756155222dec7670393cc10af1fd42713428808708f0b901fcf2d  archives/trading-ai-core-kernel-v2.zip
+d99b614a062dafc8101091a12539afa08ac39c0d50c780a733e8d88b742bd9ab  archives/trading-ai-spec.zip
+4749683be1628b8112aae90cfe0e4c0cdef083f002e9e97a0b441e80d17a9e24  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/README.md
+649588b678bfcd27a618988a70d9e0f375be89556e8b3846af69ea90d5610d07  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/14-core-engine-build-spec.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/03-market-data-brokers.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/07-risk-exits-allocation.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/05-quant-core.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/08-trading-operations.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/13-open-decisions.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/04-model-training.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/09-infrastructure-costs.md
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/01-product-charter.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/12-contracts-config.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/02-architecture.md
+8516b1f37baeb1ffa29915229638a319e407ef717ca681b80d6090ed05212c93  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/11-roadmap.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/06-strategy-evaluation.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/10-security-compliance.md
+509a7976ea21219ade88f12fb782af09d5726db4f338ca56e7e5e3f063b05561  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/RUN.md
+18c2a8a74c6061b14e691cf7e4fd8a33e0d7d0d84b79cd6110a9b2e6eedf6d4f  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/CORE.md
+fdbdfa162facc16a078bf1be70427f3c4fe548744f7be5933ab61dcf2f2b5cc3  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/ACCEPTANCE.md
+864042ad1cfdc49fd4348e1e922aff98f6a1672de328c663515156bb18832b06  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/DATA-RAG.md
+9634751b61ca6599b8ea0de95eed69ef7c3f95fe5e399f90eac947c2a2a1c658  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/MODEL-SELECTION.md
+1a99c1e6a84493a2c22e33dc803f46147ffb33c5747d15db088f6998f25b043e  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/KERNEL.md
+7629adb5a5c2bbf647accff3a6be7313bb51f3f6fabcb27f04bf7c94e9bdd4cf  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md
+ca6949a127c381d8c5c1da8aa74319c63efe07cb718feda86e82be71d97bbc66  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md
+b07eea8d6b2868ddc8f87f5ba071c66ce8a413f1cae2a7a5ccec2e5edbbcccf2  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md
+bce845f864358d48f4e246614c0a54dfdaadacd022599cbd391048415863bb10  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/21-ALGORITHM-RESEARCH-AND-REVERSE-ENGINEERING.md
+6ebc09b352baaea4187630b3a90d1ea66414c28c8e592f2cdb8f2fee3c236c72  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md
+f4bb9805f24161fb5ad7817ec63a67d90a5c03af984da0a15443d2cf982ed324  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md
+460ab73a1f8a059014092681ff6aab1777ca63e9e4077c4c4113d589d6f17ef8  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/README.md
+d6a2d170ee60e1aa56ffd47718d9616fd2c8be36d16a257bac54ce803130e1b7  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/04-MANAGEMENT.md
+592024c10ba8ee70c83ee58603a33e933683b0b311c27c326cb6bc47e32d4407  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md
+14cee6cbc9c2b67e2039a0e8dcd60184b12924c22311abf7c6b5be9c0ef2ae34  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md
+2f7c49d3d2596ef4bc47f88bf58a0377790bfd27a59fab825da2dedafa38ff9d  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/05-GATEKEEPER.md
+7844b6d871301dfdb5ad7fdff7444e6f3c90d3d2f4df883c2851e8d25888f386  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/02-ARENA.md
+30ae4416a9a0e18c7e9fd4215daf63b832fda37629ded912f68c456c4e39b50b  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/09-CONNECTORS.md
+0e3721b132a871a73f6b0f308d277919fda2206bb59a6ecf178c4838d20a663b  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/22-ALGORITHM-REGISTER.csv
+ef7eaa7a37cb4fa0d4f31323787d28cf9247eeac19800f88721ee54ecdaf2dfc  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md
+23ff3c5a8af3b07a1f0ee269d37630adf1a09e2d5451b1791b2eb37bc23d1986  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md
+93e3a14f1a60ceb9f6fc34ee87db3fc5e22d3de2e29d32c5e7f1a9d661afc631  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/23-CORE-ASSURANCE-AND-PEER-REVIEW.md
+d76041b14fdb891a91116e3c61bb36467fa15b08607b8f4419f235cbfd176eca  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/10-DATA.md
+40bf039c2cb0f1aa76369a263c36a200bdc55dbe46305db2529611d7cc99346a  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/06-GLADIATORS.md
+c723d463137919b4a47c0da75ad6ffaf95134138f8c258ec07b6253f156acef0  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md
+f7612f16ef0c65be31faac9819ee73d9b36e858247aa11dbb3a650b117b68e98  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/03-JUDGES.md
+6138f95c63745319cbdafdbf4cd6915c5ac438f927b3ad08277ba6ede2bfc5fe  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md
+7fbd0d6b6b28fcba30379ae8c7f70fd63f5898a70dde8558c80e2198a585d0b7  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md
+5947797887655afa16dfa427b5643913f99444f96263961b02beea75b033c4f4  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md
+c58a35a8a620eb106abb4ba5eb27d9b4df1158f8f1812d9dcf6f212650fe9fa3  releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md
+c9c4a2d805d16979fbbf5c36a98a014db9a93839345b714462661a4f05e5c3d3  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/README.md
+649588b678bfcd27a618988a70d9e0f375be89556e8b3846af69ea90d5610d07  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/14-core-engine-build-spec.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/03-market-data-brokers.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/07-risk-exits-allocation.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/05-quant-core.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/08-trading-operations.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/13-open-decisions.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/04-model-training.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/09-infrastructure-costs.md
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/01-product-charter.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/12-contracts-config.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/02-architecture.md
+8516b1f37baeb1ffa29915229638a319e407ef717ca681b80d6090ed05212c93  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/11-roadmap.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/06-strategy-evaluation.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/10-security-compliance.md
+509a7976ea21219ade88f12fb782af09d5726db4f338ca56e7e5e3f063b05561  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/RUN.md
+18c2a8a74c6061b14e691cf7e4fd8a33e0d7d0d84b79cd6110a9b2e6eedf6d4f  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/CORE.md
+fdbdfa162facc16a078bf1be70427f3c4fe548744f7be5933ab61dcf2f2b5cc3  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/ACCEPTANCE.md
+864042ad1cfdc49fd4348e1e922aff98f6a1672de328c663515156bb18832b06  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/DATA-RAG.md
+9634751b61ca6599b8ea0de95eed69ef7c3f95fe5e399f90eac947c2a2a1c658  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/MODEL-SELECTION.md
+1a99c1e6a84493a2c22e33dc803f46147ffb33c5747d15db088f6998f25b043e  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/KERNEL.md
+7629adb5a5c2bbf647accff3a6be7313bb51f3f6fabcb27f04bf7c94e9bdd4cf  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md
+ca6949a127c381d8c5c1da8aa74319c63efe07cb718feda86e82be71d97bbc66  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md
+b07eea8d6b2868ddc8f87f5ba071c66ce8a413f1cae2a7a5ccec2e5edbbcccf2  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md
+5dbdeced8189b2a829cfa3076373cf7eacdfc497e52654e4d9ec12fed741e697  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md
+f4bb9805f24161fb5ad7817ec63a67d90a5c03af984da0a15443d2cf982ed324  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md
+8a8f780d5c3d1bbf1c6769373cf05022fa9ba2d7548a3e770ecce2e836ac3161  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/README.md
+f0ab57d619b299bcedd63443c416f91905310f1ed91275f08aea868f9d1e3e99  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/04-MANAGEMENT.md
+592024c10ba8ee70c83ee58603a33e933683b0b311c27c326cb6bc47e32d4407  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md
+14cee6cbc9c2b67e2039a0e8dcd60184b12924c22311abf7c6b5be9c0ef2ae34  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md
+2f7c49d3d2596ef4bc47f88bf58a0377790bfd27a59fab825da2dedafa38ff9d  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/05-GATEKEEPER.md
+7844b6d871301dfdb5ad7fdff7444e6f3c90d3d2f4df883c2851e8d25888f386  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/02-ARENA.md
+30ae4416a9a0e18c7e9fd4215daf63b832fda37629ded912f68c456c4e39b50b  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/09-CONNECTORS.md
+ef7eaa7a37cb4fa0d4f31323787d28cf9247eeac19800f88721ee54ecdaf2dfc  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md
+23ff3c5a8af3b07a1f0ee269d37630adf1a09e2d5451b1791b2eb37bc23d1986  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md
+d76041b14fdb891a91116e3c61bb36467fa15b08607b8f4419f235cbfd176eca  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/10-DATA.md
+40bf039c2cb0f1aa76369a263c36a200bdc55dbe46305db2529611d7cc99346a  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/06-GLADIATORS.md
+c723d463137919b4a47c0da75ad6ffaf95134138f8c258ec07b6253f156acef0  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md
+71a64c888506800fc4237c6812b37dcf5ebc92b4be2cd66613a527a5fc431743  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/03-JUDGES.md
+6138f95c63745319cbdafdbf4cd6915c5ac438f927b3ad08277ba6ede2bfc5fe  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md
+7fbd0d6b6b28fcba30379ae8c7f70fd63f5898a70dde8558c80e2198a585d0b7  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md
+5947797887655afa16dfa427b5643913f99444f96263961b02beea75b033c4f4  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md
+c58a35a8a620eb106abb4ba5eb27d9b4df1158f8f1812d9dcf6f212650fe9fa3  releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md
+7ae2c6ca3f04955fe2c61fbdc99bd51f30a57288bec24b80e56050b1d7b5a920  releases/gladiator-core-components-v3/trading-ai-spec/README.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/gladiator-core-components-v3/trading-ai-spec/docs/08-trading-operations.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/gladiator-core-components-v3/trading-ai-spec/docs/06-strategy-evaluation.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/gladiator-core-components-v3/trading-ai-spec/docs/13-open-decisions.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/gladiator-core-components-v3/trading-ai-spec/docs/02-architecture.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/gladiator-core-components-v3/trading-ai-spec/docs/10-security-compliance.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/gladiator-core-components-v3/trading-ai-spec/docs/04-model-training.md
+649588b678bfcd27a618988a70d9e0f375be89556e8b3846af69ea90d5610d07  releases/gladiator-core-components-v3/trading-ai-spec/docs/14-core-engine-build-spec.md
+78f27c95878bb9810d7ed074db89a326eb08448444a5acc528a0213d65d3d190  releases/gladiator-core-components-v3/trading-ai-spec/docs/11-roadmap.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/gladiator-core-components-v3/trading-ai-spec/docs/09-infrastructure-costs.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/gladiator-core-components-v3/trading-ai-spec/docs/03-market-data-brokers.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/gladiator-core-components-v3/trading-ai-spec/docs/05-quant-core.md
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/gladiator-core-components-v3/trading-ai-spec/docs/01-product-charter.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/gladiator-core-components-v3/trading-ai-spec/docs/07-risk-exits-allocation.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/gladiator-core-components-v3/trading-ai-spec/docs/12-contracts-config.md
+509a7976ea21219ade88f12fb782af09d5726db4f338ca56e7e5e3f063b05561  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/RUN.md
+50886574cbb3da88f7214e4da438bac98453276dff54c590a5e4d3e974298d7a  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/CORE.md
+9634751b61ca6599b8ea0de95eed69ef7c3f95fe5e399f90eac947c2a2a1c658  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/MODEL-SELECTION.md
+864042ad1cfdc49fd4348e1e922aff98f6a1672de328c663515156bb18832b06  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/DATA-RAG.md
+fdbdfa162facc16a078bf1be70427f3c4fe548744f7be5933ab61dcf2f2b5cc3  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/ACCEPTANCE.md
+1a99c1e6a84493a2c22e33dc803f46147ffb33c5747d15db088f6998f25b043e  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/KERNEL.md
+3de34764bef1cd179a80968af472c355a61bce83fa0973eeb94d3c2c3f17a16b  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/tests/test_core.py
+199746bacc7c34679cbbf2e5398b4a3be94a7c187360570b4ab63b19995e1dff  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/runtime/core.py
+592024c10ba8ee70c83ee58603a33e933683b0b311c27c326cb6bc47e32d4407  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md
+71a64c888506800fc4237c6812b37dcf5ebc92b4be2cd66613a527a5fc431743  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/03-JUDGES.md
+30ae4416a9a0e18c7e9fd4215daf63b832fda37629ded912f68c456c4e39b50b  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/09-CONNECTORS.md
+05be5f2d321997f7bcacbe9bc52025c00e7f29fbe007514fc7d4e4932869658a  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/04-MANAGEMENT.md
+5947797887655afa16dfa427b5643913f99444f96263961b02beea75b033c4f4  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md
+ca6949a127c381d8c5c1da8aa74319c63efe07cb718feda86e82be71d97bbc66  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md
+40bf039c2cb0f1aa76369a263c36a200bdc55dbe46305db2529611d7cc99346a  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/06-GLADIATORS.md
+c58a35a8a620eb106abb4ba5eb27d9b4df1158f8f1812d9dcf6f212650fe9fa3  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md
+3677c0f8a01881eabf47076f3aa2bd21673fa4041d7bbd10679f065fa82c18df  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/README.md
+2f7c49d3d2596ef4bc47f88bf58a0377790bfd27a59fab825da2dedafa38ff9d  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/05-GATEKEEPER.md
+7844b6d871301dfdb5ad7fdff7444e6f3c90d3d2f4df883c2851e8d25888f386  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/02-ARENA.md
+14cee6cbc9c2b67e2039a0e8dcd60184b12924c22311abf7c6b5be9c0ef2ae34  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md
+6138f95c63745319cbdafdbf4cd6915c5ac438f927b3ad08277ba6ede2bfc5fe  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md
+ef7eaa7a37cb4fa0d4f31323787d28cf9247eeac19800f88721ee54ecdaf2dfc  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md
+5c4f15369d73eb451cbcaa2441ad4d96aafbd0a6cfa3fa7f1c40bc5c8ca734a0  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md
+d76041b14fdb891a91116e3c61bb36467fa15b08607b8f4419f235cbfd176eca  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/10-DATA.md
+f4bb9805f24161fb5ad7817ec63a67d90a5c03af984da0a15443d2cf982ed324  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md
+5dbdeced8189b2a829cfa3076373cf7eacdfc497e52654e4d9ec12fed741e697  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md
+6b989fc8edcf509eb956fe7bfa0f6d1822f84ec60b18887263021f03a3b6ec64  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc
+a8cc1bffcffb6bd098a86a2ff84eff882562efb81daf18720efa2ba3ed414c28  releases/gladiator-core-components-v3/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc
+f40c8cd0881b0aca659b60ecc1b1544e0c880e3790177b3ca20adc2fe51d66c8  releases/gladiator-core-research-update-v4/trading-ai-spec/README.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/08-trading-operations.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/06-strategy-evaluation.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/13-open-decisions.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/02-architecture.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/10-security-compliance.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/04-model-training.md
+649588b678bfcd27a618988a70d9e0f375be89556e8b3846af69ea90d5610d07  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/14-core-engine-build-spec.md
+78f27c95878bb9810d7ed074db89a326eb08448444a5acc528a0213d65d3d190  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/11-roadmap.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/09-infrastructure-costs.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/03-market-data-brokers.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/05-quant-core.md
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/01-product-charter.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/07-risk-exits-allocation.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/gladiator-core-research-update-v4/trading-ai-spec/docs/12-contracts-config.md
+509a7976ea21219ade88f12fb782af09d5726db4f338ca56e7e5e3f063b05561  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/RUN.md
+50886574cbb3da88f7214e4da438bac98453276dff54c590a5e4d3e974298d7a  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/CORE.md
+9634751b61ca6599b8ea0de95eed69ef7c3f95fe5e399f90eac947c2a2a1c658  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/MODEL-SELECTION.md
+864042ad1cfdc49fd4348e1e922aff98f6a1672de328c663515156bb18832b06  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/DATA-RAG.md
+fdbdfa162facc16a078bf1be70427f3c4fe548744f7be5933ab61dcf2f2b5cc3  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/ACCEPTANCE.md
+1a99c1e6a84493a2c22e33dc803f46147ffb33c5747d15db088f6998f25b043e  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/KERNEL.md
+3de34764bef1cd179a80968af472c355a61bce83fa0973eeb94d3c2c3f17a16b  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/tests/test_core.py
+199746bacc7c34679cbbf2e5398b4a3be94a7c187360570b4ab63b19995e1dff  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/runtime/core.py
+46c22326fc0051d299226e5a3344534b7566f151007325ab055a403f42ffe4c8  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md
+86c14d0b6982dabd99e6730bf5e7e493f077f6f69cf3258bd751a4a478c4483a  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/03-JUDGES.md
+0644f60493b217b2785d6738e75db6a2fc4a8329e1608a6b34e72c5d8f259efd  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/09-CONNECTORS.md
+a9bd31b709e470488ef64c9ee01dd39a38a4c2ac5dc2237ba37e8d65593645fa  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/04-MANAGEMENT.md
+646ee4b5b949baa68710fa77eefe4aab6f5aae63eefa7151cbf1ec9114679a3a  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md
+cf0ddd0e47776a469510a1018981c8613dd25ab7fb5ab8c8a8cd82a801bdf020  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md
+127c1627ffac25dbd2fcd705f8b151fb7672111cd16818745d93edeaecfc3fcd  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/06-GLADIATORS.md
+a7c64c4d59ca8fc970f50c68a5bbfc63d78a6876a319b31eee81ab748257afa2  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md
+ff0a267cd5405ff55eb27e79d73cf2a6ef348c84123b5f443bc2f7dcc8cdd3d4  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/README.md
+7f1d92dcdda71b1638ed15136c5fc71de0706f9aeb7e8cd7bfe07d7abeee3be2  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/05-GATEKEEPER.md
+8a75a34ddcfbef75f58f4462d69c5a26fc5db1d7879df924021ccb235ed8c2fc  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/02-ARENA.md
+2ef59a04b0d02a0dc8dfcd54fecd8ff19c8cada91c3e709ff110f8c07b5e5e79  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md
+0fb6f474d2601e2b67b92f020bd52379299b76364056a348f685ae6b2cba53a0  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md
+9cee11c220eafeafdffd0dc122a5d68ce6cc6ac9041a0d01d96afee30fc97804  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md
+7629adb5a5c2bbf647accff3a6be7313bb51f3f6fabcb27f04bf7c94e9bdd4cf  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md
+bca7a5f57857c20ce3d1005c1e036c18cb80f77589a8e1e2aa8d9e8942c44225  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md
+2204d547f86bbbfe6f7c48316e9f85ef6005e505a755d9d232082a25b60f15b7  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/10-DATA.md
+d8df779e19018922bf8655a47b071da3d96a56828809dac981dd54ccce922151  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md
+5441a640d8860092641f5a6a6d43f499e58e828ec263b6c41507a97b3a1ba148  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md
+6b989fc8edcf509eb956fe7bfa0f6d1822f84ec60b18887263021f03a3b6ec64  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc
+a8cc1bffcffb6bd098a86a2ff84eff882562efb81daf18720efa2ba3ed414c28  releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc
+70ed53b19a46463b91bb6ff920e3d6407f46775fa9d80515177d34d4c957c48b  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/02-ARENA.md
+7472b5438a9afa04aba0968735281570340dbb8aff9b13926ebfa776bd284387  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/05-GATEKEEPER.md
+6213b586cfab86a81782a304bd1774725258cf09ba11e85870ed57577b2102dc  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/README.md
+377ef8271daef17fc003b7085c6fc0ad7db81f3e42d41675e7633082be32ac2b  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md
+5c4f15369d73eb451cbcaa2441ad4d96aafbd0a6cfa3fa7f1c40bc5c8ca734a0  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md
+f7d31a65987a26833109d8c2604ed5073c84e5afa1f614d85985fdfee05a10d8  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md
+411dc9d07bf455208b160ae6636d50bb69ca1a5dc86f48ac978256541a6f346e  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/03-JUDGES.md
+a0582c999611de7e071b545a2f2507226775f04dd43d199659abed595ffda2c1  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md
+3250c76a7094db59acae3ed619fcd284ab0f017014b38c1271d42ccc4f7ec64d  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/09-CONNECTORS.md
+4a4cc535086c39275f9e9b787346c55e9bbeec03d616be7f4842ecc4de3daa47  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md
+a1b6b1cc12a71e9fe5308db74e47c7c5a973d85dd8a5c8c9f452db698a95672f  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md
+c7476357413439d06d2b3d98b350b0045d7c4b97cbc22526b86f788f96fbb5b4  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/04-MANAGEMENT.md
+c58a35a8a620eb106abb4ba5eb27d9b4df1158f8f1812d9dcf6f212650fe9fa3  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md
+ce901f66b87f4ee584e651cc23e6aa0157ba79e99540de04e3cfd7e634e6ce33  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md
+5bd6324b52676565d8101bf3e9701b2ee149942a9a44576982823d2fffe6d4d2  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md
+2c78f877d09b60922eaa11afa69b1e7aae2c9a145411d15df5c5aa35c8d19fd6  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/06-GLADIATORS.md
+d4f17bcb2b81b151be465b87a7195233155c3c3ccae910ca216b6efe6985d994  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md
+19060c9a840fa3b8f84980c76062c18f0bc7d17f6ffc41c56b07601b792bf6da  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/10-DATA.md
+7629adb5a5c2bbf647accff3a6be7313bb51f3f6fabcb27f04bf7c94e9bdd4cf  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md
+7fbd0d6b6b28fcba30379ae8c7f70fd63f5898a70dde8558c80e2198a585d0b7  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md
+9634751b61ca6599b8ea0de95eed69ef7c3f95fe5e399f90eac947c2a2a1c658  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/MODEL-SELECTION.md
+1a99c1e6a84493a2c22e33dc803f46147ffb33c5747d15db088f6998f25b043e  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/KERNEL.md
+864042ad1cfdc49fd4348e1e922aff98f6a1672de328c663515156bb18832b06  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/DATA-RAG.md
+509a7976ea21219ade88f12fb782af09d5726db4f338ca56e7e5e3f063b05561  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/RUN.md
+18c2a8a74c6061b14e691cf7e4fd8a33e0d7d0d84b79cd6110a9b2e6eedf6d4f  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/CORE.md
+fdbdfa162facc16a078bf1be70427f3c4fe548744f7be5933ab61dcf2f2b5cc3  releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/ACCEPTANCE.md
+e4c58a600dbf4496db99552b64e5f8d162af835a73102a9ecbc788c454d0c76d  releases/gladiator-core-reviewed-v5/trading-ai-spec/README.md
+3409455ada049d0d7d4f60352bab742b17efd79db5911dc62821e54e6a577aff  releases/gladiator-core-reviewed-v5/trading-ai-spec/audit/tests/test_spec_audit.py
+e196697a64877bb7e5c2e5b8c2642d1660132dc73b75a0017cf116b4d61e71f3  releases/gladiator-core-reviewed-v5/trading-ai-spec/audit/spec_audit.py
+8516b1f37baeb1ffa29915229638a319e407ef717ca681b80d6090ed05212c93  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/11-roadmap.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/07-risk-exits-allocation.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/08-trading-operations.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/04-model-training.md
+649588b678bfcd27a618988a70d9e0f375be89556e8b3846af69ea90d5610d07  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/14-core-engine-build-spec.md
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/01-product-charter.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/12-contracts-config.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/10-security-compliance.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/06-strategy-evaluation.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/03-market-data-brokers.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/02-architecture.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/09-infrastructure-costs.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/05-quant-core.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/13-open-decisions.md
+b28c9dd38a7037e605c8b010574c06a6d69984e439eb317a8b024c6069e3f725  releases/gladiator-market-awareness-v9/trading-ai-spec/README.md
+fdbdfa162facc16a078bf1be70427f3c4fe548744f7be5933ab61dcf2f2b5cc3  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/ACCEPTANCE.md
+18c2a8a74c6061b14e691cf7e4fd8a33e0d7d0d84b79cd6110a9b2e6eedf6d4f  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/CORE.md
+864042ad1cfdc49fd4348e1e922aff98f6a1672de328c663515156bb18832b06  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/DATA-RAG.md
+1a99c1e6a84493a2c22e33dc803f46147ffb33c5747d15db088f6998f25b043e  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/KERNEL.md
+9634751b61ca6599b8ea0de95eed69ef7c3f95fe5e399f90eac947c2a2a1c658  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/MODEL-SELECTION.md
+509a7976ea21219ade88f12fb782af09d5726db4f338ca56e7e5e3f063b05561  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/RUN.md
+e13b4870bb52c7fd8346598254cc4390be07209474df4eb7f3f23613a457cd56  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md
+b7a16414eef7e6ce7d976053a8c07cb111dc0d46bcff2775a6f98ea99a55e328  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md
+182884d24c24d9304aefbd06ffb96d93fbff706250a7f599b1f83e5d4f67cc23  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/02-ARENA.md
+a4ba106890788271665dbfc4592a645181bff01b1aedb69bb0e95a49695c9a15  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/03-JUDGES.md
+2b3909d3a5a858d36e3c6911547a2aa7c7a657808f498ccfaf5c00eda6b0d04c  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/04-MANAGEMENT.md
+38a160723f43f6817f24e30ecd75547c559b78d641825990818b9921ef2585ca  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/05-GATEKEEPER.md
+40bf039c2cb0f1aa76369a263c36a200bdc55dbe46305db2529611d7cc99346a  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/06-GLADIATORS.md
+dfb56cbc9707dbb5052de11ea76733ff8d4c2abb78e1307e37d50a9d14f7df17  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md
+6138f95c63745319cbdafdbf4cd6915c5ac438f927b3ad08277ba6ede2bfc5fe  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md
+6288109c3343cde59e0869f11429a6f74f7a6b62fb3a81ed1c97c3cf7bfd1900  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/09-CONNECTORS.md
+a056d1d1771d0f8f35ccbd7316dcb915be64fd404323b3e90dd6e7e4ef96edbd  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/10-DATA.md
+df34d32cdc813c606f99cfa9132e668806d0567f6b8f8664b38c8badf1506b64  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md
+bcf79007174d0389c582e4e19ffa4e83b753693bac9e71094f49831208326a1e  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md
+ef7eaa7a37cb4fa0d4f31323787d28cf9247eeac19800f88721ee54ecdaf2dfc  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md
+592024c10ba8ee70c83ee58603a33e933683b0b311c27c326cb6bc47e32d4407  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md
+6548cff6964b3248a7bd6d2f7836f8c52dbb0f9d5c4efa2730c4a5c0b00528c0  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md
+c20c3440c06d54c4de3ecd291ce39ca817e49ec766093579d7a79757f6f53795  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md
+7629adb5a5c2bbf647accff3a6be7313bb51f3f6fabcb27f04bf7c94e9bdd4cf  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md
+7fbd0d6b6b28fcba30379ae8c7f70fd63f5898a70dde8558c80e2198a585d0b7  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md
+b07eea8d6b2868ddc8f87f5ba071c66ce8a413f1cae2a7a5ccec2e5edbbcccf2  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md
+23ff3c5a8af3b07a1f0ee269d37630adf1a09e2d5451b1791b2eb37bc23d1986  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md
+bce845f864358d48f4e246614c0a54dfdaadacd022599cbd391048415863bb10  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/21-ALGORITHM-RESEARCH-AND-REVERSE-ENGINEERING.md
+0e3721b132a871a73f6b0f308d277919fda2206bb59a6ecf178c4838d20a663b  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/22-ALGORITHM-REGISTER.csv
+8107840e56b722c1cd2b60ec75fb4c6644f9f7543e302ed644927899a03677db  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/23-CORE-ASSURANCE-AND-PEER-REVIEW.md
+be3bc0a39a69d5b1a90fcb92f04a4fff0f54c87ebbf4afd7432d879e0bfbfdc0  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/24-MARKET-AWARENESS-AND-REGIME-DETECTION.md
+ab51ff0699cc5d2c4b5904d1d9a2074ff8f11dc5abc4ab00c253a11b9ffe74f3  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/25-MARKET-INTELLIGENCE-SOURCE-REGISTER.csv
+4af381838d7283da374683ebb39549cecce1b129d321794eb872593e1c3d2bf3  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/26-MARKET-AWARENESS-ADVERSARIAL-REVIEW.md
+9b9482b6c5b31fa0d110844b1b9cb274ded74d4f52e5968aa7c7ff6b32549a63  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/README.md
+199746bacc7c34679cbbf2e5398b4a3be94a7c187360570b4ab63b19995e1dff  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/runtime/core.py
+3de34764bef1cd179a80968af472c355a61bce83fa0973eeb94d3c2c3f17a16b  releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/tests/test_core.py
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/01-product-charter.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/02-architecture.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/03-market-data-brokers.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/04-model-training.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/05-quant-core.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/06-strategy-evaluation.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/07-risk-exits-allocation.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/08-trading-operations.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/09-infrastructure-costs.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/10-security-compliance.md
+8516b1f37baeb1ffa29915229638a319e407ef717ca681b80d6090ed05212c93  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/11-roadmap.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/12-contracts-config.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/13-open-decisions.md
+649588b678bfcd27a618988a70d9e0f375be89556e8b3846af69ea90d5610d07  releases/gladiator-market-awareness-v9/trading-ai-spec/docs/14-core-engine-build-spec.md
+67c99a3ea35ca8618c81c53df85cee5b1030652e587ada34905d902a45684c13  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/README.md
+649588b678bfcd27a618988a70d9e0f375be89556e8b3846af69ea90d5610d07  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/14-core-engine-build-spec.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/03-market-data-brokers.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/07-risk-exits-allocation.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/05-quant-core.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/08-trading-operations.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/13-open-decisions.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/04-model-training.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/09-infrastructure-costs.md
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/01-product-charter.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/12-contracts-config.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/02-architecture.md
+8516b1f37baeb1ffa29915229638a319e407ef717ca681b80d6090ed05212c93  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/11-roadmap.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/06-strategy-evaluation.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/10-security-compliance.md
+509a7976ea21219ade88f12fb782af09d5726db4f338ca56e7e5e3f063b05561  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/RUN.md
+18c2a8a74c6061b14e691cf7e4fd8a33e0d7d0d84b79cd6110a9b2e6eedf6d4f  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/CORE.md
+fdbdfa162facc16a078bf1be70427f3c4fe548744f7be5933ab61dcf2f2b5cc3  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/ACCEPTANCE.md
+864042ad1cfdc49fd4348e1e922aff98f6a1672de328c663515156bb18832b06  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/DATA-RAG.md
+9634751b61ca6599b8ea0de95eed69ef7c3f95fe5e399f90eac947c2a2a1c658  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/MODEL-SELECTION.md
+1a99c1e6a84493a2c22e33dc803f46147ffb33c5747d15db088f6998f25b043e  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/KERNEL.md
+3de34764bef1cd179a80968af472c355a61bce83fa0973eeb94d3c2c3f17a16b  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/tests/test_core.py
+199746bacc7c34679cbbf2e5398b4a3be94a7c187360570b4ab63b19995e1dff  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/runtime/core.py
+7629adb5a5c2bbf647accff3a6be7313bb51f3f6fabcb27f04bf7c94e9bdd4cf  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md
+df34d32cdc813c606f99cfa9132e668806d0567f6b8f8664b38c8badf1506b64  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md
+b07eea8d6b2868ddc8f87f5ba071c66ce8a413f1cae2a7a5ccec2e5edbbcccf2  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md
+bce845f864358d48f4e246614c0a54dfdaadacd022599cbd391048415863bb10  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/21-ALGORITHM-RESEARCH-AND-REVERSE-ENGINEERING.md
+b7a16414eef7e6ce7d976053a8c07cb111dc0d46bcff2775a6f98ea99a55e328  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md
+bcf79007174d0389c582e4e19ffa4e83b753693bac9e71094f49831208326a1e  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md
+5c344e1890f9b0d3a7fd1b558b4bbe0310ed432689ea04cbcae2d760a8f6535e  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/README.md
+2b3909d3a5a858d36e3c6911547a2aa7c7a657808f498ccfaf5c00eda6b0d04c  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/04-MANAGEMENT.md
+592024c10ba8ee70c83ee58603a33e933683b0b311c27c326cb6bc47e32d4407  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md
+6548cff6964b3248a7bd6d2f7836f8c52dbb0f9d5c4efa2730c4a5c0b00528c0  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md
+38a160723f43f6817f24e30ecd75547c559b78d641825990818b9921ef2585ca  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/05-GATEKEEPER.md
+63f1ae690fab6887e93ae8b352e8163e2376c84c57db9554cc6c3194770ff77a  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/24-MARKET-AWARENESS-AND-REGIME-DETECTION.md
+182884d24c24d9304aefbd06ffb96d93fbff706250a7f599b1f83e5d4f67cc23  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/02-ARENA.md
+6288109c3343cde59e0869f11429a6f74f7a6b62fb3a81ed1c97c3cf7bfd1900  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/09-CONNECTORS.md
+0e3721b132a871a73f6b0f308d277919fda2206bb59a6ecf178c4838d20a663b  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/22-ALGORITHM-REGISTER.csv
+ef7eaa7a37cb4fa0d4f31323787d28cf9247eeac19800f88721ee54ecdaf2dfc  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md
+23ff3c5a8af3b07a1f0ee269d37630adf1a09e2d5451b1791b2eb37bc23d1986  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md
+93e3a14f1a60ceb9f6fc34ee87db3fc5e22d3de2e29d32c5e7f1a9d661afc631  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/23-CORE-ASSURANCE-AND-PEER-REVIEW.md
+a056d1d1771d0f8f35ccbd7316dcb915be64fd404323b3e90dd6e7e4ef96edbd  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/10-DATA.md
+4af381838d7283da374683ebb39549cecce1b129d321794eb872593e1c3d2bf3  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/26-MARKET-AWARENESS-ADVERSARIAL-REVIEW.md
+40bf039c2cb0f1aa76369a263c36a200bdc55dbe46305db2529611d7cc99346a  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/06-GLADIATORS.md
+dfb56cbc9707dbb5052de11ea76733ff8d4c2abb78e1307e37d50a9d14f7df17  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md
+a4ba106890788271665dbfc4592a645181bff01b1aedb69bb0e95a49695c9a15  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/03-JUDGES.md
+edee49f018ec00b8188cd512ffc8fdaf15e758031457affa58ee4b2af5c21cec  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/27-ORDER-FLOW-AND-LEDGER-INTELLIGENCE.md
+6138f95c63745319cbdafdbf4cd6915c5ac438f927b3ad08277ba6ede2bfc5fe  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md
+ab51ff0699cc5d2c4b5904d1d9a2074ff8f11dc5abc4ab00c253a11b9ffe74f3  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/25-MARKET-INTELLIGENCE-SOURCE-REGISTER.csv
+7fbd0d6b6b28fcba30379ae8c7f70fd63f5898a70dde8558c80e2198a585d0b7  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md
+c20c3440c06d54c4de3ecd291ce39ca817e49ec766093579d7a79757f6f53795  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md
+e13b4870bb52c7fd8346598254cc4390be07209474df4eb7f3f23613a457cd56  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md
+b4f8ca692ac200e0736fd99f436a8f25a5ec04b783095183ae5748dd427431cf  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc
+d472db81c431a829c288b3c9ccc3fc961302c37ca14cbaad52765ce6057b1e13  releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc
+e4c58a600dbf4496db99552b64e5f8d162af835a73102a9ecbc788c454d0c76d  releases/gladiator-upstream-issues-v6/trading-ai-spec/README.md
+649588b678bfcd27a618988a70d9e0f375be89556e8b3846af69ea90d5610d07  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/14-core-engine-build-spec.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/03-market-data-brokers.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/07-risk-exits-allocation.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/05-quant-core.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/08-trading-operations.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/13-open-decisions.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/04-model-training.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/09-infrastructure-costs.md
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/01-product-charter.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/12-contracts-config.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/02-architecture.md
+8516b1f37baeb1ffa29915229638a319e407ef717ca681b80d6090ed05212c93  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/11-roadmap.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/06-strategy-evaluation.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/10-security-compliance.md
+509a7976ea21219ade88f12fb782af09d5726db4f338ca56e7e5e3f063b05561  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/RUN.md
+18c2a8a74c6061b14e691cf7e4fd8a33e0d7d0d84b79cd6110a9b2e6eedf6d4f  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/CORE.md
+fdbdfa162facc16a078bf1be70427f3c4fe548744f7be5933ab61dcf2f2b5cc3  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/ACCEPTANCE.md
+864042ad1cfdc49fd4348e1e922aff98f6a1672de328c663515156bb18832b06  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/DATA-RAG.md
+9634751b61ca6599b8ea0de95eed69ef7c3f95fe5e399f90eac947c2a2a1c658  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/MODEL-SELECTION.md
+1a99c1e6a84493a2c22e33dc803f46147ffb33c5747d15db088f6998f25b043e  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/KERNEL.md
+7629adb5a5c2bbf647accff3a6be7313bb51f3f6fabcb27f04bf7c94e9bdd4cf  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md
+ca6949a127c381d8c5c1da8aa74319c63efe07cb718feda86e82be71d97bbc66  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md
+b07eea8d6b2868ddc8f87f5ba071c66ce8a413f1cae2a7a5ccec2e5edbbcccf2  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md
+5dbdeced8189b2a829cfa3076373cf7eacdfc497e52654e4d9ec12fed741e697  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md
+f4bb9805f24161fb5ad7817ec63a67d90a5c03af984da0a15443d2cf982ed324  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md
+e845ee43b31cd3d06f827c8c83c8f52e12569267d07889b9874b32fe2765b0c2  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/README.md
+f0ab57d619b299bcedd63443c416f91905310f1ed91275f08aea868f9d1e3e99  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/04-MANAGEMENT.md
+592024c10ba8ee70c83ee58603a33e933683b0b311c27c326cb6bc47e32d4407  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md
+14cee6cbc9c2b67e2039a0e8dcd60184b12924c22311abf7c6b5be9c0ef2ae34  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md
+2f7c49d3d2596ef4bc47f88bf58a0377790bfd27a59fab825da2dedafa38ff9d  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/05-GATEKEEPER.md
+7844b6d871301dfdb5ad7fdff7444e6f3c90d3d2f4df883c2851e8d25888f386  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/02-ARENA.md
+30ae4416a9a0e18c7e9fd4215daf63b832fda37629ded912f68c456c4e39b50b  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/09-CONNECTORS.md
+ef7eaa7a37cb4fa0d4f31323787d28cf9247eeac19800f88721ee54ecdaf2dfc  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md
+d76041b14fdb891a91116e3c61bb36467fa15b08607b8f4419f235cbfd176eca  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/10-DATA.md
+40bf039c2cb0f1aa76369a263c36a200bdc55dbe46305db2529611d7cc99346a  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/06-GLADIATORS.md
+c723d463137919b4a47c0da75ad6ffaf95134138f8c258ec07b6253f156acef0  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md
+71a64c888506800fc4237c6812b37dcf5ebc92b4be2cd66613a527a5fc431743  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/03-JUDGES.md
+6138f95c63745319cbdafdbf4cd6915c5ac438f927b3ad08277ba6ede2bfc5fe  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md
+7fbd0d6b6b28fcba30379ae8c7f70fd63f5898a70dde8558c80e2198a585d0b7  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md
+5947797887655afa16dfa427b5643913f99444f96263961b02beea75b033c4f4  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md
+c58a35a8a620eb106abb4ba5eb27d9b4df1158f8f1812d9dcf6f212650fe9fa3  releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/08-trading-operations.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/06-strategy-evaluation.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/13-open-decisions.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/02-architecture.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/10-security-compliance.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/04-model-training.md
+649588b678bfcd27a618988a70d9e0f375be89556e8b3846af69ea90d5610d07  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/14-core-engine-build-spec.md
+78f27c95878bb9810d7ed074db89a326eb08448444a5acc528a0213d65d3d190  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/11-roadmap.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/09-infrastructure-costs.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/03-market-data-brokers.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/05-quant-core.md
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/01-product-charter.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/07-risk-exits-allocation.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/12-contracts-config.md
+226fdd797c2c2c826a18eb3bdd07ca8bd3f80e4aa4ea9628eeaeb811a3692ff0  releases/trading-ai-core-kernel-v2/trading-ai-spec/README.md
+3de34764bef1cd179a80968af472c355a61bce83fa0973eeb94d3c2c3f17a16b  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/tests/test_core.py
+a8cc1bffcffb6bd098a86a2ff84eff882562efb81daf18720efa2ba3ed414c28  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc
+509a7976ea21219ade88f12fb782af09d5726db4f338ca56e7e5e3f063b05561  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/RUN.md
+50886574cbb3da88f7214e4da438bac98453276dff54c590a5e4d3e974298d7a  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/CORE.md
+9634751b61ca6599b8ea0de95eed69ef7c3f95fe5e399f90eac947c2a2a1c658  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/MODEL-SELECTION.md
+6b989fc8edcf509eb956fe7bfa0f6d1822f84ec60b18887263021f03a3b6ec64  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc
+199746bacc7c34679cbbf2e5398b4a3be94a7c187360570b4ab63b19995e1dff  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/runtime/core.py
+864042ad1cfdc49fd4348e1e922aff98f6a1672de328c663515156bb18832b06  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/DATA-RAG.md
+fdbdfa162facc16a078bf1be70427f3c4fe548744f7be5933ab61dcf2f2b5cc3  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/ACCEPTANCE.md
+1a99c1e6a84493a2c22e33dc803f46147ffb33c5747d15db088f6998f25b043e  releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/KERNEL.md
+2fa14b23fa59b01e3a96a5aea9aa4362bea38233ccf4948abb76baa3362b2cb0  releases/trading-ai-spec/trading-ai-spec/README.md
+f04e18c578c6eea878fb6073654fdf4606ca4d778688b03eca21b4a727400eb5  releases/trading-ai-spec/trading-ai-spec/docs/01-product-charter.md
+73549a154d9b2ee13e839a9d36a04d4ec998b39376bca2c9e6d9e245d240f5f6  releases/trading-ai-spec/trading-ai-spec/docs/02-architecture.md
+8d1923ce10277eb6722d9d472549170d8c11139e4f7b5f71f3487d27883a9d89  releases/trading-ai-spec/trading-ai-spec/docs/03-market-data-brokers.md
+3f5f93445c379b254f907a5f9312f3c70d7b646b8f562ff38123ede4d0f562a6  releases/trading-ai-spec/trading-ai-spec/docs/04-model-training.md
+575b68647178341d872d7450e686587cac01885c324fe08c5b8c3da227621c67  releases/trading-ai-spec/trading-ai-spec/docs/05-quant-core.md
+0c6b8acf84287328d88eb4d85f8bd2c4cea6eafec9bdd51baf935d9a84cf0b8d  releases/trading-ai-spec/trading-ai-spec/docs/06-strategy-evaluation.md
+8249be57638580cd6f85acf1e266a00c17d30c1299ea5fced447ba1321d89cb2  releases/trading-ai-spec/trading-ai-spec/docs/07-risk-exits-allocation.md
+2137d9e9faa072aae7273820bfc42742c725776668ffc8940faaf02ba16ea323  releases/trading-ai-spec/trading-ai-spec/docs/08-trading-operations.md
+37fb12914757a11ea51f032c6ff5f53b0c9cf4e464ebc690dddf19f67a25c0ab  releases/trading-ai-spec/trading-ai-spec/docs/09-infrastructure-costs.md
+61c26008c9a4989369484de8021ccb6c24fe53eb23450cd564a44a8ceca317a9  releases/trading-ai-spec/trading-ai-spec/docs/10-security-compliance.md
+8516b1f37baeb1ffa29915229638a319e407ef717ca681b80d6090ed05212c93  releases/trading-ai-spec/trading-ai-spec/docs/11-roadmap.md
+5a3e981760995eddd29bda9bd7bf5f2551a1d3a3e0598fdeed779f3ae0a3ce14  releases/trading-ai-spec/trading-ai-spec/docs/12-contracts-config.md
+8c8f7a28cb6ef89bce49ab4c5d01880880d39215f6ee781c7095bd02479998f1  releases/trading-ai-spec/trading-ai-spec/docs/13-open-decisions.md

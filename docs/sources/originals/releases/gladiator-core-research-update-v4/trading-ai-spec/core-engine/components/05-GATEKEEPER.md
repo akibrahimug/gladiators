@@ -1,0 +1,32 @@
+# Gatekeeper: independent risk and permissions
+
+Status: design specification; not a claim of implemented functionality.
+
+## Role
+Independent deterministic policy engine. Only it can approve a proposed order. It never accepts policy changes from a gladiator, LLM or core output. Paper broker must enforce approvals too.
+
+## Hard rules (initial research defaults, configurable and versioned)
+£500 simulated equity; cash account, long-only shares, no leverage, shorting or derivatives. One position maximum for eventual live operation; max two new live entries per session; live off. Initial intended per-trade loss budget 0.5–1% NAV (£2.50–£5 at £500); cannot guarantee actual loss due to gaps. Cap gross exposure, order notional, liquidity participation, total daily loss, stale-data tolerance and simultaneous pending orders. Reject absent bid/ask/cost estimates, unsupported instrument, expired approval or unreconciled positions.
+
+## Approval path
+Receive `TradeIntent`; independently fetch immutable portfolio, fee schedule and policy; validate idempotency, available cash and stressed loss; reduce quantity or veto; issue time-limited signed approval with decision ID and exact order parameters. Transport/broker accepts only approved intents; reconciliation confirms fills and fees. Kill switch always overrides.
+
+## Exit safety
+Protective stop submitted through broker when supported, with explicit gap/slippage caveat; timeouts and partial fills handled; exit intents can reduce risk even if entry paused. No adding to a losing position without independently approved policy; no stop widening solely to avoid loss.
+
+## Failure tests
+Duplicated intent produces one order; disconnected broker prevents entry; stale data veto; gap simulation may exceed planned risk and must appear in ledger; kill switch blocks all new entries; model cannot write risk config.
+
+## Operational invariants
+- Phase 1: zero paid external services, no live orders, no dashboard; terminal text/number output only. Use local files and explicit, free, permitted data sources. Network pulls require explicit invocation.
+- Every artifact includes `run_id`, UTC `as_of`, immutable `dataset_hash`, `code_version`, `config_hash`, and relevant `model_version`.
+- Reject missing, stale, future-dated, unlicensed or unverified inputs; `ABSTAIN` is valid and preferable to guessing.
+- Do not infer profitability from backtests. Keep chronological holdouts, realistic costs, and independent forward-paper validation.
+- No LLM, gladiator, or management agent may modify gatekeeper limits or access live broker credentials.
+
+---
+
+## v0.4 broker/data execution boundaries
+Paper execution may use a synthetic, zero-cost broker adapter. Alpaca's Basic real-time US equity feed is **IEX-only**, not a consolidated market quote. Reject assumptions that IEX spread or liquidity is equivalent to NBBO across all exchanges. IBKR API market data may require subscriptions and permissions. Broker integration is optional and OFF in Phase 1.
+
+Live unlock requires separate human approval after UK account eligibility, instrument restrictions, fees, FX funding/withdrawal costs, data licences, broker order behaviour and operational controls are independently verified. Order validation uses actual supported order types, lot size/fractional permissions, exchange calendar and buying power.

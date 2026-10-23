@@ -2,7 +2,7 @@
 
 The user uses Codex for brainstorming and design discussions, and Claude Code for implementation, wiring, tests and PRs. Work autonomously within an assigned, accepted task; take unresolved architecture choices back to the user with options and affected IDs.
 
-This project currently contains documentation only. The original v1.0 specs are missing; G00 is pending. Use the recorded task and gate states rather than treating the proposed architecture as accepted.
+This project currently contains documentation only. The original v1.0 specs have been recovered; see [the recovered source index](docs/sources/originals/RECOVERED.md). G00 is pending reconciliation and review. Use the recorded task and gate states rather than treating the proposed architecture as accepted.
 
 1. **Select work:** read [the task board](docs/tasks/README.md) and the assigned task packet. Begin only a Ready task; document the exact blocker for other states. Documentation preparation explicitly scoped to this handoff may proceed while G00 is pending.
 2. **Execute or delegate:** read [the Claude workflow](docs/working-with-claude.md), then the task's source, phase, contracts and acceptance criteria. Give workers explicit task context, file scope and return criteria. Implementation writers require a committed base revision; read-only bootstrap inspection uses the observed checkout and file hashes.
