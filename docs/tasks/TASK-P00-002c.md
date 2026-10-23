@@ -9,9 +9,9 @@
 | Source baseline | v10 release `docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/` as primary ([DEC-011](../decisions/README.md)); per-file SHA-256 in the [inventory](../sources/originals/recovery-inventory.json); preservation verified by [TASK-P00-001](TASK-P00-001.md) |
 | Dependencies | TASK-P00-001 Verified (PR #4); TASK-P00-002b integrated as base |
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
-| Repository / base branch / base SHA | akibrahimug/gladiators; base TASK-P00-002b head (stacked) |
+| Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-002b-core-mapping` @ `fcf1775f4cbc16794027fcf4ac1a281f13fd8ab5` (packet b final head, merged in `a60fda2`; originally branched from `d959bfd`) |
 | Task branch / worker worktrees | `task/TASK-P00-002c-components-integration`; read-only workers need no worktree |
-| PR state / URL | Not requested; draft not yet opened (DEC-009, recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1), not yet merged into this branch's base) |
+| PR state / URL | Not requested; draft not yet opened (DEC-009, recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1)) |
 | Tested head revision / evidence | Unset until observed |
 
 Part of [TASK-P00-002](TASK-P00-002.md), split by [DEC-012](../decisions/README.md).
