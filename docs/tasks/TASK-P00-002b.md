@@ -11,8 +11,8 @@
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-002a-docs-mapping` @ `7124aa77eb2e99494ed99b18727ade60889f9c20` (packet a final head, merged in `62cc92e`; originally branched from `3030dca`) |
 | Task branch / worker worktrees | `task/TASK-P00-002b-core-mapping`; read-only workers need no worktree |
-| PR state / URL | Not requested; draft not yet opened (DEC-009, recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1), not yet merged into this branch's base) |
-| Tested head revision / evidence | Unset until observed |
+| PR state / URL | Draft — [#6](https://github.com/akibrahimug/gladiators/pull/6), opened 2026-10-23 under DEC-009 ([PR #1](https://github.com/akibrahimug/gladiators/pull/1)); stacked on #5 |
+| Tested head revision / evidence | `26a5f823fe133f0aee859c38f65cc1ee2e8cd74c`; the next commit records PR metadata only |
 
 Part of [TASK-P00-002](TASK-P00-002.md), split by [DEC-012](../decisions/README.md).
 
@@ -40,7 +40,7 @@ Allowed paths: `docs/evidence/P00/v1.0-reconciliation-b.md` (new); this card; it
 - [x] Every REQ-001..012 and CMP-01..11 has a reverse-check entry for this set.
 - [x] Genuine conflicts and architecture choices are decision requests, not silent resolutions.
 - [x] Independent reviewer findings are recorded and material ones resolved; preserved files unchanged; links resolve.
-- [ ] The draft PR's real URL and tested head are recorded here.
+- [x] The draft PR's real URL and tested head are recorded here.
 
 ## Decision request or blocker
 
