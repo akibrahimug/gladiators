@@ -36,6 +36,8 @@ Observation, cause unverified: the coordinator session also has Bash but no Glob
 
 The spec-reader inspected these claims at `51a4a46`, and the reviewer re-checked them at `1417bc0`.
 
+> **Later update, 2026-10-23:** after this inspection, TASK-P00-001 ([PR #3](https://github.com/akibrahimug/gladiators/pull/3)) imported the original GLADIATOR releases into `master`; see the [recovered source index](../sources/originals/RECOVERED.md). The results below describe the inspected revisions only. G00 still awaits reconciliation and review.
+
 | Claim | Result | Evidence |
 | --- | --- | --- |
 | No original v1.0 specification is present; SRC-003 is missing | Confirmed | `docs/sources/originals/` holds only its README, manifest and checklist. The manifest says "0 original specifications imported" and both its tables are empty. The checklist boxes are all unchecked. See [source register](../sources/README.md) and [manifest](../sources/originals/import-manifest.md) |

@@ -1,0 +1,18 @@
+id,algorithm_family,reference_or_approach,owner,priority,required_falsification,starting_reference
+A01,"Arithmetic, ledger and event invariants",Double-entry ledger; integer ticks/lots; Decimal money,Core/Execution/Judges,P0,"property tests, independent ledger, replay, conservation",LEAN architecture
+A02,Clock and market microstructure,Exchange calendars; UTC event time; bid/ask; latency,Data/Execution,P0,"DST, holiday, stale quote, out-of-order event fixtures",LEAN
+A03,Purged time-series validation,Walk-forward; purged/embargo CV; label interval overlap,Judges/Training,P0,no overlap proofs and synthetic leakage trap,AFML
+A04,Multiple testing correction,Deflated Sharpe; PBO; trial ledger,Arena/Judges,P0,noise-only tournament false positive test,Bailey & Lopez de Prado
+A05,Execution and cost modeling,"Spread, fee, impact, slippage, queue/partial fill",Execution/Core,P0,"bid/ask crossing, gap, liquidity, no fill stress",LEAN
+A06,Risk and allocation,Fixed fractional risk; drawdown brakes; exposure; CVaR,Gatekeeper/Core,P0,"gap beyond stop, correlated positions, stale account",Portfolio risk literature
+A07,Prediction baselines,"Naive zero-edge, momentum, reversal, linear/logistic, LightGBM",Gladiators,P1,benchmark against naive after all costs,Qlib
+A08,Calibration and uncertainty,Reliability curves; Brier/log loss; conformal diagnostics,Core/Judges,P1,"calibration drift, sparse regime and small sample tests",Statistical learning
+A09,Ensemble and diversification,Regularised stacking; shrinkage; correlation and marginal utility,Core/Arena,P1,duplicated-model and regime-switch tests,Numerai principles
+A10,Regime and change detection,Volatility filters; CUSUM; change point and drift detection,Core/Management,P1,"false alarm, delayed response and no-trade tests",Time series literature
+A11,Portfolio optimisation,Constrained mean-variance; robust optimisation; HRP,Core,P2,"covariance instability, fees and tiny-account feasibility",LEAN / HRP
+A12,Order execution algorithms,TWAP/VWAP/participation; market vs limit,Execution,P2,partial fills and adverse selection tests,LEAN
+A13,Reinforcement learning,Offline RL; constrained policy evaluation; distribution shift,Gladiators,P3,offline-to-forward generalisation; fail closed,FinRL
+A14,Automated factor discovery,RD-Agent factor proposals with causal feature lineage,Management/Training,P2,"sandbox, trials budget, untouched holdout",RD-Agent
+A15,Crypto market specifics,Venue symbols; funding only if derivatives; 24/7; gaps,Data/Execution,P0,"cross-venue contamination, zero-trade bars, tick sizes",Exchange docs
+A16,ETF market specifics,Splits/dividends; session hours; corporate action timing,Data/Execution,P0,total-return vs tradable price reconciliation,LEAN
+A17,LLM research governance,"Evidence retrieval, prompt injection resistance, bounded agents",Research/Management,P1,"fabricated citation, malicious issue, no-execution tests",LLM security

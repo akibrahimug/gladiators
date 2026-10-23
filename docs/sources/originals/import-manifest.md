@@ -1,21 +1,17 @@
-# Original import manifest
+# Original specification import manifest
 
-[Intake instructions](README.md) · [Intake checklist](intake-checklist.md) · [Source map](../source-map.md)
+Recovered on 2026-10-23. Source: [Day Trading Income Feasibility](https://chatgpt.com/c/6ad910c9-4a70-83ed-b819-7f12576a37c8).
 
-Status on **22 October 2026**: **0 original specifications imported**. This count excludes this manifest and the other intake instructions. SRC-003 remains missing; there is no completeness claim for the original specification collection.
+[Recovered document index](RECOVERED.md) · [Complete member inventory](recovery-inventory.json) · [Archive/member checksums](RECOVERED-SHA256SUMS)
 
-## Original-file register
+The v1.0 release is identified by the original conversation heading “GLADIATOR v1.0 — Architecture update”, its “Download updated GLADIATOR project” control and the downloaded archive filename. Its member 27-ORDER-FLOW-AND-LEDGER-INTELLIGENCE.md supplies the requested architecture text. Original headers may retain earlier per-component versions; the release version does not rewrite them.
 
-Add one row per preserved original or exact message extraction. Use paths relative to this directory. Keep the register empty until actual source content has been obtained.
+Preserved: 10 archives; 405 member files; 380 Markdown file instances; 5 CSV file instances. Each release has its own immutable extracted tree.
 
-| Source/specification ID | Preserved relative path | SHA-256 | Source conversation / message / attachment ID | Capture date and method | Explicit version header | Supersedes / superseded by, with evidence | Requirements | Phases | Components | Reconciliation status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+All recovered members were compared byte-for-byte against ZIP contents and hashed. ZIP integrity checks passed. The pre-existing captured conversation and its checksum file were left unchanged.
 
-For each row, also record the original filename and relative path if a different preservation path was necessary. If a field is unknown, record `unknown` and the evidence needed to resolve it. Never invent source IDs, version text or supersession relationships.
+## Remaining review
 
-## Reconciliation findings
+Independent preservation review and section-by-section reconciliation belong to TASK-P00-001/002. G00 remains pending. The recovered documents include assumptions, old prices, research assertions and a legacy prototype; importing them does not validate those assertions or authorise execution.
 
-| Finding ID | Original source link | Planning-document link | Finding or conflict | Resolution and evidence | Status |
-| --- | --- | --- | --- | --- | --- |
-
-No reconciliation findings can be closed against original specifications until their actual content is recovered. Repeated descriptions of a component across sources must be reconciled with explicit version or decision evidence; later retrieval alone does not establish that one design supersedes another.
+The earlier empty manifest is superseded by this import record; its prior state remains in Git history.

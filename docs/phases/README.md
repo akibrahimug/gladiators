@@ -6,7 +6,7 @@ These folders make the documentation navigable. Their presence does not establis
 
 | Phase | Planning document | Required predecessor | Exit gate | Current state |
 | --- | --- | --- | --- | --- |
-| P00 | [Baseline and source reconciliation](00-baseline/README.md) | None | G00 | Preparing documentation; original specifications pending |
+| P00 | [Baseline and source reconciliation](00-baseline/README.md) | None | G00 | Preparing documentation; originals imported; reconciliation/review pending |
 | P01 | [Research and data access](01-research-and-data-access/README.md) | Accepted G00 | G01 | Not started |
 | P02 | [Event capture](02-event-capture/README.md) | Accepted G01 | G02 | Not started |
 | P03 | [Market state and ledger](03-market-state-and-ledger/README.md) | Accepted G02 | G03 | Not started |
