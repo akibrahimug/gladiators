@@ -4,14 +4,17 @@
 
 ## Start here
 
-Two bootstrap documentation tasks come first: **TASK-DOC-001**, the readiness inspection, and **TASK-DOC-002**, the post-baseline refresh. Original v1.0 recovery blocks the two P00 source tasks and all later implementation. Candidate rows below are a decomposition guide, not dispatchable task packets.
+Two bootstrap documentation tasks came first: **TASK-DOC-001**, the readiness inspection, and **TASK-DOC-002**, the post-baseline refresh. Original v1.0 releases were recovered on 2026-10-23 (TASK-P00-001) and reconciled (TASK-P00-002); G00 now waits on decisions DR-01–DR-12 and the designated reviewer, and still blocks all later implementation. Candidate rows below are a decomposition guide, not dispatchable task packets.
 
 | Task packet | Work state | Prerequisite | PR state |
 | --- | --- | --- | --- |
 | [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Verified | None; no accepted architecture required | Merged — [#1](https://github.com/akibrahimug/gladiators/pull/1) |
 | [TASK-DOC-002 — Refresh handoff after the published baseline](TASK-DOC-002.md) | Verified | TASK-DOC-001 Verified | [#2](https://github.com/akibrahimug/gladiators/pull/2) merged into #1's branch after #1 had merged; carried to `master` by Draft [#8](https://github.com/akibrahimug/gladiators/pull/8) |
 | [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | Verified | Originals recovered; preservation review complete | Import [#3](https://github.com/akibrahimug/gladiators/pull/3) and review [#4](https://github.com/akibrahimug/gladiators/pull/4) merged |
-| [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | Blocked | TASK-P00-001 Verified and source sections available | Blocked — dependencies missing |
+| [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | Verified (umbrella; G00 Pending) | TASK-P00-001 Verified | Not requested (one draft per packet) |
+| [TASK-P00-002a — Map README and docs 01–14](TASK-P00-002a.md) | Verified | TASK-P00-001 Verified | Merged — [#5](https://github.com/akibrahimug/gladiators/pull/5) |
+| [TASK-P00-002b — Map core-engine and components 00–13](TASK-P00-002b.md) | Verified | TASK-P00-002a (integrated as base) | [#6](https://github.com/akibrahimug/gladiators/pull/6) merged into packet a's branch after #5 had merged; not yet on `master` |
+| [TASK-P00-002c — Map components 14–27, lineage annex, integrate](TASK-P00-002c.md) | Verified | TASK-P00-002b (integrated as base) | [#7](https://github.com/akibrahimug/gladiators/pull/7) merged into packet b's branch after #6 had merged; not yet on `master` |
 
 A card is the task's authoritative record. The coordinator updates this index when its state changes. Owner, branch, commit, evidence and actual PR URL are kept on the card.
 
