@@ -9,7 +9,7 @@
 | Dependencies | None for local inspection |
 | Coordinator / workers | Claude Code main session, claimed 2026-10-22: coordinator and sole writer of this card, its board row, the report and the DEC-009 row. `gladiator-spec-reader`: read-only source/gate/instruction inspection. `gladiator-reviewer`: read-only review of the report and this card |
 | Repository / base / branch | akibrahimug/gladiators (default `master`); base `master` @ `cc357bccd1800348ba5e45b3fd362a3ceef40c13`; branch `task/TASK-DOC-001-handoff-inspection` |
-| PR state / URL | Open — [#1](https://github.com/akibrahimug/gladiators/pull/1). Opened as a draft on 2026-10-22 under [DEC-009](../decisions/README.md) (user instruction: a branch and PR per task); the user marked it ready for review at 2026-10-22T21:31:44Z. Tested head `25e722624537c8136f5e029811fcff75b569ff9f`; later commits record PR metadata and the DEC-010 decision only. Replaces the earlier "Not requested" default. Human review and merge pending |
+| PR state / URL | Merged — [#1](https://github.com/akibrahimug/gladiators/pull/1), merged by the user at 2026-10-23T10:00:39Z. Opened as a draft on 2026-10-22 under [DEC-009](../decisions/README.md); marked ready for review at 2026-10-22T21:31:44Z. Tested head `25e722624537c8136f5e029811fcff75b569ff9f` |
 
 ## Objective and scope
 

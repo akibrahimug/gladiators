@@ -466,6 +466,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/sources/source-map.md](<sources/source-map.md>) |
 | [docs/tasks/README.md](<tasks/README.md>) |
 | [docs/tasks/TASK-DOC-001.md](<tasks/TASK-DOC-001.md>) |
+| [docs/tasks/TASK-DOC-002.md](<tasks/TASK-DOC-002.md>) |
 | [docs/tasks/TASK-P00-001.md](<tasks/TASK-P00-001.md>) |
 | [docs/tasks/TASK-P00-002.md](<tasks/TASK-P00-002.md>) |
 | [docs/tasks/TASK-P00-002a.md](<tasks/TASK-P00-002a.md>) |
@@ -475,5 +476,6 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/traceability/components.md](<traceability/components.md>) |
 | [docs/traceability/requirements-matrix.md](<traceability/requirements-matrix.md>) |
 | [docs/validation/acceptance-scenarios.md](<validation/acceptance-scenarios.md>) |
+| [docs/validation/claude-handoff.md](<validation/claude-handoff.md>) |
 | [docs/validation/setup-report.md](<validation/setup-report.md>) |
 | [docs/working-with-claude.md](<working-with-claude.md>) |
