@@ -11,7 +11,7 @@
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base `task/TASK-P00-002b-core-mapping` @ `fcf1775f4cbc16794027fcf4ac1a281f13fd8ab5` (packet b final head, merged in `a60fda2`; originally branched from `d959bfd`) |
 | Task branch / worker worktrees | `task/TASK-P00-002c-components-integration`; read-only workers need no worktree |
-| PR state / URL | Draft — [#7](https://github.com/akibrahimug/gladiators/pull/7), opened 2026-10-23 under DEC-009 ([PR #1](https://github.com/akibrahimug/gladiators/pull/1)); stacked on #6 |
+| PR state / URL | [#7](https://github.com/akibrahimug/gladiators/pull/7) was merged at 2026-10-23T19:12:47Z into its stacked base `task/TASK-P00-002b-core-mapping`, so its changes did not reach `master`. Follow-up Draft [#9](https://github.com/akibrahimug/gladiators/pull/9) carries them (head 897f1cc included) |
 | Tested head revision / evidence | `95a57eaa92f70d9b5398019a88b7b038c86f08a2`; the next commit records PR metadata only |
 
 Part of [TASK-P00-002](TASK-P00-002.md), split by [DEC-012](../decisions/README.md).
