@@ -13,7 +13,7 @@ Define research decision contracts for Core, Judges, and Managers and their evid
 ## Documentation deliverables
 
 - [This phase planning specification](README.md), defining the decision-design work.
-- Component contracts describing inputs, outputs, authority, versions, state, and failure behavior for Core, Judges, and Managers; future evidence: `../../evidence/P05/decision-contracts.md`.
+- Component contracts describing inputs, outputs, authority, versions, state, and failure behavior for the Core kernel, Gladiators, Arena, Judges, Management and Gatekeeper (DEC-014); future evidence: `../../evidence/P05/decision-contracts.md`.
 - A deterministic policy and abstention specification covering data quality, state validity, ledger reconciliation, conflicting assessments, and approved risk constraints; future evidence: `../../evidence/P05/policy-and-abstention.md`.
 - A decision trace format and scenario validation matrix mapping each decision to data, features, component versions, rules, and reasons; future evidence: `../../evidence/P05/decision-validation.md`.
 - Cited algorithm alternatives, reference baselines, adaptation rationale and bounded fixture comparisons for each research hypothesis, including rejected candidates and limitations; future evidence: `../../evidence/P05/algorithm-research.md`. VAL-009 covers this comparison; held-out end-to-end evaluation follows in P06.
@@ -45,6 +45,6 @@ Pass only when each research hypothesis has cited algorithm alternatives, refere
 
 **Failure and rework:** keep the affected pathway in abstention, revise its contract or policy, and repeat impacted scenarios. Return to G04 for input-definition defects or G03 for ledger/state defects; reopen downstream evaluations affected by policy changes.
 
-**Exact next step:** after G04 acceptance, draft the responsibility and authority table for Core, Judges, and Managers using the accepted v1.0 terminology.
+**Exact next step:** after G04 acceptance, draft the responsibility and authority table for the Core kernel, Gladiators, Arena, Judges, Management and Gatekeeper using the DEC-014 terminology. Reinstated L-026 (dependency security) also applies.
 
 **Implementation boundary:** these are research and policy documents. No autonomous agent, order-routing connector, or live trading behavior is implemented or authorized.

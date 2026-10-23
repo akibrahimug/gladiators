@@ -23,9 +23,9 @@
 | REQ-015 | Enforce explicit spend budgets and alerts for data, compute and services | Proposed (DEC-019); FR-13; A-069, A-075, B-082, C-002; amounts provisional (DEC-017) | G01 budget; G07 operations |
 | REQ-016 | Define the strategy lifecycle and promotion rules, with an immutable record of failed and retired candidates | Proposed (DEC-019); A-046, A-114, B-063, B-080 | G05 lifecycle contract; G06 promotion evidence |
 | REQ-017 | Specify position sizing and exits deterministically: size by cash and loss budget, model-independent stops, no averaging down | Proposed (DEC-019); A-053, A-055, A-057–A-059, B-029, B-055 | G05 sizing/exit scenarios |
-| REQ-018 | Provide an operator CLI surface for every documented action; no frontend | Proposed (DEC-019); A-117, B-065, B-084, C-008, C-057 | G07 operations; per-phase acceptance commands |
+| REQ-018 | Provide an operator CLI surface for every documented action; no frontend | Proposed (DEC-019); A-117, B-065, B-084, C-008, C-057 | G05/G07 operations; per-phase acceptance commands |
 | REQ-019 | Track upstream dependency issues, pins and fork policy as untrusted evidence | Proposed (DEC-019); B-086, C-036, C-039; reinstated L-026 | G05 dependency review; G07 |
-| REQ-020 | Observe public/on-chain ledger records as a source with stated coverage; never infer a universal money ledger | Proposed (DEC-018, DEC-019); A-013, C-105, C-108; owner CMP-05 with CMP-01 | G01 source coverage; G04 context |
+| REQ-020 | Observe public/on-chain ledger records as a source with stated coverage; never infer a universal money ledger | Proposed (DEC-018, DEC-019); A-013, C-105, C-108; proposed owner CMP-05 with CMP-01 | G01 source coverage; G04 context |
 
 ## Interpretations to resolve
 

@@ -23,6 +23,8 @@ Specify how event-derived observations and external context become time-consiste
 
 **Components:** [CMP-03 book/replay, CMP-05 context, CMP-06 features/regimes, CMP-13 Gladiators, CMP-11 audit and operations](../../traceability/components.md).
 
+**Reinstated sources (DEC-020):** T19–T30 as aliases of the v10 24:189 acceptance cases (L-034) apply to this phase; see the [baseline record](../../evidence/P00/baseline-decision.md#reinstated-sections).
+
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G04 in the [milestone register](../../milestones.md).
 
 ## Ordered tasks

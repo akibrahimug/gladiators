@@ -23,6 +23,8 @@ Specify how source observations become a provenance-preserving event record that
 
 **Components:** [CMP-01 source registry, CMP-02 ingest and raw log, CMP-03 book/replay, CMP-11 audit and operations](../../traceability/components.md).
 
+**Reinstated sources (DEC-020):** L-008 and L-023 (transport invariants and correctness), L-010, L-024 and L-025 (data and connectors) apply to this phase; see the [baseline record](../../evidence/P00/baseline-decision.md#reinstated-sections).
+
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G02 in the [milestone register](../../milestones.md).
 
 ## Ordered tasks

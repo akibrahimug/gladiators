@@ -1,10 +1,10 @@
-# Architecture map — pending v1.0 source
+# Architecture map
 
-> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported; v10 is not a complete superset of earlier releases (PF-05). See the [recovered document index](<../sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported; v10 is not a complete superset of earlier releases (PF-05). See the [recovered document index](<../sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. Reconciliation and decisions are done (DEC-014–DEC-025); G00 awaits the reviewer's decision.
 
 [Documentation index](../README.md) · [Component register](../traceability/components.md) · [Contract checklist](contracts.md)
 
-**Status:** proposed navigation and responsibility map, created from the accessible brief. It is not the missing v1.0 architecture. Component names below are provisional workspace labels.
+**Status:** proposed navigation and responsibility map, first created from the accessible brief and now aligned with the v10 role model (DEC-014). Component IDs are workspace aliases for original names.
 
 > **Reconciliation, 2026-10-23:** this map is now compared section by section with the v10 release ([summary](../evidence/P00/v1.0-reconciliation.md)). The user decided the component model on 2026-10-23 ([DEC-014](../decisions/README.md)), and the flow below follows it. Boundaries remain proposals until their gates.
 
@@ -38,6 +38,12 @@ flowchart TD
   R --> J
   J --> M["CMP-09 Management"]
   M -. "promotion and budgets" .-> G
+  F -- "regime state" --> C
+  F -- "regime state" --> K
+  X -- "textual evidence" --> G
+  L --> J
+  J --> R
+  R --> M
   A["CMP-11 Audit / configuration"] -. "lineage across all stages" .-> I
   A -.-> K
   A -.-> T

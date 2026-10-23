@@ -2,7 +2,7 @@
 
 Claude Code handoff: [P00 task packets and candidates](../../tasks/README.md#p00) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: PROPOSED; documentation preparation in progress. G00 is pending reconciliation/review of the recovered v1.0 specifications.**
+**Status: PROPOSED; tasks 1–5 done and task 6 awaits the G00 decision. G00 is pending the reviewer's decision (DEC-026).**
 
 **Dependencies:** none. This phase establishes the prerequisite for every later phase.
 
@@ -21,7 +21,7 @@ Establish which documents are authoritative, preserve their original contents, a
 
 **Requirements:** [REQ-003, REQ-011, REQ-012](../../requirements.md), plus the baseline for all other requirements.
 
-**Components:** [CMP-01 through CMP-11](../../traceability/components.md); no component definition is accepted until reconciled.
+**Components:** [CMP-01 through CMP-14](../../traceability/components.md) (DEC-014); boundaries remain proposals until their gates.
 
 **Gate:** G00 in the [milestone register](../../milestones.md).
 
@@ -31,7 +31,7 @@ Establish which documents are authoritative, preserve their original contents, a
 2. [x] Inventory and preserve the source documents without editing their contents; give each source a stable identity.
 3. [x] Compare each proposed requirement and component with an exact source location, or mark it as a proposal with no source match.
 4. [x] Resolve architectural vocabulary, boundaries, conflicts, and intended revision precedence with the baseline reviewer.
-5. [x] Select and document the initial research scope, decision owner, gate evidence format, and review criteria.
+5. [x] Select and document the initial research scope, decision owner, gate evidence format, and review criteria. (The scope is the set of provisional inputs P01 evaluates; none is a selection, per DEC-017.)
 6. [ ] Update the plan and traceability to match the accepted baseline, then record the G00 decision.
 
 Progress 2026-10-23 (task 1 with recorded gaps: archives not compared with the browser downloads, PF-01; v1.0 conversation evidence not preserved, PF-02): tasks 1–2 by [TASK-P00-001](../../tasks/TASK-P00-001.md) ([preservation review](../../evidence/P00/preservation-review.md)); task 3 by [TASK-P00-002](../../tasks/TASK-P00-002.md) ([reconciliation summary](../../evidence/P00/v1.0-reconciliation.md)). Tasks 4–5 by [TASK-P00-003](../../tasks/TASK-P00-003.md): decisions DEC-014–DEC-025 and the [baseline record](../../evidence/P00/baseline-decision.md). Task 6: the plan and traceability are updated; the G00 decision is the reviewer's (DEC-026), and the [G00 record](../../evidence/P00/g00-gate-record.md) is Pending.

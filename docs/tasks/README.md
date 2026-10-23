@@ -93,7 +93,7 @@ Candidates are Draft pending G04 and accepted [P05 roles](../phases/05-core-judg
 | --- | --- | --- |
 | TASK-P05-001 | Cited algorithm alternatives, bounded baseline comparisons and role/decision contracts | Research/documentation; G04; VAL-009 bounded stage |
 | TASK-P05-002 | One accepted Core/Judge research-decision slice and provenance | Implementation; accepted TASK-P05-001 contract |
-| TASK-P05-003 | Deterministic Manager/risk policy slice with controlled ledger/simulator stubs | Implementation/validation; accepted policy; VAL-010/011 bounded stage |
+| TASK-P05-003 | Deterministic Gatekeeper (CMP-12) policy slice with controlled ledger/simulator stubs | Implementation/validation; accepted policy; VAL-010/011 bounded stage |
 
 Policy authority and values must be decided before TASK-P05-003 is Ready. Contract changes remain coordinator-owned.
 
