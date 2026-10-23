@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Work state | In progress (claimed 2026-10-23; mapping and integration drafted; TASK-P00-002b to be merged as base after its review) |
+| Work state | In progress (claimed 2026-10-23; TASK-P00-002b integrated as base) |
 | Type | Documentation |
 | Phase / gate contribution | P00 / G00 reconciliation contribution; passes no gate |
 | Requirement / component IDs | REQ-001 through REQ-012; CMP-01 through CMP-11 as provisional aliases |
@@ -11,7 +11,7 @@
 | Coordinator / workers | Claude Code main session (coordinator, sole writer). One read-only `gladiator-spec-reader` mapping worker for this section set; `gladiator-reviewer` for coverage review |
 | Repository / base branch / base SHA | akibrahimug/gladiators; base TASK-P00-002b head (stacked) |
 | Task branch / worker worktrees | `task/TASK-P00-002c-components-integration`; read-only workers need no worktree |
-| PR state / URL | Not yet opened; draft due under DEC-009 |
+| PR state / URL | Not requested; draft not yet opened (DEC-009, recorded in [PR #1](https://github.com/akibrahimug/gladiators/pull/1), not yet merged into this branch's base) |
 | Tested head revision / evidence | Unset until observed |
 
 Part of [TASK-P00-002](TASK-P00-002.md), split by [DEC-012](../decisions/README.md).
