@@ -1,5 +1,7 @@
 # Architecture map — pending v1.0 source
 
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<../sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+
 [Documentation index](../README.md) · [Component register](../traceability/components.md) · [Contract checklist](contracts.md)
 
 **Status:** proposed navigation and responsibility map, created from the accessible brief. It is not the missing v1.0 architecture. Component names below are provisional workspace labels.

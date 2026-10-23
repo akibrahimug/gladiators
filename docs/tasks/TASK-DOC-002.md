@@ -66,7 +66,7 @@ Excluded scope:
 
 - [x] No allowed-path document still claims the baseline is uncommitted, publishing access is unverified, Claude has not run, or agent discovery is unverified. Each corrected statement is consistent with the TASK-DOC-001 report. (F3, F7, F9, F10)
 - [x] The workflow's TASK-DOC-001/TASK-DOC-002 paragraph, its first-session prompt and the board's TASK-DOC-002 text agree with DEC-009 and the actual task sequence. (F13)
-- [x] TASK-P00-001 and TASK-P00-002 remain Blocked, with the missing source as the only stated reason.
+- [x] The TASK-P00-001 and TASK-P00-002 PR fields carry no stale publishing reason and match actual state. (Amended 2026-10-23 after TASK-P00-001's PR #3 merged; the original criterion was "remain Blocked, with the missing source as the only stated reason".)
 - [x] CHANGELOG has a 0.3 entry; the 0.2 entry and the setup report are unchanged. (F11)
 - [x] The catalog lists exactly the tracked files, including the TASK-DOC-001 report and this card. The documentation and evidence indexes link the report. (F12)
 - [x] The README's stray second H1 is removed. (F8)

@@ -6,7 +6,7 @@
 
 | Gate | Phase / prerequisite | Required acceptance evidence | Current state | Owner / reviewer / decision |
 | --- | --- | --- | --- | --- |
-| G00 | [P00](phases/00-baseline/README.md), no predecessor | Preserved original v1.0 specs; complete inventory/checksums; source-section mappings; conflict dispositions; accepted baseline | Pending — original v1.0 missing | Unassigned / unassigned / no decision |
+| G00 | [P00](phases/00-baseline/README.md), no predecessor | Preserved original v1.0 specs; complete inventory/checksums; source-section mappings; conflict dispositions; accepted baseline | Pending — original v1.0 recovered; reconciliation/review outstanding | Unassigned / unassigned / no decision |
 | G01 | [P01](phases/01-research-and-data-access/README.md), G00 | Bounded venue/instrument/source scope; access and coverage limits; algorithm research questions; documented workload, quality/latency/recovery targets and evaluation methods | Not started | Unassigned / unassigned / no decision |
 | G02 | [P02](phases/02-event-capture/README.md), G01 | Accepted event contract; source/raw lineage; representative capture and gap/duplicate/order/staleness evidence against agreed thresholds | Not started | Unassigned / unassigned / no decision |
 | G03 | [P03](phases/03-market-state-and-ledger/README.md), G02 | Feed-specific book fixtures and reproducible replay; invalidation/recovery; separate simulated account-ledger reconciliation and invariants | Not started | Unassigned / unassigned / no decision |

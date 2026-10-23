@@ -1,5 +1,7 @@
 # GLADIATOR
 
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<docs/sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+
 Order-flow and ledger research system — documentation workspace.
 
 **Workspace edition:** 0.3, updated 22 October 2026 (Europe/London).  
@@ -20,7 +22,7 @@ Open **GLADIATOR.code-workspace** in Cursor or another compatible IDE. Relative 
 
 Use Codex for brainstorming and design discussion. Use Claude Code for assigned implementation, wiring, checks and PRs. Start Claude Code in this GLADIATOR folder; [CLAUDE.md](CLAUDE.md) points to the [task board](docs/tasks/README.md), [execution workflow](docs/working-with-claude.md), three project agents and PR template.
 
-The handoff is committed and pushed to the [GitHub repository](https://github.com/akibrahimug/gladiators) on `master`. Claude Code's readiness inspection, [TASK-DOC-001](docs/tasks/TASK-DOC-001.md), recorded agent discovery and verified publishing access ([report](docs/validation/claude-handoff.md)). Each task gets its own branch and draft PR ([DEC-009](docs/decisions/README.md)). Later implementation candidates remain Draft while the original baseline is missing.
+The handoff is committed and pushed to the [GitHub repository](https://github.com/akibrahimug/gladiators) on `master`. Claude Code's readiness inspection, [TASK-DOC-001](docs/tasks/TASK-DOC-001.md), recorded agent discovery and verified publishing access ([report](docs/validation/claude-handoff.md)). Each task gets its own branch and draft PR ([DEC-009](docs/decisions/README.md)). Later implementation candidates remain Draft while G00 is pending.
 
 ## What is established
 

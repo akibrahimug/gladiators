@@ -10,7 +10,7 @@ Two bootstrap documentation tasks come first: **TASK-DOC-001**, the readiness in
 | --- | --- | --- | --- |
 | [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Verified | None; no accepted architecture required | Open — [#1](https://github.com/akibrahimug/gladiators/pull/1) |
 | [TASK-DOC-002 — Refresh handoff after the published baseline](TASK-DOC-002.md) | Verified | TASK-DOC-001 Verified | Draft — [#2](https://github.com/akibrahimug/gladiators/pull/2) |
-| [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | Blocked | Actual original specification input | Blocked — original source input missing |
+| [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | In progress | Originals recovered; preservation review pending | Merged — [#3](https://github.com/akibrahimug/gladiators/pull/3) |
 | [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | Blocked | TASK-P00-001 Verified and source sections available | Blocked — dependencies missing |
 
 A card is the task's authoritative record. The coordinator updates this index when its state changes. Owner, branch, commit, evidence and actual PR URL are kept on the card.

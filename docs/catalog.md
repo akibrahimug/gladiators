@@ -1,58 +1,476 @@
 # File catalog
 
-[Project home](../README.md) · [Documentation index](README.md)
+Original releases recovered 2026-10-23. [Recovered source index](sources/originals/RECOVERED.md) · [Import manifest](sources/originals/import-manifest.md)
 
-Project documentation and handoff files are listed below; Git internals and runtime worktrees are excluded. Original v1.0 specifications imported: **0**. The original-intake folder currently contains guidance and an empty manifest only.
+Original source files are preserved unchanged. Archive code is historical material and was not executed.
 
-| File | Type / purpose |
-| --- | --- |
-| [.claude/agents/implementer.md](../.claude/agents/implementer.md) | Markdown document |
-| [.claude/agents/reviewer.md](../.claude/agents/reviewer.md) | Markdown document |
-| [.claude/agents/spec-reader.md](../.claude/agents/spec-reader.md) | Markdown document |
-| [.github/pull_request_template.md](../.github/pull_request_template.md) | Markdown document |
-| [CHANGELOG.md](../CHANGELOG.md) | Change log |
-| [CLAUDE.md](../CLAUDE.md) | GLADIATOR — Claude Code entry point |
-| [GLADIATOR.code-workspace](../GLADIATOR.code-workspace) | IDE workspace configuration |
-| [README.md](../README.md) | GLADIATOR |
-| [docs/README.md](README.md) | Documentation index |
-| [docs/architecture/README.md](architecture/README.md) | Architecture map — pending v1.0 source |
-| [docs/architecture/contracts.md](architecture/contracts.md) | Interface and data contract checklist |
-| [docs/backlog.md](backlog.md) | Open backlog |
-| [docs/catalog.md](catalog.md) | File catalog |
-| [docs/decisions/README.md](decisions/README.md) | Decision register |
-| [docs/evidence/README.md](evidence/README.md) | Evidence and gate records |
-| [docs/evidence/gate-record-template.md](evidence/gate-record-template.md) | Gate record template |
-| [docs/ide-guide.md](ide-guide.md) | IDE navigation |
-| [docs/milestones.md](milestones.md) | Milestone gate register |
-| [docs/phases/00-baseline/README.md](phases/00-baseline/README.md) | P00 — Baseline and source reconciliation |
-| [docs/phases/01-research-and-data-access/README.md](phases/01-research-and-data-access/README.md) | P01 — Research and data access |
-| [docs/phases/02-event-capture/README.md](phases/02-event-capture/README.md) | P02 — Event capture |
-| [docs/phases/03-market-state-and-ledger/README.md](phases/03-market-state-and-ledger/README.md) | P03 — Market state and ledger |
-| [docs/phases/04-features-and-context/README.md](phases/04-features-and-context/README.md) | P04 — Features and context |
-| [docs/phases/05-core-judges-and-managers/README.md](phases/05-core-judges-and-managers/README.md) | P05 — Core, Judges, and Managers |
-| [docs/phases/06-simulation-and-validation/README.md](phases/06-simulation-and-validation/README.md) | P06 — Simulation and validation |
-| [docs/phases/07-paper-readiness/README.md](phases/07-paper-readiness/README.md) | P07 — Paper readiness |
-| [docs/phases/README.md](phases/README.md) | Phase documentation |
-| [docs/requirements.md](requirements.md) | Requirements register |
-| [docs/roadmap.md](roadmap.md) | Phased development roadmap |
-| [docs/sources/README.md](sources/README.md) | Source register and preservation |
-| [docs/sources/captured/SHA256SUMS](sources/captured/SHA256SUMS) | Captured-source integrity checksums |
-| [docs/sources/captured/conversation-reader.json](sources/captured/conversation-reader.json) | Preserved partial conversation-reader response |
-| [docs/sources/captured/current-request.md](sources/captured/current-request.md) | Current user request |
-| [docs/sources/captured/recovered-user-messages.md](sources/captured/recovered-user-messages.md) | Recovered user messages and assistant markers |
-| [docs/sources/originals/README.md](sources/originals/README.md) | Original specifications: preserved intake |
-| [docs/sources/originals/import-manifest.md](sources/originals/import-manifest.md) | Original import manifest |
-| [docs/sources/originals/intake-checklist.md](sources/originals/intake-checklist.md) | Original-specification intake checklist |
-| [docs/sources/source-map.md](sources/source-map.md) | Source-to-requirement map |
-| [docs/tasks/README.md](tasks/README.md) | Claude task board |
-| [docs/tasks/TASK-DOC-001.md](tasks/TASK-DOC-001.md) | TASK-DOC-001 — Check the Claude handoff and repository readiness |
-| [docs/tasks/TASK-DOC-002.md](tasks/TASK-DOC-002.md) | TASK-DOC-002 — Refresh handoff documents after the published baseline |
-| [docs/tasks/TASK-P00-001.md](tasks/TASK-P00-001.md) | TASK-P00-001 — Preserve the original v1.0 specifications |
-| [docs/tasks/TASK-P00-002.md](tasks/TASK-P00-002.md) | TASK-P00-002 — Reconcile specifications with the phased plan |
-| [docs/tasks/task-template.md](tasks/task-template.md) | TASK template — replace with a unique TASK-ID and outcome |
-| [docs/traceability/components.md](traceability/components.md) | Component responsibility and dependency register |
-| [docs/traceability/requirements-matrix.md](traceability/requirements-matrix.md) | Requirement traceability matrix |
-| [docs/validation/acceptance-scenarios.md](validation/acceptance-scenarios.md) | Proposed acceptance scenarios |
-| [docs/validation/claude-handoff.md](validation/claude-handoff.md) | Claude handoff and repository readiness |
-| [docs/validation/setup-report.md](validation/setup-report.md) | Documentation setup verification |
-| [docs/working-with-claude.md](working-with-claude.md) | Working with Claude Code |
+| File |
+| --- |
+| [.claude/agents/implementer.md](<../.claude/agents/implementer.md>) |
+| [.claude/agents/reviewer.md](<../.claude/agents/reviewer.md>) |
+| [.claude/agents/spec-reader.md](<../.claude/agents/spec-reader.md>) |
+| [.github/pull_request_template.md](<../.github/pull_request_template.md>) |
+| [CHANGELOG.md](<../CHANGELOG.md>) |
+| [CLAUDE.md](<../CLAUDE.md>) |
+| [GLADIATOR.code-workspace](<../GLADIATOR.code-workspace>) |
+| [README.md](<../README.md>) |
+| [docs/README.md](<README.md>) |
+| [docs/architecture/README.md](<architecture/README.md>) |
+| [docs/architecture/contracts.md](<architecture/contracts.md>) |
+| [docs/backlog.md](<backlog.md>) |
+| [docs/catalog.md](<catalog.md>) |
+| [docs/decisions/README.md](<decisions/README.md>) |
+| [docs/evidence/README.md](<evidence/README.md>) |
+| [docs/evidence/gate-record-template.md](<evidence/gate-record-template.md>) |
+| [docs/ide-guide.md](<ide-guide.md>) |
+| [docs/milestones.md](<milestones.md>) |
+| [docs/phases/00-baseline/README.md](<phases/00-baseline/README.md>) |
+| [docs/phases/01-research-and-data-access/README.md](<phases/01-research-and-data-access/README.md>) |
+| [docs/phases/02-event-capture/README.md](<phases/02-event-capture/README.md>) |
+| [docs/phases/03-market-state-and-ledger/README.md](<phases/03-market-state-and-ledger/README.md>) |
+| [docs/phases/04-features-and-context/README.md](<phases/04-features-and-context/README.md>) |
+| [docs/phases/05-core-judges-and-managers/README.md](<phases/05-core-judges-and-managers/README.md>) |
+| [docs/phases/06-simulation-and-validation/README.md](<phases/06-simulation-and-validation/README.md>) |
+| [docs/phases/07-paper-readiness/README.md](<phases/07-paper-readiness/README.md>) |
+| [docs/phases/README.md](<phases/README.md>) |
+| [docs/requirements.md](<requirements.md>) |
+| [docs/roadmap.md](<roadmap.md>) |
+| [docs/sources/README.md](<sources/README.md>) |
+| [docs/sources/captured/SHA256SUMS](<sources/captured/SHA256SUMS>) |
+| [docs/sources/captured/conversation-reader.json](<sources/captured/conversation-reader.json>) |
+| [docs/sources/captured/current-request.md](<sources/captured/current-request.md>) |
+| [docs/sources/captured/recovered-user-messages.md](<sources/captured/recovered-user-messages.md>) |
+| [docs/sources/originals/README.md](<sources/originals/README.md>) |
+| [docs/sources/originals/RECOVERED-SHA256SUMS](<sources/originals/RECOVERED-SHA256SUMS>) |
+| [docs/sources/originals/RECOVERED.md](<sources/originals/RECOVERED.md>) |
+| [docs/sources/originals/archives/gladiator-algorithm-assurance-v8.zip](<sources/originals/archives/gladiator-algorithm-assurance-v8.zip>) |
+| [docs/sources/originals/archives/gladiator-competitive-intelligence-v7.zip](<sources/originals/archives/gladiator-competitive-intelligence-v7.zip>) |
+| [docs/sources/originals/archives/gladiator-core-components-v3.zip](<sources/originals/archives/gladiator-core-components-v3.zip>) |
+| [docs/sources/originals/archives/gladiator-core-research-update-v4.zip](<sources/originals/archives/gladiator-core-research-update-v4.zip>) |
+| [docs/sources/originals/archives/gladiator-core-reviewed-v5.zip](<sources/originals/archives/gladiator-core-reviewed-v5.zip>) |
+| [docs/sources/originals/archives/gladiator-market-awareness-v9.zip](<sources/originals/archives/gladiator-market-awareness-v9.zip>) |
+| [docs/sources/originals/archives/gladiator-order-flow-ledger-v10 (1).zip](<sources/originals/archives/gladiator-order-flow-ledger-v10 (1).zip>) |
+| [docs/sources/originals/archives/gladiator-upstream-issues-v6.zip](<sources/originals/archives/gladiator-upstream-issues-v6.zip>) |
+| [docs/sources/originals/archives/trading-ai-core-kernel-v2.zip](<sources/originals/archives/trading-ai-core-kernel-v2.zip>) |
+| [docs/sources/originals/archives/trading-ai-spec.zip](<sources/originals/archives/trading-ai-spec.zip>) |
+| [docs/sources/originals/import-manifest.md](<sources/originals/import-manifest.md>) |
+| [docs/sources/originals/intake-checklist.md](<sources/originals/intake-checklist.md>) |
+| [docs/sources/originals/recovery-inventory.json](<sources/originals/recovery-inventory.json>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/README.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/ACCEPTANCE.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/CORE.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/CORE.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/DATA-RAG.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/DATA-RAG.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/KERNEL.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/MODEL-SELECTION.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/MODEL-SELECTION.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/RUN.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/RUN.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/02-ARENA.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/02-ARENA.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/03-JUDGES.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/03-JUDGES.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/04-MANAGEMENT.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/04-MANAGEMENT.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/05-GATEKEEPER.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/05-GATEKEEPER.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/06-GLADIATORS.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/06-GLADIATORS.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/09-CONNECTORS.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/09-CONNECTORS.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/10-DATA.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/10-DATA.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/21-ALGORITHM-RESEARCH-AND-REVERSE-ENGINEERING.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/21-ALGORITHM-RESEARCH-AND-REVERSE-ENGINEERING.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/22-ALGORITHM-REGISTER.csv](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/22-ALGORITHM-REGISTER.csv>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/23-CORE-ASSURANCE-AND-PEER-REVIEW.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/23-CORE-ASSURANCE-AND-PEER-REVIEW.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/README.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/core-engine/components/README.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/14-core-engine-build-spec.md](<sources/originals/releases/gladiator-algorithm-assurance-v8/trading-ai-spec/docs/14-core-engine-build-spec.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/README.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/ACCEPTANCE.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/CORE.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/CORE.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/DATA-RAG.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/DATA-RAG.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/KERNEL.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/MODEL-SELECTION.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/MODEL-SELECTION.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/RUN.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/RUN.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/02-ARENA.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/02-ARENA.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/03-JUDGES.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/03-JUDGES.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/04-MANAGEMENT.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/04-MANAGEMENT.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/05-GATEKEEPER.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/05-GATEKEEPER.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/06-GLADIATORS.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/06-GLADIATORS.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/09-CONNECTORS.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/09-CONNECTORS.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/10-DATA.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/10-DATA.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/README.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/core-engine/components/README.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/14-core-engine-build-spec.md](<sources/originals/releases/gladiator-competitive-intelligence-v7/trading-ai-spec/docs/14-core-engine-build-spec.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/README.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/ACCEPTANCE.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/CORE.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/CORE.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/DATA-RAG.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/DATA-RAG.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/KERNEL.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/MODEL-SELECTION.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/MODEL-SELECTION.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/RUN.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/RUN.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/02-ARENA.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/02-ARENA.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/03-JUDGES.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/03-JUDGES.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/04-MANAGEMENT.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/04-MANAGEMENT.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/05-GATEKEEPER.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/05-GATEKEEPER.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/06-GLADIATORS.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/06-GLADIATORS.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/09-CONNECTORS.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/09-CONNECTORS.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/10-DATA.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/10-DATA.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/README.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/components/README.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/runtime/core.py](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/runtime/core.py>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/tests/test_core.py](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/core-engine/tests/test_core.py>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/14-core-engine-build-spec.md](<sources/originals/releases/gladiator-core-components-v3/trading-ai-spec/docs/14-core-engine-build-spec.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/README.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/ACCEPTANCE.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/CORE.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/CORE.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/DATA-RAG.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/DATA-RAG.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/KERNEL.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/MODEL-SELECTION.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/MODEL-SELECTION.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/RUN.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/RUN.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/02-ARENA.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/02-ARENA.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/03-JUDGES.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/03-JUDGES.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/04-MANAGEMENT.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/04-MANAGEMENT.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/05-GATEKEEPER.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/05-GATEKEEPER.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/06-GLADIATORS.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/06-GLADIATORS.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/09-CONNECTORS.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/09-CONNECTORS.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/10-DATA.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/10-DATA.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/README.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/components/README.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/runtime/core.py](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/runtime/core.py>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/tests/test_core.py](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/core-engine/tests/test_core.py>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/14-core-engine-build-spec.md](<sources/originals/releases/gladiator-core-research-update-v4/trading-ai-spec/docs/14-core-engine-build-spec.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/README.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/audit/spec_audit.py](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/audit/spec_audit.py>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/audit/tests/test_spec_audit.py](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/audit/tests/test_spec_audit.py>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/ACCEPTANCE.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/CORE.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/CORE.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/DATA-RAG.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/DATA-RAG.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/KERNEL.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/MODEL-SELECTION.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/MODEL-SELECTION.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/RUN.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/RUN.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/02-ARENA.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/02-ARENA.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/03-JUDGES.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/03-JUDGES.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/04-MANAGEMENT.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/04-MANAGEMENT.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/05-GATEKEEPER.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/05-GATEKEEPER.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/06-GLADIATORS.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/06-GLADIATORS.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/09-CONNECTORS.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/09-CONNECTORS.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/10-DATA.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/10-DATA.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/README.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/core-engine/components/README.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/14-core-engine-build-spec.md](<sources/originals/releases/gladiator-core-reviewed-v5/trading-ai-spec/docs/14-core-engine-build-spec.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/README.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/ACCEPTANCE.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/CORE.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/CORE.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/DATA-RAG.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/DATA-RAG.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/KERNEL.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/MODEL-SELECTION.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/MODEL-SELECTION.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/RUN.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/RUN.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/02-ARENA.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/02-ARENA.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/03-JUDGES.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/03-JUDGES.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/04-MANAGEMENT.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/04-MANAGEMENT.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/05-GATEKEEPER.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/05-GATEKEEPER.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/06-GLADIATORS.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/06-GLADIATORS.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/09-CONNECTORS.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/09-CONNECTORS.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/10-DATA.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/10-DATA.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/21-ALGORITHM-RESEARCH-AND-REVERSE-ENGINEERING.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/21-ALGORITHM-RESEARCH-AND-REVERSE-ENGINEERING.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/22-ALGORITHM-REGISTER.csv](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/22-ALGORITHM-REGISTER.csv>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/23-CORE-ASSURANCE-AND-PEER-REVIEW.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/23-CORE-ASSURANCE-AND-PEER-REVIEW.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/24-MARKET-AWARENESS-AND-REGIME-DETECTION.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/24-MARKET-AWARENESS-AND-REGIME-DETECTION.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/25-MARKET-INTELLIGENCE-SOURCE-REGISTER.csv](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/25-MARKET-INTELLIGENCE-SOURCE-REGISTER.csv>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/26-MARKET-AWARENESS-ADVERSARIAL-REVIEW.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/26-MARKET-AWARENESS-ADVERSARIAL-REVIEW.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/README.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/components/README.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/runtime/core.py](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/runtime/core.py>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/tests/test_core.py](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/core-engine/tests/test_core.py>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/14-core-engine-build-spec.md](<sources/originals/releases/gladiator-market-awareness-v9/trading-ai-spec/docs/14-core-engine-build-spec.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/README.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/ACCEPTANCE.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/CORE.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/CORE.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/DATA-RAG.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/DATA-RAG.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/KERNEL.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/MODEL-SELECTION.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/MODEL-SELECTION.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/RUN.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/RUN.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/02-ARENA.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/02-ARENA.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/03-JUDGES.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/03-JUDGES.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/04-MANAGEMENT.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/04-MANAGEMENT.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/05-GATEKEEPER.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/05-GATEKEEPER.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/06-GLADIATORS.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/06-GLADIATORS.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/09-CONNECTORS.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/09-CONNECTORS.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/10-DATA.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/10-DATA.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/20-COMPETITIVE-INTELLIGENCE.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/21-ALGORITHM-RESEARCH-AND-REVERSE-ENGINEERING.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/21-ALGORITHM-RESEARCH-AND-REVERSE-ENGINEERING.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/22-ALGORITHM-REGISTER.csv](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/22-ALGORITHM-REGISTER.csv>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/23-CORE-ASSURANCE-AND-PEER-REVIEW.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/23-CORE-ASSURANCE-AND-PEER-REVIEW.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/24-MARKET-AWARENESS-AND-REGIME-DETECTION.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/24-MARKET-AWARENESS-AND-REGIME-DETECTION.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/25-MARKET-INTELLIGENCE-SOURCE-REGISTER.csv](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/25-MARKET-INTELLIGENCE-SOURCE-REGISTER.csv>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/26-MARKET-AWARENESS-ADVERSARIAL-REVIEW.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/26-MARKET-AWARENESS-ADVERSARIAL-REVIEW.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/27-ORDER-FLOW-AND-LEDGER-INTELLIGENCE.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/27-ORDER-FLOW-AND-LEDGER-INTELLIGENCE.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/README.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/components/README.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/runtime/core.py](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/runtime/core.py>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/tests/test_core.py](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/core-engine/tests/test_core.py>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/14-core-engine-build-spec.md](<sources/originals/releases/gladiator-order-flow-ledger-v10 (1)/trading-ai-spec/docs/14-core-engine-build-spec.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/README.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/ACCEPTANCE.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/CORE.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/CORE.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/DATA-RAG.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/DATA-RAG.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/KERNEL.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/MODEL-SELECTION.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/MODEL-SELECTION.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/RUN.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/RUN.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/00-SYSTEM-MAP.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/01-CORE-KERNEL.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/02-ARENA.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/02-ARENA.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/03-JUDGES.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/03-JUDGES.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/04-MANAGEMENT.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/04-MANAGEMENT.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/05-GATEKEEPER.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/05-GATEKEEPER.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/06-GLADIATORS.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/06-GLADIATORS.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/07-CODE-OF-CONDUCT.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/08-TRANSPORTERS.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/09-CONNECTORS.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/09-CONNECTORS.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/10-DATA.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/10-DATA.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/11-QLIB-AND-TRAINING.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/12-RAG-MEMORY.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/13-EXECUTION-AND-LEDGER.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/14-COSTS-AND-OPERATIONS.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/15-CLI-AND-ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/16-SYSTEMS-THINKING.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/17-RESEARCH-AUDIT-2026-10.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/18-ADVERSARIAL-REVIEW-2026-10-22.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/19-UPSTREAM-ISSUES-AND-FORK-POLICY.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/README.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/core-engine/components/README.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/14-core-engine-build-spec.md](<sources/originals/releases/gladiator-upstream-issues-v6/trading-ai-spec/docs/14-core-engine-build-spec.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/README.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/ACCEPTANCE.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/ACCEPTANCE.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/CORE.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/CORE.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/DATA-RAG.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/DATA-RAG.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/KERNEL.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/KERNEL.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/MODEL-SELECTION.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/MODEL-SELECTION.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/RUN.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/RUN.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/runtime/__pycache__/core.cpython-313.pyc>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/runtime/core.py](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/runtime/core.py>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/tests/__pycache__/test_core.cpython-313.pyc>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/tests/test_core.py](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/core-engine/tests/test_core.py>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/14-core-engine-build-spec.md](<sources/originals/releases/trading-ai-core-kernel-v2/trading-ai-spec/docs/14-core-engine-build-spec.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/README.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/README.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/01-product-charter.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/01-product-charter.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/02-architecture.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/02-architecture.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/03-market-data-brokers.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/03-market-data-brokers.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/04-model-training.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/04-model-training.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/05-quant-core.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/05-quant-core.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/06-strategy-evaluation.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/06-strategy-evaluation.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/07-risk-exits-allocation.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/07-risk-exits-allocation.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/08-trading-operations.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/08-trading-operations.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/09-infrastructure-costs.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/09-infrastructure-costs.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/10-security-compliance.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/10-security-compliance.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/11-roadmap.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/11-roadmap.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/12-contracts-config.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/12-contracts-config.md>) |
+| [docs/sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/13-open-decisions.md](<sources/originals/releases/trading-ai-spec/trading-ai-spec/docs/13-open-decisions.md>) |
+| [docs/sources/source-map.md](<sources/source-map.md>) |
+| [docs/tasks/README.md](<tasks/README.md>) |
+| [docs/tasks/TASK-DOC-001.md](<tasks/TASK-DOC-001.md>) |
+| [docs/tasks/TASK-DOC-002.md](<tasks/TASK-DOC-002.md>) |
+| [docs/tasks/TASK-P00-001.md](<tasks/TASK-P00-001.md>) |
+| [docs/tasks/TASK-P00-002.md](<tasks/TASK-P00-002.md>) |
+| [docs/tasks/task-template.md](<tasks/task-template.md>) |
+| [docs/traceability/components.md](<traceability/components.md>) |
+| [docs/traceability/requirements-matrix.md](<traceability/requirements-matrix.md>) |
+| [docs/validation/acceptance-scenarios.md](<validation/acceptance-scenarios.md>) |
+| [docs/validation/claude-handoff.md](<validation/claude-handoff.md>) |
+| [docs/validation/setup-report.md](<validation/setup-report.md>) |
+| [docs/working-with-claude.md](<working-with-claude.md>) |
