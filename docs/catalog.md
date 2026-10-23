@@ -20,6 +20,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/backlog.md](<backlog.md>) |
 | [docs/catalog.md](<catalog.md>) |
 | [docs/decisions/README.md](<decisions/README.md>) |
+| [docs/evidence/P00/preservation-review.md](<evidence/P00/preservation-review.md>) |
 | [docs/evidence/README.md](<evidence/README.md>) |
 | [docs/evidence/gate-record-template.md](<evidence/gate-record-template.md>) |
 | [docs/ide-guide.md](<ide-guide.md>) |

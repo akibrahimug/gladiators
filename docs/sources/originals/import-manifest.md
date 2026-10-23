@@ -10,6 +10,14 @@ Preserved: 10 archives; 405 member files; 380 Markdown file instances; 5 CSV fil
 
 All recovered members were compared byte-for-byte against ZIP contents and hashed. ZIP integrity checks passed. The pre-existing captured conversation and its checksum file were left unchanged.
 
+## Preservation review — 2026-10-23
+
+The [preservation review](../../evidence/P00/preservation-review.md) (TASK-P00-001) verified all 10 archive digests, ZIP integrity, and all 405 members byte for byte against their extracted copies, the inventory and `RECOVERED-SHA256SUMS`. It also classified version evidence:
+
+- The only in-file v1.0 statement is the header of component 27 in the v10 release. The v1.0 conversation heading and download control quoted above are not preserved in the repository (PF-02).
+- No release explicitly supersedes another (PF-03).
+- Releases are not cumulative: v6 onward lacks the v0.4/v0.5 component amendments, and v10 lacks v9's amendment to component 23 (PF-05). All releases remain authoritative inputs for TASK-P00-002.
+
 ## Remaining review
 
 Independent preservation review and section-by-section reconciliation belong to TASK-P00-001/002. G00 remains pending. The recovered documents include assumptions, old prices, research assertions and a legacy prototype; importing them does not validate those assertions or authorise execution.

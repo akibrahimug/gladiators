@@ -4,7 +4,7 @@
 
 [Project home](../../../README.md) · [Source register](../README.md) · [Import manifest](import-manifest.md) · [Intake checklist](intake-checklist.md)
 
-**No original GLADIATOR specification has been imported.** This directory currently contains intake documentation only. The latest v1.0 architecture and original Markdown specification bodies remain missing (SRC-003), so the baseline gate G00 is pending.
+**Original GLADIATOR releases were imported on 2026-10-23** (see the [recovered index](RECOVERED.md) and the [preservation review](../../evidence/P00/preservation-review.md)). Until then this directory held intake documentation only, and the paragraph below described that earlier state. The latest v1.0 architecture and original Markdown specification bodies remain missing (SRC-003), so the baseline gate G00 is pending.
 
 When the original files or full conversation exports become available, copy them here byte for byte. Preserve original filenames, directory relationships, version headers and attachments. If only a message body is recoverable, save the exact retrieved body and its source message ID; identify it as a message extraction rather than claiming it is an original Markdown file. Preserve the raw export separately when available.
 
