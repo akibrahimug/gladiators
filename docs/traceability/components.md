@@ -2,7 +2,7 @@
 
 [Architecture](../architecture/README.md) · [Contracts](../architecture/contracts.md) · [Requirement matrix](requirements-matrix.md) · [Phases](../phases/README.md)
 
-**Status:** proposed component labels and boundaries pending original v1.0 reconciliation. No component is implemented. Original identifiers must be retained as aliases after recovery.
+**Status:** proposed component labels and boundaries pending original v1.0 reconciliation. No component is implemented. Original identifiers must be retained as aliases after recovery. Original v10 components 00–27 are now mapped to these aliases, provisionally: see [original component aliases](../evidence/P00/v1.0-reconciliation.md#original-component-aliases-provisional). Key differences, pending DR-01: the source Core is a deterministic decision kernel (not research, CMP-07); the source separates Management from the Gatekeeper (merged here as CMP-09); Arena has no CMP; Gladiators (CMP-07) and Market Intelligence (CMP-05/06) map only partially.
 
 | ID | Component and responsibility | Inputs / dependencies | Outputs / consumers | Owns phase / gate | Requirements |
 | --- | --- | --- | --- | --- | --- |

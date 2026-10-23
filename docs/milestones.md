@@ -15,6 +15,8 @@
 | G06 | [P06](phases/06-simulation-and-validation/README.md), G05 | Pre-registered held-out evaluation; documented execution/cost/latency assumptions; sensitivity, replay and risk/ledger evidence; limitations | Not started | Unassigned / unassigned / no decision |
 | G07 | [P07](phases/07-paper-readiness/README.md), G06 | Paper-only boundary; operational procedures; recovery/stop/incident drills; monitored data/ledger reconciliation and reviewed handover | Not started | Unassigned / unassigned / no decision |
 
+G00 evidence so far: [preservation review](evidence/P00/preservation-review.md), [reconciliation summary](evidence/P00/v1.0-reconciliation.md) and a [draft gate record](evidence/P00/g00-gate-record.md) with decision Pending.
+
 ## Closure rule
 
 For every gate, record its exact baseline, predecessor gate revisions, criteria and thresholds agreed in advance, evidence links and versions, observed results, unresolved issues, reviewer, decision and date. Use the [gate record](evidence/gate-record-template.md). All mandatory criteria and phase requirements must be satisfied. A checklist, document count, profitability claim or model confidence score cannot close a gate.

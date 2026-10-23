@@ -2,7 +2,7 @@
 
 [Documentation index](README.md) · [Traceability matrix](traceability/requirements-matrix.md) · [Source register](sources/README.md)
 
-**Status:** requirements extracted or proposed from the accessible brief and user messages. Original v1.0 requirement IDs and wording remain pending. These IDs are workspace references, not claimed original identifiers.
+**Status:** requirements extracted or proposed from the accessible brief and user messages. Original v1.0 releases were recovered on 2026-10-23 and every v10 section is mapped ([reconciliation summary](evidence/P00/v1.0-reconciliation.md)); requirement wording below is unchanged until decisions DR-01–DR-12 are made. These IDs are workspace references, not claimed original identifiers.
 
 | ID | Requirement / planning constraint | Basis and state | Acceptance target |
 | --- | --- | --- | --- |
@@ -28,3 +28,24 @@ The readable chat expresses an aspiration toward “near zero” error and acces
 ## Change control
 
 When originals are recovered, preserve their IDs. Add explicit aliases to these workspace IDs, record matching sections and conflicts, and update every affected phase, component and gate. Do not silently replace original requirements with this register.
+
+## v1.0 source reconciliation — 2026-10-23
+
+Source status of each requirement against the v10 baseline ([DEC-011](decisions/README.md)), from [TASK-P00-002](tasks/TASK-P00-002.md). "Conflicting" means the source and this register differ; nothing here changes a requirement until the linked decision is made.
+
+| ID | Source status (v10) | Key source rows | Open decision |
+| --- | --- | --- | --- |
+| REQ-001 | Conflicting within the source: docs 01–14 and components 00–13 are bar-based; file 27 (v1.0 header) puts native market events first | A-026, B-130, C-104, C-108 | DR-02, DR-10 |
+| REQ-002 | Confirmed | B-110, C-077, C-093 | — |
+| REQ-003 | Confirmed | A-027, B-128, C-081 | — |
+| REQ-004 | Confirmed | A-027, B-113, C-109 | — |
+| REQ-005 | Confirmed | B-094, C-083, C-109 | — |
+| REQ-006 | Own-account ledger confirmed; source also uses "ledger" for public/on-chain records | B-153, C-105 | DR-05 |
+| REQ-007 | Conflicting role model (Core kernel, Gladiators, Arena, Judges, Management, Gatekeeper) | B-025, B-042, C-110 | DR-01 |
+| REQ-008 | Confirmed | B-051, C-076 | — |
+| REQ-009 | Confirmed; the source sets provisional numeric defaults | A-054, B-091 | DR-04 |
+| REQ-010 | Confirmed | A-030, B-151, C-066 | — |
+| REQ-011 | Confirmed | A-098, B-050, C-006 | — |
+| REQ-012 | Confirmed as current boundary; the source designs an eventual live path, off by default | B-003, C-074 | DR-08 |
+
+Candidate requirements found only in the source (Proposed, pending DR-06 and DR-01): research LLM/RAG boundaries; untrusted-content security; cost and budget controls; strategy lifecycle and promotion; position sizing and exits; operator CLI surface; dependency intelligence; public/on-chain ledger observation. Row references are in the [summary](evidence/P00/v1.0-reconciliation.md).
