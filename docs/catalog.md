@@ -467,6 +467,9 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-DOC-001.md](<tasks/TASK-DOC-001.md>) |
 | [docs/tasks/TASK-P00-001.md](<tasks/TASK-P00-001.md>) |
 | [docs/tasks/TASK-P00-002.md](<tasks/TASK-P00-002.md>) |
+| [docs/tasks/TASK-P00-002a.md](<tasks/TASK-P00-002a.md>) |
+| [docs/tasks/TASK-P00-002b.md](<tasks/TASK-P00-002b.md>) |
+| [docs/tasks/TASK-P00-002c.md](<tasks/TASK-P00-002c.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
 | [docs/traceability/components.md](<traceability/components.md>) |
 | [docs/traceability/requirements-matrix.md](<traceability/requirements-matrix.md>) |
