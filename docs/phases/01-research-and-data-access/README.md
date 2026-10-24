@@ -2,7 +2,7 @@
 
 Claude Code handoff: [P01 task packets and candidates](../../tasks/README.md#p01) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: PROPOSED; not started.** Original v1.0 reconciliation is required before this phase can be accepted.
+**Status: PROPOSED; in progress since 2026-10-24. G00 passed (DEC-027); P01 works from the [accepted baseline](../../evidence/P00/baseline-decision.md) under the documented research assumptions (DEC-017, DEC-028, DEC-029).**
 
 **Dependencies:** accepted G00 and the documented baseline from [P00](../00-baseline/README.md).
 
@@ -26,6 +26,8 @@ Determine which observations are available, what each observation represents, an
 **Components:** [CMP-01 source registry, CMP-02 ingest and raw log, CMP-03 book/replay, CMP-04 own-account ledger, CMP-05 context, CMP-13 Gladiators (research framing)](../../traceability/components.md).
 
 **Baseline inputs (2026-10-23):** P01 evaluates the original provisional defaults in the [baseline record](../../evidence/P00/baseline-decision.md#initial-research-scope-for-p01): events first where entitled (DEC-015), the market universe, the daily-first horizon and the £0 phase-1 budget. None is accepted (DEC-017). Reinstated sections L-010, L-024 and L-025 apply to source and connector scope.
+
+**Progress 2026-10-24:** [TASK-P01-001](../../tasks/TASK-P01-001.md) covers tasks 1–3 for market data and core context: the [source registry](../../evidence/P01/source-registry.md) and [observability map](../../evidence/P01/observability-map.md). [TASK-P01-004](../../tasks/TASK-P01-004.md) followed up items F-1 to F-5 ([record](../../evidence/P01/source-followups.md)). F-1 (licence-clear free daily ETF bars) is narrowed but not closed: Twelve Data and IEX HIST remain open. DEC-029 (crypto first) applies only if F-1 closes negatively. Kraken is the leading crypto candidate (not a selection) and remains Conditional. Coinbase appeared unusable for model research without its written consent (indirect evidence). The user decided the research is personal and non-commercial (DEC-030) and that Coinbase stays out of model research (DEC-031).
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G01 in the [milestone register](../../milestones.md).
 

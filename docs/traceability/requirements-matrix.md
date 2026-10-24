@@ -35,7 +35,7 @@ For execution, extend each relevant mapping with the [task packet](../tasks/READ
 
 | Source collection | Imported originals | Section mappings | Completeness status |
 | --- | --- | --- | --- |
-| SRC-003 latest v1.0 architecture/specs | 10 release archives, 405 members ([preservation review](../evidence/P00/preservation-review.md)) | v10 release: 349 sections + 2 CSV registers + 4 code files in 389 rows ([summary](../evidence/P00/v1.0-reconciliation.md)); 40 lineage-annex rows | Mapped for the v10 baseline (DEC-011); earlier releases covered by the lineage annex, 10 sections reinstated plus the T19–T30 alias (DEC-020); decisions DR-01–DR-12 made (DEC-014–DEC-025); G00 review pending |
+| SRC-003 latest v1.0 architecture/specs | 10 release archives, 405 members ([preservation review](../evidence/P00/preservation-review.md)) | v10 release: 349 sections + 2 CSV registers + 4 code files in 389 rows ([summary](../evidence/P00/v1.0-reconciliation.md)); 40 lineage-annex rows | Mapped for the v10 baseline (DEC-011); earlier releases covered by the lineage annex, 10 sections reinstated plus the T19–T30 alias (DEC-020); decisions DR-01–DR-12 made (DEC-014–DEC-025); G00 passed on 2026-10-24 (DEC-027) |
 | SRC-002 accessible conversation capture | 1 reader response; 5 user messages and 5 markers | [Source map](../sources/source-map.md) | Complete for this returned capture only |
 
 When originals arrive, add one row per actual specification section with exact source path/section, version/hash, original ID, workspace alias, requirement, component, phase, gate and evidence. Record confirmed, conflicting, absent and superseded relationships explicitly. Every unmatched original must have a disposition before G00 can pass.
