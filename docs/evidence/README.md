@@ -2,7 +2,7 @@
 
 [Milestone register](../milestones.md) · [Gate-record template](gate-record-template.md) · [Acceptance scenarios](../validation/acceptance-scenarios.md)
 
-**Current evidence:** documentation checks only: the [setup report](../validation/setup-report.md) and the [Claude handoff report](../validation/claude-handoff.md). No system acceptance test, research result or gate sign-off exists.
+**Current evidence:** documentation checks (the [setup report](../validation/setup-report.md) and the [Claude handoff report](../validation/claude-handoff.md)); the P00 records, including the [G00 gate record](P00/g00-gate-record.md) (Passed 2026-10-24); and P01 research evidence: the [source registry](P01/source-registry.md) and [observability map](P01/observability-map.md). No system acceptance test or research result exists.
 
 For each future gate, create a record using the template. Keep evidence relative to the project or point to an authorised accessible source; record hashes/versions for datasets and reports. Avoid placing account credentials or private account exports in this workspace.
 
