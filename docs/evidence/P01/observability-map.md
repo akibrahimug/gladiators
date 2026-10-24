@@ -73,9 +73,9 @@ These are field-level classes for the four file 27 contracts (27:50–56). They 
 | `NativeMarketEvent` | `source_id`, `venue`, `instrument`, `native_symbol`, `message_type`, `price`, `size`, `quote_currency` | Observed | Conditional (F-4) | Present in the documented messages |
 | `NativeMarketEvent` | `native_sequence` | Observed | Conditional | Coinbase per-product sequence; Kraken `trade_id` per book (trades). Kraken book updates have a checksum but no documented sequence; Binance has `U`/`u` (unresolved) |
 | `NativeMarketEvent` | `exchange_event_ns` | Observed | Conditional (Kraken RFC3339 µs); **unverified** for Coinbase (F-4) | Record native precision; do not pad |
-| `NativeMarketEvent` | `local_receive_ns`, `ingest_ns`, `raw_payload_hash` | Own-account (system-generated) | Accessible | Generated at capture (P02) |
+| `NativeMarketEvent` | `local_receive_ns`, `ingest_ns`, `raw_payload_hash` | Derived (system-generated at capture) | Accessible | Generated at capture (P02) |
 | `NativeMarketEvent` | `side_semantics` | Observed, venue-defined | Conditional | Kraken: taker side; Binance: buyer-is-maker. Store as stated by the venue, never normalised silently |
-| `NativeMarketEvent` | `rights_id`, `source_version` | Own-account (from `source_approval`) | **Unresolved** until F-4 | A record cannot carry a rights ID before its terms are approved (L-025) |
+| `NativeMarketEvent` | `rights_id`, `source_version` | Derived (system-generated from `source_approval`) | **Unresolved** until F-4 | A record cannot carry a rights ID before its terms are approved (L-025) |
 | `BookState` | `snapshot_update_id`, `latest_applied_update_id`, `best_bid`, `best_ask`, `depth_by_level` | Derived | Conditional | From each venue's documented snapshot-and-update procedure |
 | `BookState` | `observed_age_ms`, `gap_count`, `resync_count`, `book_health`, `sequence_integrity`, `timestamp_uncertainty_ms` | Derived | Accessible once capture exists | System-computed; clock uncertainty needs the P01 objectives (TASK-P01-003) |
 | `FlowFeature` | All fields | Derived or inferred | Conditional on the inputs above | Signals 1–6 are per venue. Signal 7 is unavailable on £0 except through issuer holdings. Signal 8 depends on F-3. Signal 9 is inferred (F-3) |
@@ -95,7 +95,7 @@ These are field-level classes for the four file 27 contracts (27:50–56). They 
 
 1. **CMP-01/02.** Design per venue. Every record carries its venue, feed identity and coverage label. Under DEC-028 there is no consolidated ETF source on £0.
 2. **CMP-03.** It appears feasible for crypto venues, from live capture only and subject to F-4. Historical depth replay starts at the project's first capture.
-3. **Daily-first baseline.** For crypto it appears feasible, subject to the SR-05 terms (F-4). For ETFs it is blocked until F-1 closes. Under DEC-029 the crypto daily baseline runs first and ETFs follow.
+3. **Daily-first baseline.** For crypto it appears feasible, subject to the SR-05 terms (F-4). For ETFs it is blocked until F-1 closes. If F-1 closes negatively, DEC-029 applies: the crypto daily baseline runs first and ETFs follow.
 4. **REQ-001 (native events first where entitled).** It appears satisfiable for crypto live data, subject to F-4, and only at IEX-venue scope for ETFs (subject to F-1). The evidence for it belongs to G02–G04.
 
 ## Follow-up
