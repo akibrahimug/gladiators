@@ -2,7 +2,7 @@
 
 Claude Code handoff: [P01 task packets and candidates](../../tasks/README.md#p01) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: PROPOSED; not started. G00 passed on 2026-10-24 (DEC-027), so P01 task packets may be drafted from the [accepted baseline](../../evidence/P00/baseline-decision.md).**
+**Status: PROPOSED; in progress since 2026-10-24. G00 passed (DEC-027); P01 works from the [accepted baseline](../../evidence/P00/baseline-decision.md) under the documented research assumptions (DEC-017, DEC-028, DEC-029).**
 
 **Dependencies:** accepted G00 and the documented baseline from [P00](../00-baseline/README.md).
 
@@ -27,7 +27,7 @@ Determine which observations are available, what each observation represents, an
 
 **Baseline inputs (2026-10-23):** P01 evaluates the original provisional defaults in the [baseline record](../../evidence/P00/baseline-decision.md#initial-research-scope-for-p01): events first where entitled (DEC-015), the market universe, the daily-first horizon and the £0 phase-1 budget. None is accepted (DEC-017). Reinstated sections L-010, L-024 and L-025 apply to source and connector scope.
 
-**Progress 2026-10-24:** [TASK-P01-001](../../tasks/TASK-P01-001.md) covers tasks 1–3 for market data and core context: the [source registry](../../evidence/P01/source-registry.md) and [observability map](../../evidence/P01/observability-map.md). Follow-up items F-1 to F-5 remain open, among them a licence-clear free daily ETF bar source.
+**Progress 2026-10-24:** [TASK-P01-001](../../tasks/TASK-P01-001.md) covers tasks 1–3 for market data and core context: the [source registry](../../evidence/P01/source-registry.md) and [observability map](../../evidence/P01/observability-map.md). Follow-up items F-1 to F-5 remain open, among them a licence-clear free daily ETF bar source. If that source is not found, the daily baseline runs on crypto first (DEC-029).
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G01 in the [milestone register](../../milestones.md).
 

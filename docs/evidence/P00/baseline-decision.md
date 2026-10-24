@@ -61,7 +61,7 @@ These are the inputs P01 must evaluate. **None of them is a selection.** Each is
 | Primary input | Native market events first where the project is entitled to them; bars as baseline and fallback (DEC-015) | Docs 01–14 and components 00–13 are bar-based; file 27 puts events first | G01 entitlement evidence |
 | Market universe | US ETFs plus crypto spot (README:9, 27:3) | docs/03:4 US equities and ETFs; docs/13:4 and docs/12:37 US equities | G01 |
 | Horizon | Daily bars first (17:33) | 20:21 and CORE:8 "15-minute/1-hour" | G01 |
-| Budget | £0 paid services in phase 1 (14:6, 17:11; KERNEL:60; KERNEL:6 cited earlier in error, corrected 2026-10-24 by TASK-P01-001) | CORE:71 £20/month | G01 |
+| Budget | £0 paid services in phase 1 (14:6, 17:11; KERNEL:6, :60) | CORE:71 £20/month | G01 |
 | Risk defaults | GBP 500 simulated equity; risk per trade ≤1% with a 0.5% research default; 1 position and ≤2 entries per session for eventual live operation (05:9, ACCEPTANCE:11); long-only cash (CORE:56, KERNEL:30, 05:8) | 0.5–1% vs ≤1%; £2.50–£5 planned loss (18:18) | G05 |
 | Stack | Python CLI with conditional Qlib use (17:6, 19:20–27) | — | An implementation phase (DEC-022) |
 
