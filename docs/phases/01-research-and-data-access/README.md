@@ -27,6 +27,8 @@ Determine which observations are available, what each observation represents, an
 
 **Baseline inputs (2026-10-23):** P01 evaluates the original provisional defaults in the [baseline record](../../evidence/P00/baseline-decision.md#initial-research-scope-for-p01): events first where entitled (DEC-015), the market universe, the daily-first horizon and the £0 phase-1 budget. None is accepted (DEC-017). Reinstated sections L-010, L-024 and L-025 apply to source and connector scope.
 
+**Progress 2026-10-24:** [TASK-P01-001](../../tasks/TASK-P01-001.md) covers tasks 1–3 for market data and core context: the [source registry](../../evidence/P01/source-registry.md) and [observability map](../../evidence/P01/observability-map.md). Follow-up items F-1 to F-5 remain open, among them a licence-clear free daily ETF bar source.
+
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G01 in the [milestone register](../../milestones.md).
 
 ## Ordered tasks

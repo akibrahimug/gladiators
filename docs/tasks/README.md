@@ -49,7 +49,7 @@ G00 passed on 2026-10-24. Candidates become packets once they are expanded again
 
 | Candidate ID | Bounded outcome | Type / dependency |
 | --- | --- | --- |
-| TASK-P01-001 | Selected-source registry and observability/access map for the chosen market scope | Research/documentation; G00 |
+| [TASK-P01-001](TASK-P01-001.md) | Selected-source registry and observability/access map for the chosen market scope | Research/documentation; G00 passed. **In progress**; PR not requested yet |
 | TASK-P01-002 | Cited algorithm-research agenda, reference baselines and required observations | Research/documentation; scope from TASK-P01-001 |
 | TASK-P01-003 | Workload, quality/latency/recovery objectives and source evaluation criteria | Documentation/validation; TASK-P01-001/002 outputs |
 
