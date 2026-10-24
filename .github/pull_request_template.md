@@ -26,4 +26,4 @@
 
 <!-- State affected gates, evidence added, and any proposed reopening. Link the repository's docs/milestones.md and evidence files at the reviewed revision. -->
 
-PR merge does not approve a milestone gate. Gate decisions require their recorded criteria, evidence, and designated reviewer. G00 remains pending while the original v1.0 specification is missing. Live trading is outside this documentation handoff.
+PR merge does not approve a milestone gate. Gate decisions require their recorded criteria, evidence, and designated reviewer. G00 passed on 2026-10-24; later gates follow their own records. Live trading is outside this documentation handoff.

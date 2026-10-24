@@ -74,4 +74,4 @@ Claude documents PR creation as a supported workflow ([official common workflows
 
 After the bootstrap tasks (TASK-DOC-001 readiness inspection, TASK-DOC-002 post-baseline refresh), a later session can start with:
 
-> Read CLAUDE.md and the task board. Work only on Ready tasks. Give each one its own `task/<TASK-ID>-<short-scope>` branch and draft PR (DEC-009), and use gladiator-spec-reader and gladiator-reviewer as its card requires. Keep application implementation unstarted while G00 is pending. Record real task/PR states and precise blockers.
+> Read CLAUDE.md and the task board. Work only on Ready tasks. Give each one its own `task/<TASK-ID>-<short-scope>` branch and draft PR (DEC-009), and use gladiator-spec-reader and gladiator-reviewer as its card requires. Keep application implementation unstarted until its predecessor phase gate passes. Record real task/PR states and precise blockers.

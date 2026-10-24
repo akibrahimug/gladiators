@@ -2,7 +2,7 @@
 
 **Status: PROPOSED — pending reconciliation with the original v1.0 specifications.**
 
-These folders make the documentation navigable. Their presence does not establish that a phase, component, experiment, or gate has been completed. The referenced conversation did not provide the original architecture text; G00 remains pending until that baseline is available and reviewed.
+These folders make the documentation navigable. Their presence does not establish that a phase, component, experiment, or gate has been completed. The original architecture was recovered and reconciled, and G00 passed on 2026-10-24 ([gate record](../evidence/P00/g00-gate-record.md)).
 
 | Phase | Planning document | Required predecessor | Exit gate | Current state |
 | --- | --- | --- | --- | --- |
@@ -31,4 +31,4 @@ Follow the [roadmap](../roadmap.md) for sequencing, the [milestone register](../
 
 **Source phase schemes:** the recovered sources use their own phase, stage and gate labels (Phase 0–9, Stages A–I, P0–P8, G0–G6 and others). They are crosswalked, provisionally, in the [reconciliation summary](../evidence/P00/v1.0-reconciliation.md#source-identifier-crosswalk), kept by DEC-016; cite them file-qualified, not as P/G IDs.
 
-**Immediate next step (superseded 2026-10-23 for recovery):** originals are recovered and mapped; DR-01–DR-12 were decided on 2026-10-23 (DEC-014–DEC-025); the next step is the G00 review. Earlier text: obtain the original v1.0 Markdown specifications and source attachments, then complete P00 reconciliation before approving any downstream scope.
+**Immediate next step (superseded 2026-10-23 for recovery):** originals are recovered and mapped; DR-01–DR-12 were decided on 2026-10-23 (DEC-014–DEC-025), and G00 passed on 2026-10-24 (DEC-027); the next step is P01. Earlier text: obtain the original v1.0 Markdown specifications and source attachments, then complete P00 reconciliation before approving any downstream scope.
