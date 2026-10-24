@@ -49,7 +49,7 @@ Purpose: verifying the sources, not producing research results. The plan runs **
 - the user's authorisation of downloads.
 
 **1. Kraken archive sample.**
-- **Download:** the latest quarterly incremental ZIP, plus the full-history multi-part ZIP. The full history covers all pairs, so the whole file is downloaded and the W-1 candidate pairs are extracted from it.
+- **Download:** the latest quarterly incremental ZIP, plus the full-history multi-part ZIP. The Kraken article says the complete dataset covers "each pair from its first trade on Kraken" (SR-05). Whether the download is a single all-pairs file or one file per pair is unverified. Whichever it is, only the W-1 candidate pairs are used.
 - **Integrity:** verify every part against the published SHA-256.
 - **Per pair, record:**
   - the first and last bar, and the row count;
@@ -103,7 +103,7 @@ Fields carried by each record:
 
 | Source | Retention | Redistribution | Status |
 | --- | --- | --- | --- |
-| Kraken | Not addressed in the terms read | §8 "only for your own benefit" | **Pending the Kraken reply (DEC-032)** |
+| Kraken | Not addressed in the terms read | §8 "only for your own benefit" (the coordinator's reading; whether "Our Content" covers API data is open, F-4a) | **Pending the Kraken reply (DEC-032)** |
 | FOMC, BLS, CFTC | Not established | Not established | Open (S-2); US government publications |
 | GDELT | Not established | Allowed, but "must include a citation to the GDELT Project" | Open (S-2) |
 | FRED/ALFRED | Not established | Third-party series need permission "beyond personal use" | Open (S-2) |
@@ -137,6 +137,6 @@ Under DEC-032, whether and when to send this is the user's decision.
 | --- | --- |
 | Proposed baseline | Per the table above: Kraken SR-05, and SR-02 if capture is authorised; the context sources as listed; no ETF source yet |
 | Decision | **Pending** |
-| Dependencies | **Kraken:** DEC-032 reply; F-4a (including provenance); F-4d; F-4f; F-4g; F-4h; F-4i<br>**ETF:** F-1 as a whole (F-1a, F-1b, Stooq, Yahoo; otherwise DEC-029); F-2 and F-2a; NYSE calendar terms<br>**Context:** venue status; context retention (S-2); S-7 for GDELT, FRED and Coin Metrics<br>**All sources:** `source_approval` records<br>**For the G01 reviewer:** the VAL gaps recorded in the register, its proposed values, and the provisional defaults W-5 (daily first) and S-3 (£0 budget)<br>**Recorded gaps:** H-OF4, H-OF6, H-OF7 |
+| Dependencies | **Kraken:** DEC-032 reply; F-4a (including provenance); F-4d; F-4f; F-4g; F-4h; F-4i<br>**ETF:** F-1 as a whole (F-1a, F-1b, Stooq, Yahoo; otherwise DEC-029); F-2 and F-2a; NYSE calendar terms<br>**Crypto venue:** venue status<br>**Context:** context retention (S-2); S-7 for GDELT, FRED and Coin Metrics<br>**All sources:** `source_approval` records<br>**For the G01 reviewer:** the VAL gaps recorded in the register, its proposed values, and the provisional defaults W-5 (daily first) and S-3 (£0 budget)<br>**Recorded gaps:** H-OF4, H-OF6, H-OF7; H-OF8 and H-OF9 (F-3; out of scope per W-7) |
 | If Kraken does not reply, or replies negatively | Return to the user for a decision (DEC-032) |
 | Reviewer | G01 reviewer not yet designated |

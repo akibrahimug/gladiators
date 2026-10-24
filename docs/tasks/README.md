@@ -53,7 +53,7 @@ G00 passed on 2026-10-24. Candidates become packets once they are expanded again
 | [TASK-P01-002](TASK-P01-002.md) | Cited algorithm-research agenda, reference baselines and required observations | Research/documentation; scope from TASK-P01-001. **Verified**; Draft [#15](https://github.com/akibrahimug/gladiators/pull/15) |
 | [TASK-P01-003](TASK-P01-003.md) | Workload, quality/latency/recovery objectives and source evaluation criteria | Documentation/validation; TASK-P01-001/002 outputs. **Verified**; Draft [#16](https://github.com/akibrahimug/gladiators/pull/16) |
 | [TASK-P01-004](TASK-P01-004.md) | Follow up source items F-1 to F-5 from TASK-P01-001 | Research/documentation; TASK-P01-001. **Verified**; Draft [#14](https://github.com/akibrahimug/gladiators/pull/14) |
-| [TASK-P01-005](TASK-P01-005.md) | Data-access decision draft and sample plan (P01 tasks 4 and 7) | Documentation; TASK-P01-003. **Verified**; PR not requested yet |
+| [TASK-P01-005](TASK-P01-005.md) | Data-access decision draft and sample plan (P01 tasks 4 and 7) | Documentation; TASK-P01-003. **Verified**; Draft [#17](https://github.com/akibrahimug/gladiators/pull/17) |
 
 ## P02
 
