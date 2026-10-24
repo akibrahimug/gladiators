@@ -43,8 +43,8 @@ The retrieved chat contains five user turns; its assistant messages contain refe
 | Item | State |
 | --- | --- |
 | Documentation structure and navigation | Created; see [setup verification](docs/validation/setup-report.md) |
-| Original v1.0 specification import | Pending — [SRC-003](docs/sources/README.md) |
-| G00 baseline gate | Pending original source and reconciliation |
+| Original v1.0 specification import | Done 2026-10-23 — [SRC-003](docs/sources/README.md), [preservation review](docs/evidence/P00/preservation-review.md) |
+| G00 baseline gate | Passed 2026-10-24 ([gate record](docs/evidence/P00/g00-gate-record.md)) |
 | G01–G07 development gates | Not started |
 | Implementation and trading | Not started |
 
