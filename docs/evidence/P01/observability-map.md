@@ -4,6 +4,8 @@
 
 **Status:** research evidence for G01, 2026-10-24. It works under the assumptions and source constraints listed in the [source registry](source-registry.md#research-assumptions-and-source-constraints), including DEC-028 (read-only data keys only) and DEC-029 (crypto first if the ETF daily gap stays open).
 
+> **Follow-up, 2026-10-24:** the open items F-1 to F-5 are followed up in [source-followups.md](source-followups.md) (TASK-P01-004). Where that file changes a status recorded here, it takes precedence.
+
 This map covers P01 task 3. Each required observation gets a **class**: accessible, conditional, unavailable or unresolved. The registry's status vocabulary maps onto these classes as shown in its [method table](source-registry.md#method). "Accessible" means documented and free with no open eligibility or terms item; it does not mean access has been demonstrated.
 
 Each observation also has a **category**:

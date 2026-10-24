@@ -4,6 +4,8 @@
 
 **Status: research evidence for G01, 2026-10-24. It selects no source and authorises no access, account, spending, capture or trading.** For each source, a row records what current primary documentation states, what is still unverified and the consequence for P01.
 
+> **Follow-up, 2026-10-24:** the open items F-1 to F-5 are followed up in [source-followups.md](source-followups.md) (TASK-P01-004). Where that file changes a status recorded here, it takes precedence.
+
 ## Research assumptions and source constraints
 
 The defaults below come from DEC-017 ([baseline record](../P00/baseline-decision.md#initial-research-scope-for-p01)). As the user directed on 2026-10-24, they are used as working assumptions, not commitments. G01 confirms or replaces each one using this evidence.
