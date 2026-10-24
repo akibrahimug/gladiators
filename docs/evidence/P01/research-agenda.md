@@ -41,7 +41,7 @@ Elsewhere:
 | B1 | Buy and hold | Hold over the evaluation window, with entry and exit costs | *(addition)* standard reference |
 | B2 | Time-series momentum | Sign of the trailing return over a pre-registered look-back | Register A07 "momentum". *(addition)* Moskowitz, Ooi & Pedersen (2012), *J. Financial Economics*, [doi:10.1016/j.jfineco.2011.11.003](https://doi.org/10.1016/j.jfineco.2011.11.003) |
 | B3 | Short-term reversal | Negative sign of the trailing short-window return | Register A07 "reversal" |
-| BB | Bar-based price-and-volume model | The best pre-registered model of H-01 to H-03 on bars only. It is the comparison baseline for every order-flow hypothesis (27:75, 27:90) | Source control rule |
+| BB | Bar-based price-and-volume model, defined per order-flow hypothesis | A price-and-volume-only model at the **same venue, horizon, period and cost model** as the H-OF row it serves. Its specification is fixed and logged in the trial ledger (A04) **before** any order-flow test data is seen, and it is never chosen on the order-flow evaluation partitions (27:90 "untouched") | *(addition)* operationalisation of 27:75 and 27:90 |
 
 ## Falsifiable hypotheses — predictive (P1 families)
 
@@ -66,9 +66,9 @@ Each H-OF*n* tests signal *n* of file 27. Every null is the source's control rul
 | ID | Hypothesis | Signal-specific condition | External reference | Observations | Feasible | Evaluation |
 | --- | --- | --- | --- | --- | --- | --- |
 | H-OF1 | Event-wise OFI at the best quotes adds explanatory power for short-interval mid-price changes on a crypto venue | Matched intervals; OFI defined as in the published paper | *(addition; fulfils 27:22)* Cont, Kukanov & Stoikov (2014), *J. Financial Econometrics* 12(1):47–88, [doi:10.1093/jjfinec/nbt003](https://doi.org/10.1093/jjfinec/nbt003) | Live L2 changes and trades (SR-02) | **Only after forward capture** (P02/P03); no history | VAL-009 (G05); VAL-012 (G06) |
-| H-OF2 | Top-of-book queue imbalance improves next mid-move direction prediction over BB | The comparison model is BB restricted to price and volume at the same horizon | *(addition)* Gould & Bonart, [arXiv:1512.03492](https://arxiv.org/abs/1512.03492) (*Market Microstructure and Liquidity*, 2016; volume per a secondary listing) | Live L2 (SR-02) | Only after forward capture | As H-OF1 |
+| H-OF2 | Top-of-book queue imbalance improves next mid-move direction prediction over BB | BB at the next-mid-move horizon | *(addition)* Gould & Bonart, [arXiv:1512.03492](https://arxiv.org/abs/1512.03492) (*Market Microstructure and Liquidity*, 2016; volume per a secondary listing) | Live L2 (SR-02) | Only after forward capture | As H-OF1 |
 | H-OF3 | Aggressor-signed trade notional adds information beyond BB | Daily horizon | File 27 signal 3 | Trades with aggressor side (SR-02 live; history F-4d) | Live only until F-4d closes | VAL-009 (G05) |
-| H-OF4 | Cancellation, addition and execution ratios separate fleeting from durable depth | Per-order lifecycles | File 27 signal 4 | Per-order (L3) events | **Not testable as stated.** Kraken L2 gives level changes. Its L3 "individual order data requires authentication" (Kraken blog via search; indirect), and DEC-028 excludes trading-account keys. Only a level-based proxy is possible | Recorded gap |
+| H-OF4 | Cancellation, addition and execution ratios separate fleeting from durable depth | Per-order lifecycles | File 27 signal 4 | Per-order (L3) events | **Not testable as stated.** Kraken L2 gives level changes. Kraken's [level3 channel](https://docs.kraken.com/api/docs/websocket-v2/level3) (read 2026-10-24) gives per-order `add`/`modify`/`delete` events with `order_id`, but "The `level3` channel is authenticated (i.e. it requires an API token to subscribe)". That token needs a Kraken exchange-account key, which DEC-028 excludes (the coordinator's reading). Only a level-based proxy is possible | Recorded gap |
 | H-OF5 | Price impact and resilience after signed flow differ by regime and add information beyond BB | Per-regime breakdown (27:75) | File 27 signal 5 | Live L2 and trades plus regimes | Only after forward capture | VAL-009 (G05); VAL-012 (G06) |
 | H-OF6 | Cross-venue divergence leads the slower venue | After clock and fee alignment | File 27 signal 6 | Two or more venues usable for model research | **Blocked:** Coinbase is out (DEC-031) and Binance is Unresolved (F-5) | Deferred |
 | H-OF7 | ETF auction imbalance or primary-market flows inform the next session | By publication time | File 27 signal 7 | NOII (paid); issuer holdings | NOII is blocked under £0. The issuer-holdings route is Unresolved (F-3) | Deferred |
@@ -87,18 +87,18 @@ Each H-OF*n* tests signal *n* of file 27. Every null is the source's control rul
 | A04 Multiple testing correction | Bailey & Lopez de Prado; Arena/Judges; "noise-only tournament false positive test" | Trial ledger; deflated Sharpe; PBO | Deflated Sharpe ratio [doi:10.3905/JPM.2014.40.5.094](https://doi.org/10.3905/JPM.2014.40.5.094) (source-cited, 21:62; resolves to *J. Portfolio Management* 40(5), behind a login). *(addition)* PBO: Bailey, Borwein, López de Prado & Zhu, *J. Computational Finance* 20(4), [doi:10.21314/JCF.2016.322](https://doi.org/10.21314/JCF.2016.322) | VAL-009 (G05); VAL-012 (G06) |
 | A05 Execution and cost modelling | LEAN; Execution/Core; "bid/ask crossing, gap, liquidity, no fill stress" | Buy at the feasible ask and sell at the feasible bid; fees; no assumed fills (21:53) | — | P06 (VAL-012) |
 | A06 Risk and allocation | Portfolio risk literature; Gatekeeper/Core; "gap beyond stop, correlated positions, stale account" | The sizing formula (21:49); a stop does not bound loss | — | P05 (VAL-011) |
-| A15 Crypto market specifics | Exchange docs; Data/Execution; "cross-venue contamination, zero-trade bars, tick sizes" | 24/7 sessions; zero-trade intervals (L-025) | SR-02, SR-05 | P02–P03 |
+| A15 Crypto market specifics | Exchange docs; Data/Execution; "cross-venue contamination, zero-trade bars, tick sizes" | 24/7 sessions; zero-trade intervals (L-025) | SR-02, SR-05 | P02–P03 (VAL-004) |
 | A16 ETF market specifics | LEAN; Data/Execution; "total-return vs tradable price reconciliation" | Splits, dividends and session hours | — | Deferred with ETFs (F-1, F-2) |
 
 ## Later families
 
-| Family | Register (22): starting reference; priority | Status | Reason |
+| Family | Register (22): starting reference; owner; priority; required falsification | Status | Reason |
 | --- | --- | --- | --- |
-| A11 Portfolio optimisation | LEAN / HRP; P2 | Deferred | "tiny-account feasibility" (A11), and the universe is not fixed. *(addition)* HRP: López de Prado (2016), *J. Portfolio Management* 42(4):59–69, [doi:10.3905/jpm.2016.42.4.059](https://doi.org/10.3905/jpm.2016.42.4.059) |
-| A12 Order execution algorithms | LEAN; P2 | Deferred | Beyond the P06 simulation scope |
-| A13 Reinforcement learning | FinRL; P3 | Deferred | "Avoid starting with reinforcement learning or large LLMs before accounting and data are trustworthy" (21:23) |
-| A14 Automated factor discovery | RD-Agent; P2 | Deferred | Needs a sandbox, a trials budget and an untouched holdout (A14) |
-| A17 LLM research governance | LLM security; P1; falsification "fabricated citation, malicious issue, no-execution tests" | Kept as a governance requirement (REQ-013, REQ-014), not a forecasting hypothesis | Phase 1 has "no mandatory LLM or GPU" (11:15) and "no cloud models" (17:11) |
+| A11 Portfolio optimisation | LEAN / HRP; Core; P2; "covariance instability, fees and tiny-account feasibility" | Deferred | "tiny-account feasibility" (A11), and the universe is not fixed. *(addition)* HRP: López de Prado (2016), *J. Portfolio Management* 42(4):59–69, [doi:10.3905/jpm.2016.42.4.059](https://doi.org/10.3905/jpm.2016.42.4.059) |
+| A12 Order execution algorithms | LEAN; Execution; P2; "partial fills and adverse selection tests" | Deferred | Beyond the P06 simulation scope |
+| A13 Reinforcement learning | FinRL; Gladiators; P3; "offline-to-forward generalisation; fail closed" | Deferred | "Avoid starting with reinforcement learning or large LLMs before accounting and data are trustworthy" (21:23) |
+| A14 Automated factor discovery | RD-Agent; Management/Training; P2; "sandbox, trials budget, untouched holdout" | Deferred | Needs a sandbox, a trials budget and an untouched holdout (A14) |
+| A17 LLM research governance | LLM security; Research/Management; P1; "fabricated citation, malicious issue, no-execution tests" | Kept as a governance requirement (REQ-013, REQ-014), not a forecasting hypothesis | Phase 1 has "no mandatory LLM or GPU" (11:15) and "no cloud models" (17:11) |
 
 ## Evaluation protocol links
 
@@ -113,6 +113,6 @@ Thresholds, holdout dates and bounds belong to TASK-P01-003 and P06.
 ## Gaps this agenda records for G01
 
 1. H-OF1, H-OF2 and H-OF5 depend on forward capture. H-OF3 does too until F-4d closes. None of their evidence can exist before P02 and P03 run.
-2. H-OF4 is not testable on L2 data without trading-account keys (DEC-028). H-OF6 has no second venue usable for model research. H-OF7 is blocked under £0, except for the unresolved issuer-holdings route.
+2. H-OF4 is not testable without Kraken's authenticated level3 channel, whose account key DEC-028 excludes (the coordinator's reading of DEC-028). H-OF6 has no second venue usable for model research. H-OF7 is blocked under £0, except for the unresolved issuer-holdings route.
 3. The ETF variants of H-01 to H-06 wait on F-1 and F-2; otherwise DEC-029 applies.
 4. Only the predictive hypotheses can be tested on history today. That applies to crypto daily bars, Conditional on F-4a and F-4f.
