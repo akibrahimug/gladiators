@@ -19,9 +19,11 @@ Specify a reproducible simulation study that evaluates the accepted research sys
 
 ## Traceability
 
-**Requirements:** [REQ-003, REQ-004, REQ-005, REQ-006, REQ-009, REQ-010, REQ-011, REQ-012](../../requirements.md).
+**Requirements:** [REQ-003, REQ-004, REQ-005, REQ-006, REQ-009, REQ-010, REQ-011, REQ-012; Proposed REQ-016](../../requirements.md).
 
-**Components:** [CMP-03 book/replay, CMP-04 own-account ledger, CMP-07 Core research, CMP-08 Judges, CMP-09 Managers/risk, CMP-10 simulation/paper, CMP-11 audit and operations](../../traceability/components.md).
+**Components:** [CMP-03 book/replay, CMP-04 own-account ledger, CMP-07 Core decision kernel, CMP-08 Judges, CMP-12 Gatekeeper, CMP-13 Gladiators, CMP-14 Arena, CMP-10 simulation/paper, CMP-11 audit and operations](../../traceability/components.md).
+
+**Reinstated sources (DEC-020):** L-018 (Arena anti-overfitting pools), L-028 (execution accounting) and the T19–T30 aliases (L-034) apply to this phase; see the [baseline record](../../evidence/P00/baseline-decision.md#reinstated-sections).
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G06 in the [milestone register](../../milestones.md).
 

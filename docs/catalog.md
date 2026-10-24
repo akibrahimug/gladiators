@@ -20,6 +20,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/backlog.md](<backlog.md>) |
 | [docs/catalog.md](<catalog.md>) |
 | [docs/decisions/README.md](<decisions/README.md>) |
+| [docs/evidence/P00/baseline-decision.md](<evidence/P00/baseline-decision.md>) |
 | [docs/evidence/P00/g00-gate-record.md](<evidence/P00/g00-gate-record.md>) |
 | [docs/evidence/P00/preservation-review.md](<evidence/P00/preservation-review.md>) |
 | [docs/evidence/P00/v1.0-reconciliation-a.md](<evidence/P00/v1.0-reconciliation-a.md>) |
@@ -476,6 +477,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P00-002a.md](<tasks/TASK-P00-002a.md>) |
 | [docs/tasks/TASK-P00-002b.md](<tasks/TASK-P00-002b.md>) |
 | [docs/tasks/TASK-P00-002c.md](<tasks/TASK-P00-002c.md>) |
+| [docs/tasks/TASK-P00-003.md](<tasks/TASK-P00-003.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
 | [docs/traceability/components.md](<traceability/components.md>) |
 | [docs/traceability/requirements-matrix.md](<traceability/requirements-matrix.md>) |

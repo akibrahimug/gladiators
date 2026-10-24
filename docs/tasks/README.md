@@ -4,7 +4,7 @@
 
 ## Start here
 
-Two bootstrap documentation tasks came first: **TASK-DOC-001**, the readiness inspection, and **TASK-DOC-002**, the post-baseline refresh. Original v1.0 releases were recovered on 2026-10-23 (TASK-P00-001) and reconciled (TASK-P00-002); G00 now waits on decisions DR-01–DR-12 and the designated reviewer, and still blocks all later implementation. Candidate rows below are a decomposition guide, not dispatchable task packets.
+Two bootstrap documentation tasks came first: **TASK-DOC-001**, the readiness inspection, and **TASK-DOC-002**, the post-baseline refresh. Original v1.0 releases were recovered on 2026-10-23 (TASK-P00-001) and reconciled (TASK-P00-002); the user decided DR-01–DR-12 on 2026-10-23 (TASK-P00-003). G00 now waits on its reviewer, the user, and still blocks all later implementation. Candidate rows below are a decomposition guide, not dispatchable task packets.
 
 | Task packet | Work state | Prerequisite | PR state |
 | --- | --- | --- | --- |
@@ -15,6 +15,7 @@ Two bootstrap documentation tasks came first: **TASK-DOC-001**, the readiness in
 | [TASK-P00-002a — Map README and docs 01–14](TASK-P00-002a.md) | Verified | TASK-P00-001 Verified | Merged — [#5](https://github.com/akibrahimug/gladiators/pull/5) |
 | [TASK-P00-002b — Map core-engine and components 00–13](TASK-P00-002b.md) | Verified | TASK-P00-002a (integrated as base) | [#6](https://github.com/akibrahimug/gladiators/pull/6) merged into packet a's branch after #5 had merged; carried to `master` by [#9](https://github.com/akibrahimug/gladiators/pull/9), merged |
 | [TASK-P00-002c — Map components 14–27, lineage annex, integrate](TASK-P00-002c.md) | Verified | TASK-P00-002b (integrated as base) | [#7](https://github.com/akibrahimug/gladiators/pull/7) merged into packet b's branch after #6 had merged; carried to `master` by [#9](https://github.com/akibrahimug/gladiators/pull/9), merged |
+| [TASK-P00-003 — Apply DR-01–DR-12 decisions and prepare G00](TASK-P00-003.md) | Verified | TASK-P00-002 Verified; user decisions recorded | Draft — [#11](https://github.com/akibrahimug/gladiators/pull/11) |
 
 A card is the task's authoritative record. The coordinator updates this index when its state changes. Owner, branch, commit, evidence and actual PR URL are kept on the card.
 
@@ -92,7 +93,7 @@ Candidates are Draft pending G04 and accepted [P05 roles](../phases/05-core-judg
 | --- | --- | --- |
 | TASK-P05-001 | Cited algorithm alternatives, bounded baseline comparisons and role/decision contracts | Research/documentation; G04; VAL-009 bounded stage |
 | TASK-P05-002 | One accepted Core/Judge research-decision slice and provenance | Implementation; accepted TASK-P05-001 contract |
-| TASK-P05-003 | Deterministic Manager/risk policy slice with controlled ledger/simulator stubs | Implementation/validation; accepted policy; VAL-010/011 bounded stage |
+| TASK-P05-003 | Deterministic Gatekeeper (CMP-12) policy slice with controlled ledger/simulator stubs | Implementation/validation; accepted policy; VAL-010/011 bounded stage |
 
 Policy authority and values must be decided before TASK-P05-003 is Ready. Contract changes remain coordinator-owned.
 

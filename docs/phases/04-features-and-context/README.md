@@ -19,9 +19,11 @@ Specify how event-derived observations and external context become time-consiste
 
 ## Traceability
 
-**Requirements:** [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-008, REQ-009, REQ-011](../../requirements.md).
+**Requirements:** [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-008, REQ-009, REQ-011; Proposed REQ-013, REQ-020](../../requirements.md).
 
-**Components:** [CMP-03 book/replay, CMP-05 context, CMP-06 features/regimes, CMP-07 Core research, CMP-11 audit and operations](../../traceability/components.md).
+**Components:** [CMP-03 book/replay, CMP-05 context, CMP-06 features/regimes, CMP-13 Gladiators, CMP-11 audit and operations](../../traceability/components.md).
+
+**Reinstated sources (DEC-020):** T19–T30 as aliases of the v10 24:189 acceptance cases (L-034) apply to this phase; see the [baseline record](../../evidence/P00/baseline-decision.md#reinstated-sections).
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G04 in the [milestone register](../../milestones.md).
 

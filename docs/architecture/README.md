@@ -1,12 +1,12 @@
-# Architecture map — pending v1.0 source
+# Architecture map
 
-> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported; v10 is not a complete superset of earlier releases (PF-05). See the [recovered document index](<../sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported; v10 is not a complete superset of earlier releases (PF-05). See the [recovered document index](<../sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. Reconciliation and decisions are done (DEC-014–DEC-025); G00 awaits the reviewer's decision.
 
 [Documentation index](../README.md) · [Component register](../traceability/components.md) · [Contract checklist](contracts.md)
 
-**Status:** proposed navigation and responsibility map, created from the accessible brief. It is not the missing v1.0 architecture. Component names below are provisional workspace labels.
+**Status:** proposed navigation and responsibility map, first created from the accessible brief and now aligned with the v10 role model (DEC-014). Component IDs are workspace aliases for original names.
 
-> **Reconciliation, 2026-10-23:** this map is now compared section by section with the v10 release ([summary](../evidence/P00/v1.0-reconciliation.md)). The source component model differs (see DR-01); this map stays the proposal until that decision.
+> **Reconciliation, 2026-10-23:** this map is now compared section by section with the v10 release ([summary](../evidence/P00/v1.0-reconciliation.md)). The user decided the component model on 2026-10-23 ([DEC-014](../decisions/README.md)), and the flow below follows it. Boundaries remain proposals until their gates.
 
 ## Meaning of order flow and ledger
 
@@ -23,14 +23,29 @@ flowchart TD
   I --> X["CMP-05 Context / availability"]
   B --> F["CMP-06 Features / regimes"]
   X --> F
-  F --> C["CMP-07 Core research"]
-  C --> J["CMP-08 Judges"]
-  J --> M["CMP-09 Managers / risk"]
-  L["CMP-04 Own-account ledger"] --> M
-  M --> T["CMP-10 Simulation / paper"]
+  F --> G["CMP-13 Gladiators"]
+  G --> C["CMP-07 Core decision kernel"]
+  X --> C
+  C --> K["CMP-12 Gatekeeper"]
+  X --> K
+  L["CMP-04 Own-account ledger"] --> C
+  L --> K
+  K --> T["CMP-10 Simulation / paper"]
   T --> L
+  T --> J["CMP-08 Judges"]
+  T --> R["CMP-14 Arena"]
+  G --> R
+  R --> J
+  J --> M["CMP-09 Management"]
+  M -. "promotion and budgets" .-> G
+  F -- "regime state" --> C
+  F -- "regime state" --> K
+  X -- "textual evidence" --> G
+  L --> J
+  J --> R
+  R --> M
   A["CMP-11 Audit / configuration"] -. "lineage across all stages" .-> I
-  A -.-> M
+  A -.-> K
   A -.-> T
 ```
 
@@ -44,7 +59,9 @@ The diagram is a proposed logical relationship, not an implemented service topol
 | CMP-03 | Reconstruct only the market state supported by each feed; replay it | Price-level or order-level data? Recovery guarantees? |
 | CMP-04 | Account for simulated cash, positions, fills and fees separately | What did “ledger” mean in original v1.0? Which accounting convention? |
 | CMP-05 / CMP-06 | Track context knowledge time, features and regime uncertainty | Which contexts and hypotheses have measurable relevance? |
-| CMP-07 / CMP-08 / CMP-09 | Research candidates, assess evidence and apply risk decisions | Do these proposed responsibilities match the original role definitions? |
+| CMP-13 / CMP-14 | Gladiators forecast; the Arena compares them fairly | Which baselines, pools and leakage controls (reinstated L-018)? |
+| CMP-07 / CMP-12 | Core decides and sizes; the Gatekeeper alone approves | Which decision maths and which policy values (DEC-017 defaults, not accepted)? |
+| CMP-08 / CMP-09 | Judges evaluate; Management promotes and budgets | Which promotion criteria and evidence thresholds? |
 | CMP-10 | Simulate and later assess paper-only behaviour | Which fill, queue, latency and cost assumptions are defensible? |
 | CMP-11 | Record lineage, policy/config versions, incidents and evidence | Which records are required for reproducibility and recovery? |
 
