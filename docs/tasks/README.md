@@ -4,18 +4,19 @@
 
 ## Start here
 
-Two bootstrap documentation tasks came first: **TASK-DOC-001**, the readiness inspection, and **TASK-DOC-002**, the post-baseline refresh. Original v1.0 releases were recovered on 2026-10-23 (TASK-P00-001) and reconciled (TASK-P00-002); the user decided DR-01–DR-12 on 2026-10-23 (TASK-P00-003). G00 now waits on its reviewer, the user, and still blocks all later implementation. Candidate rows below are a decomposition guide, not dispatchable task packets.
+Two bootstrap documentation tasks came first: **TASK-DOC-001**, the readiness inspection, and **TASK-DOC-002**, the post-baseline refresh. Original v1.0 releases were recovered on 2026-10-23 (TASK-P00-001) and reconciled (TASK-P00-002); the user decided DR-01–DR-12 on 2026-10-23 (TASK-P00-003). G00 passed on 2026-10-24 (TASK-P00-004, DEC-027). Implementation still needs the user's explicit acceptance of a Ready implementation task and its phase's predecessor gate. Candidate rows below are a decomposition guide, not dispatchable task packets.
 
 | Task packet | Work state | Prerequisite | PR state |
 | --- | --- | --- | --- |
 | [TASK-DOC-001 — Check handoff and repository readiness](TASK-DOC-001.md) | Verified | None; no accepted architecture required | Merged — [#1](https://github.com/akibrahimug/gladiators/pull/1) |
 | [TASK-DOC-002 — Refresh handoff after the published baseline](TASK-DOC-002.md) | Verified | TASK-DOC-001 Verified | [#2](https://github.com/akibrahimug/gladiators/pull/2) merged into #1's branch after #1 had merged; carried to `master` by [#8](https://github.com/akibrahimug/gladiators/pull/8), merged |
 | [TASK-P00-001 — Preserve originals](TASK-P00-001.md) | Verified | Originals recovered; preservation review complete | Import [#3](https://github.com/akibrahimug/gladiators/pull/3) and review [#4](https://github.com/akibrahimug/gladiators/pull/4) merged |
-| [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | Verified (umbrella; G00 Pending) | TASK-P00-001 Verified | Not requested (one draft per packet) |
+| [TASK-P00-002 — Reconcile plan](TASK-P00-002.md) | Verified (umbrella; G00 passed 2026-10-24) | TASK-P00-001 Verified | Not requested (one draft per packet) |
 | [TASK-P00-002a — Map README and docs 01–14](TASK-P00-002a.md) | Verified | TASK-P00-001 Verified | Merged — [#5](https://github.com/akibrahimug/gladiators/pull/5) |
 | [TASK-P00-002b — Map core-engine and components 00–13](TASK-P00-002b.md) | Verified | TASK-P00-002a (integrated as base) | [#6](https://github.com/akibrahimug/gladiators/pull/6) merged into packet a's branch after #5 had merged; carried to `master` by [#9](https://github.com/akibrahimug/gladiators/pull/9), merged |
 | [TASK-P00-002c — Map components 14–27, lineage annex, integrate](TASK-P00-002c.md) | Verified | TASK-P00-002b (integrated as base) | [#7](https://github.com/akibrahimug/gladiators/pull/7) merged into packet b's branch after #6 had merged; carried to `master` by [#9](https://github.com/akibrahimug/gladiators/pull/9), merged |
 | [TASK-P00-003 — Apply DR-01–DR-12 decisions and prepare G00](TASK-P00-003.md) | Verified | TASK-P00-002 Verified; user decisions recorded | Draft — [#11](https://github.com/akibrahimug/gladiators/pull/11) |
+| [TASK-P00-004 — Record the G00 decision](TASK-P00-004.md) | Verified | TASK-P00-003 Verified; reviewer decision of 2026-10-24 | Draft — [#12](https://github.com/akibrahimug/gladiators/pull/12) |
 
 A card is the task's authoritative record. The coordinator updates this index when its state changes. Owner, branch, commit, evidence and actual PR URL are kept on the card.
 
@@ -44,13 +45,15 @@ Use the full [source-intake](TASK-P00-001.md) and [reconciliation](TASK-P00-002.
 
 ## P01
 
-Candidates are Draft pending G00 and the accepted [P01 scope](../phases/01-research-and-data-access/README.md).
+G00 passed on 2026-10-24. Candidates become packets once they are expanded against the accepted [P01 scope](../phases/01-research-and-data-access/README.md) and the [baseline record](../evidence/P00/baseline-decision.md).
 
 | Candidate ID | Bounded outcome | Type / dependency |
 | --- | --- | --- |
-| TASK-P01-001 | Selected-source registry and observability/access map for the chosen market scope | Research/documentation; G00 |
-| TASK-P01-002 | Cited algorithm-research agenda, reference baselines and required observations | Research/documentation; scope from TASK-P01-001 |
-| TASK-P01-003 | Workload, quality/latency/recovery objectives and source evaluation criteria | Documentation/validation; TASK-P01-001/002 outputs |
+| [TASK-P01-001](TASK-P01-001.md) | Source registry and observability map for the research-assumption scope | Research/documentation; G00 passed. **Verified**; Draft [#13](https://github.com/akibrahimug/gladiators/pull/13) |
+| [TASK-P01-002](TASK-P01-002.md) | Cited algorithm-research agenda, reference baselines and required observations | Research/documentation; scope from TASK-P01-001. **Verified**; Draft [#15](https://github.com/akibrahimug/gladiators/pull/15) |
+| [TASK-P01-003](TASK-P01-003.md) | Workload, quality/latency/recovery objectives and source evaluation criteria | Documentation/validation; TASK-P01-001/002 outputs. **Verified**; Draft [#16](https://github.com/akibrahimug/gladiators/pull/16) |
+| [TASK-P01-004](TASK-P01-004.md) | Follow up source items F-1 to F-5 from TASK-P01-001 | Research/documentation; TASK-P01-001. **Verified**; Draft [#14](https://github.com/akibrahimug/gladiators/pull/14) |
+| [TASK-P01-005](TASK-P01-005.md) | Data-access decision draft and sample plan (P01 tasks 4 and 7) | Documentation; TASK-P01-003. **Verified**; Draft [#17](https://github.com/akibrahimug/gladiators/pull/17) |
 
 ## P02
 
