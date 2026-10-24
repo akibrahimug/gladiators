@@ -56,7 +56,7 @@ TASK-DOC-001 therefore opened its own draft PR. [TASK-DOC-002](tasks/TASK-DOC-00
 
 The [task board](tasks/README.md) defines work and PR states independently. Link **source/decision → REQ → CMP → P/G → TASK → branch/commit → PR → evidence**. The task card is the task record; the board is its index. A task can be locally Verified while its PR is Blocked, and neither state makes a phase complete.
 
-Original v1.0 recovery remains a G00 prerequisite. This workflow does not convert the provisional component map into an accepted implementation brief.
+Original v1.0 recovery was the G00 prerequisite; G00 passed on 2026-10-24. This workflow does not convert the provisional component map into an accepted implementation brief.
 
 ## Claude Code format references
 
@@ -74,4 +74,4 @@ Claude documents PR creation as a supported workflow ([official common workflows
 
 After the bootstrap tasks (TASK-DOC-001 readiness inspection, TASK-DOC-002 post-baseline refresh), a later session can start with:
 
-> Read CLAUDE.md and the task board. Work only on Ready tasks. Give each one its own `task/<TASK-ID>-<short-scope>` branch and draft PR (DEC-009), and use gladiator-spec-reader and gladiator-reviewer as its card requires. Keep application implementation unstarted until its predecessor phase gate passes. Record real task/PR states and precise blockers.
+> Read CLAUDE.md and the task board. Work only on Ready tasks. Give each one its own `task/<TASK-ID>-<short-scope>` branch and draft PR (DEC-009), and use gladiator-spec-reader and gladiator-reviewer as its card requires. Keep application implementation unstarted until the user explicitly accepts an implementation task as Ready and its phase's predecessor gate has passed. Record real task/PR states and precise blockers.

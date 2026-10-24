@@ -2,7 +2,7 @@
 
 [Documentation index](README.md) · [Phase index](phases/README.md) · [Evidence format](evidence/gate-record-template.md)
 
-**This is the gate-state record. G00 passed on 2026-10-24; no other gate has passed.** The detailed phase specifications supply the full exit criteria; summaries here do not weaken them. Owners and reviewers are unassigned.
+**This is the gate-state record. G00 passed on 2026-10-24; no other gate has passed.** The detailed phase specifications supply the full exit criteria; summaries here do not weaken them. Owners and reviewers are unassigned except where a row names them (G00).
 
 | Gate | Phase / prerequisite | Required acceptance evidence | Current state | Owner / reviewer / decision |
 | --- | --- | --- | --- | --- |
