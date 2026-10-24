@@ -1,14 +1,14 @@
 # Source register and preservation
 
-> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported. That release is not a complete superset of earlier ones; see the preservation review (PF-02, PF-05). See the [recovered document index](<originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported. That release is not a complete superset of earlier ones; see the preservation review (PF-02, PF-05). See the [recovered document index](<originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 passed on 2026-10-24 ([gate record](../evidence/P00/g00-gate-record.md)).
 
 [Project home](../../README.md) · [Requirements](../requirements.md) · [Source map](source-map.md) · [Original-specification intake](originals/README.md)
 
-Status: **original releases recovered 2026-10-23; preservation reviewed by TASK-P00-001 (see the task card for its state); reconciliation (TASK-P00-002) and G00 review pending**. Original access date: **22 October 2026, Europe/London**; recovery: 23 October 2026.
+Status: **original releases recovered 2026-10-23; preservation reviewed by TASK-P00-001 (see the task card for its state); reconciled (TASK-P00-002, TASK-P00-003); G00 passed on 2026-10-24**. Original access date: **22 October 2026, Europe/London**; recovery: 23 October 2026.
 
 The referenced chat was inspected after the user confirmed that the specifications were created there. The available reader returned five recent turns, no attachments and no older-page cursor. The user messages are readable; every assistant response is a content-reference marker. Those markers do not contain the specification text. No original GLADIATOR specification was found in the local search. A direct browser attempt reached a sign-in screen; no sign-in was attempted.
 
-This workspace preserves what was actually retrieved and distinguishes it from newly prepared planning documents. The present structure must not be labelled an authoritative reconstruction of the latest v1.0 architecture. Baseline gate **G00 remains pending** until the original specifications can be read, preserved and reconciled.
+This workspace preserves what was actually retrieved and distinguishes it from newly prepared planning documents. The present structure must not be labelled an authoritative reconstruction of the latest v1.0 architecture. Baseline gate **G00 passed on 2026-10-24** after the original specifications were read, preserved and reconciled ([accepted baseline](../evidence/P00/baseline-decision.md)).
 
 ## Project sources
 

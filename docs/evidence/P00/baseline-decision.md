@@ -2,7 +2,7 @@
 
 [Task](../../tasks/TASK-P00-003.md) · [Decision register](../../decisions/README.md) · [Reconciliation summary](v1.0-reconciliation.md) · [Lineage annex](v1.0-reconciliation-c.md#lineage-annex) · [G00 gate record](g00-gate-record.md) · [P00 phase](../../phases/00-baseline/README.md)
 
-This is the P00 deliverable planned as `baseline-decision.md`: the scope and terminology baseline that follows the user's decisions on DR-01–DR-12, which were recorded on 2026-10-23 as [DEC-014–DEC-025](../../decisions/README.md). **It is evidence for G00, not the G00 decision.** That decision belongs to the designated reviewer ([DEC-026](../../decisions/README.md)) and is recorded in the [gate record](g00-gate-record.md).
+This is the P00 deliverable planned as `baseline-decision.md`: the scope and terminology baseline that follows the user's decisions on DR-01–DR-12, which were recorded on 2026-10-23 as [DEC-014–DEC-025](../../decisions/README.md). **Accepted baseline since 2026-10-24:** the G00 reviewer passed G00 ([DEC-027](../../decisions/README.md), [gate record](g00-gate-record.md)). The provisional defaults below stay unaccepted until their gates.
 
 ## Source baseline
 

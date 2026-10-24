@@ -1,6 +1,6 @@
 # GLADIATOR
 
-> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<docs/sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 still awaits reconciliation/review.
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the complete 54-file v1.0 package, are now imported. See the [recovered document index](<docs/sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. G00 passed on 2026-10-24 ([gate record](docs/evidence/P00/g00-gate-record.md)).
 
 Order-flow and ledger research system — documentation workspace.
 
@@ -22,7 +22,7 @@ Open **GLADIATOR.code-workspace** in Cursor or another compatible IDE. Relative 
 
 Use Codex for brainstorming and design discussion. Use Claude Code for assigned implementation, wiring, checks and PRs. Start Claude Code in this GLADIATOR folder; [CLAUDE.md](CLAUDE.md) points to the [task board](docs/tasks/README.md), [execution workflow](docs/working-with-claude.md), three project agents and PR template.
 
-The handoff is committed and pushed to the [GitHub repository](https://github.com/akibrahimug/gladiators) on `master`. Claude Code's readiness inspection, [TASK-DOC-001](docs/tasks/TASK-DOC-001.md), recorded agent discovery and verified publishing access ([report](docs/validation/claude-handoff.md)). Each task gets its own branch and draft PR ([DEC-009](docs/decisions/README.md)). Later implementation candidates remain Draft while G00 is pending.
+The handoff is committed and pushed to the [GitHub repository](https://github.com/akibrahimug/gladiators) on `master`. Claude Code's readiness inspection, [TASK-DOC-001](docs/tasks/TASK-DOC-001.md), recorded agent discovery and verified publishing access ([report](docs/validation/claude-handoff.md)). Each task gets its own branch and draft PR ([DEC-009](docs/decisions/README.md)). G00 passed on 2026-10-24; implementation candidates remain Draft until the user explicitly accepts one as Ready and its phase's predecessor gate has passed.
 
 ## What is established
 
@@ -43,8 +43,8 @@ The retrieved chat contains five user turns; its assistant messages contain refe
 | Item | State |
 | --- | --- |
 | Documentation structure and navigation | Created; see [setup verification](docs/validation/setup-report.md) |
-| Original v1.0 specification import | Pending — [SRC-003](docs/sources/README.md) |
-| G00 baseline gate | Pending original source and reconciliation |
+| Original v1.0 specification import | Done 2026-10-23 — [SRC-003](docs/sources/README.md), [preservation review](docs/evidence/P00/preservation-review.md) |
+| G00 baseline gate | Passed 2026-10-24 ([gate record](docs/evidence/P00/g00-gate-record.md)) |
 | G01–G07 development gates | Not started |
 | Implementation and trading | Not started |
 

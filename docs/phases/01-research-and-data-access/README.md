@@ -2,7 +2,7 @@
 
 Claude Code handoff: [P01 task packets and candidates](../../tasks/README.md#p01) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: PROPOSED; not started.** Original v1.0 reconciliation is required before this phase can be accepted.
+**Status: PROPOSED; not started. G00 passed on 2026-10-24 (DEC-027), so P01 task packets may be drafted from the [accepted baseline](../../evidence/P00/baseline-decision.md).**
 
 **Dependencies:** accepted G00 and the documented baseline from [P00](../00-baseline/README.md).
 

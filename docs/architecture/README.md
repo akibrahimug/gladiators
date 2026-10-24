@@ -1,6 +1,6 @@
 # Architecture map
 
-> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported; v10 is not a complete superset of earlier releases (PF-05). See the [recovered document index](<../sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. Reconciliation and decisions are done (DEC-014–DEC-025); G00 awaits the reviewer's decision.
+> **Source recovery update — 2026-10-23:** Original GLADIATOR releases, including the 54-file v10 release identified as v1.0, are now imported; v10 is not a complete superset of earlier releases (PF-05). See the [recovered document index](<../sources/originals/RECOVERED.md>). Earlier missing-source statements below are historical. Reconciliation and decisions are done (DEC-014–DEC-025), and G00 passed on 2026-10-24 (DEC-027).
 
 [Documentation index](../README.md) · [Component register](../traceability/components.md) · [Contract checklist](contracts.md)
 
