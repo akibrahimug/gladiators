@@ -6,6 +6,8 @@
 
 This round follows up the items that [round 1](source-followups.md) and the [data-access decision](data-access-decision.md) left open and that public documentation can answer. Where it changes a status recorded in round 1, the registry or the map, this file takes precedence; the [status changes](#status-changes) table lists every change. Items that need Kraken's reply (DEC-032) or a later sample download stay open.
 
+> **Reassessment, 2026-10-25:** under DEC-033 no Kraken reply is awaited. [source-reassessment.md](source-reassessment.md) (TASK-P01-007) records Kraken's published terms as ambiguous but not restricting DEC-030 use, and evaluates Binance Vision. Where it changes a status or dependency recorded here, it takes precedence.
+
 The method is unchanged: current primary documentation was read on 2026-10-25, and the text behind each claim is quoted. **Indirect** marks a claim resting on a search-engine extract or on a page that returned no readable text to automated fetch. Statuses use the registry vocabulary: Documented, Conditional, Unresolved and Excluded. "Set aside" and "narrowed" qualify a status; they are not statuses. The SR rows keep their own statuses (SR-05 stays Conditional).
 
 ## Summary
