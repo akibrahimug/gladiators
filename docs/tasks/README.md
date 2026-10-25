@@ -51,7 +51,7 @@ G00 passed on 2026-10-24. Candidates become packets once they are expanded again
 | --- | --- | --- |
 | [TASK-P01-001](TASK-P01-001.md) | Source registry and observability map for the research-assumption scope | Research/documentation; G00 passed. **Verified**; Draft [#13](https://github.com/akibrahimug/gladiators/pull/13) |
 | [TASK-P01-002](TASK-P01-002.md) | Cited algorithm-research agenda, reference baselines and required observations | Research/documentation; scope from TASK-P01-001. **Verified**; Draft [#15](https://github.com/akibrahimug/gladiators/pull/15) |
-| TASK-P01-003 | Workload, quality/latency/recovery objectives and source evaluation criteria | Documentation/validation; TASK-P01-001/002 outputs |
+| [TASK-P01-003](TASK-P01-003.md) | Workload, quality/latency/recovery objectives and source evaluation criteria | Documentation/validation; TASK-P01-001/002 outputs. **Verified**; Draft [#16](https://github.com/akibrahimug/gladiators/pull/16) |
 | [TASK-P01-004](TASK-P01-004.md) | Follow up source items F-1 to F-5 from TASK-P01-001 | Research/documentation; TASK-P01-001. **Verified**; Draft [#14](https://github.com/akibrahimug/gladiators/pull/14) |
 
 ## P02

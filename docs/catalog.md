@@ -27,6 +27,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/evidence/P00/v1.0-reconciliation-b.md](<evidence/P00/v1.0-reconciliation-b.md>) |
 | [docs/evidence/P00/v1.0-reconciliation-c.md](<evidence/P00/v1.0-reconciliation-c.md>) |
 | [docs/evidence/P00/v1.0-reconciliation.md](<evidence/P00/v1.0-reconciliation.md>) |
+| [docs/evidence/P01/acceptance-objectives.md](<evidence/P01/acceptance-objectives.md>) |
 | [docs/evidence/P01/observability-map.md](<evidence/P01/observability-map.md>) |
 | [docs/evidence/P01/research-agenda.md](<evidence/P01/research-agenda.md>) |
 | [docs/evidence/P01/source-followups.md](<evidence/P01/source-followups.md>) |
@@ -485,6 +486,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P00-004.md](<tasks/TASK-P00-004.md>) |
 | [docs/tasks/TASK-P01-001.md](<tasks/TASK-P01-001.md>) |
 | [docs/tasks/TASK-P01-002.md](<tasks/TASK-P01-002.md>) |
+| [docs/tasks/TASK-P01-003.md](<tasks/TASK-P01-003.md>) |
 | [docs/tasks/TASK-P01-004.md](<tasks/TASK-P01-004.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
 | [docs/traceability/components.md](<traceability/components.md>) |
