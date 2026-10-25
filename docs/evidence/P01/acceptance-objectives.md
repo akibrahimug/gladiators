@@ -78,7 +78,7 @@ Each criterion applies to the source classes listed. A source of a listed class 
 **Current standing (information only):**
 - **SR-02** (live): passes S-3, S-4 and S-6. S-1 and S-2 are open (F-4a).
 - **SR-05** (bars): passes S-3 and S-6. S-1 and S-2 are open (F-4a). S-4b is open: candle timestamp semantics (bar start or end; new item F-4i) and the 30-minute inconsistency (F-4f). S-5 is likely met ("from its first trade on Kraken"), but unconfirmed per pair.
-- **Context sources:** S-3 passes. S-1 is documented for the FOMC, BLS, CFTC, GDELT, FRED (DEC-030 use) and Coin Metrics (DEC-030 use) terms. **S-2 (retention) is open** for every context source, and no `source_approval` record exists yet. S-7 is documented for the FOMC (minutes timing; no statement time), BLS (08:30) and CFTC (3:30 p.m. ET), and open for GDELT, FRED and Coin Metrics.
+- **Context sources:** S-3 passes. S-1 is documented for the FOMC, BLS, CFTC, GDELT, FRED (DEC-030 use) and Coin Metrics (DEC-030 use) terms. **S-2 (retention) is open** for every context source, and no `source_approval` record exists yet. S-7 is documented for the FOMC (minutes timing; no statement time), BLS (08:30) and CFTC (3:30 p.m. ET), and open for GDELT, FRED and Coin Metrics. *Round 2 (2026-10-25, [source-followups-2.md](source-followups-2.md#context-sources--s-7-publication-timing)) takes precedence: GDELT is documented (15 minutes), FRED is documented at date granularity with a proposed rule, and Coin Metrics stays open.*
 - **ETF candidates:** none passes S-1, S-2 and S-5 (F-1).
 
 ## 6. Evaluation methods
