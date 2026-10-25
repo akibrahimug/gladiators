@@ -10,7 +10,7 @@
 >
 > **Reassessment, 2026-10-25:** [source-reassessment.md](source-reassessment.md) (TASK-P01-007, DEC-033) moves SR-04 Binance Vision from Unresolved to Conditional (its dataset terms permit DEC-030 personal, non-production research; broader terms open, F-5b) and finds Kraken ambiguous but not restricted. Where it changes a status recorded here, it takes precedence.
 >
-> **Binance general terms, 2026-10-25:** [binance-general-terms.md](binance-general-terms.md) (TASK-P01-008) narrows F-5b to F-5b′ (no UK restriction found; the governing version of Binance's general terms is unconfirmed) and narrows F-7b (forward platform-wide status only). SR-04 stays Conditional. Where it changes a status recorded here, it takes precedence.
+> **Binance general terms, 2026-10-25:** [binance-general-terms.md](binance-general-terms.md) (TASK-P01-008) narrows F-5b to F-5b′, Unresolved (no UK restriction found; retention ambiguous under the general terms; whether the archive is a Binance Service, and the governing version, unconfirmed) and narrows F-7b, Unresolved (forward platform-wide status only, rights unassessed; no history). SR-04 stays Conditional. Where it changes a status recorded here, it takes precedence.
 
 This map covers P01 task 3. Each required observation gets a **class**: accessible, conditional, unavailable or unresolved. The registry's status vocabulary maps onto these classes as shown in its [method table](source-registry.md#method). "Accessible" means documented and free with no open eligibility or terms item; it does not mean access has been demonstrated.
 

@@ -9,7 +9,7 @@
 - if those remain unsuitable or ambiguous, evaluate another public source. The user named Binance Vision as "a strong alternative", and noted that "broader eligibility and retention conditions still need checking before selection";
 - crypto-first (DEC-029) remains the baseline plan.
 
-> **Follow-up, 2026-10-25:** [binance-general-terms.md](binance-general-terms.md) (TASK-P01-008) reads the Binance general terms and narrows F-5b to F-5b′ and F-7b. Where it changes a status recorded here, it takes precedence.
+> **Follow-up, 2026-10-25:** [binance-general-terms.md](binance-general-terms.md) (TASK-P01-008) reads the Binance general terms. It narrows F-5b to F-5b′ (Unresolved) and F-7b (Unresolved; a forward platform-wide endpoint is now documented). It supersedes the S-1 and S-2 lines for SR-04 below. Where it changes a status recorded here, it takes precedence.
 
 **Precedence.** Where this file changes a status recorded in the registry, the map, rounds 1 and 2, or the [research agenda](research-agenda.md)'s data notes, this file takes precedence. The [status changes](#status-changes) table lists every change.
 
@@ -118,7 +118,7 @@ Before selection: F-5b, F-5c, F-5d, F-7b and F-8 (below), and G01.
 | F-5b | **Narrowed to F-5b′** ([follow-up](binance-general-terms.md#f-5b-eligibility-automated-access-and-retention)). Eligibility and retention or use conditions in Binance's general or site-wide terms that may govern a UK individual using `data.binance.vision`. §12 of the dataset terms imports only the dispute, arbitration, governing-law and class-action clauses | Primary text of the Binance Terms of Use and of any terms for `data.binance.vision` |
 | F-5c | Whether Binance Vision keeps the files of delisted symbols | Sample plan, or the README |
 | F-5d | The W-1 quote-currency rule for a USDT-quoted source, including the USDT/USD basis | G01 reviewer decision on the proposed value |
-| F-7b | **Narrowed** ([follow-up](binance-general-terms.md#f-7b-binance-venue-status)). Venue status for a Binance-history baseline: no historical or forward source | A documented Binance status history, or a reviewer-approved rule (see F-7) |
+| F-7b | **Narrowed** ([follow-up](binance-general-terms.md#f-7b-binance-venue-status)): a forward platform-wide endpoint is now documented; still no historical source. Venue status for a Binance-history baseline | A documented Binance status history, or a reviewer-approved rule (see F-7) |
 | F-8 | Venue consistency between training history and paper-simulation inputs | G01 reviewer decision (options above) |
 
 ## Status changes
