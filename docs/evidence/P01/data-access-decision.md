@@ -17,16 +17,16 @@ This table assesses each source against criteria S-1 to S-7 in the [acceptance-o
 
 | Need | Proposed source | S-criteria status | Pending items |
 | --- | --- | --- | --- |
-| Crypto daily bars (history for H-01 to H-06) | **Binance Vision daily `klines` (SR-04)**, proposed primary ([reassessment](source-reassessment.md#3-comparison-for-the-crypto-first-daily-baseline)). **Kraken OHLCVT archive (SR-05)** as a cross-venue check | SR-04: S-1 rights documented for DEC-030 use (no `source_approval` record yet); S-2 no limit, downloaded data keeps its terms; S-3 free; S-4b open and close time explicit; S-6 checksums and announced corrections; S-5 likely met (delisted symbols open). SR-05: Conditional, as before (F-4a; F-4f; F-4i) | F-5b (Binance Terms of Use eligibility), F-5c (delisted symbols), F-5d (W-1 quote currency, USDT); for SR-05: F-4a, F-4f, F-4g, F-4h, F-4i |
+| Crypto daily bars (history for H-01 to H-06) | **Binance Vision daily `klines` (SR-04)**, proposed primary ([reassessment](source-reassessment.md#3-comparison-for-the-crypto-first-daily-baseline)). **Kraken OHLCVT archive (SR-05)** as a cross-venue check | SR-04 **Conditional**. S-1: use permitted by §4.1; eligibility under the broader Binance terms open (F-5b); no `source_approval` record yet. S-2: not restricted by the dataset terms; broader terms open (F-5b). S-3 free. S-4b: open and close time explicit; checksums per file. S-5 likely met (delisted symbols open). S-6: venue-local, Binance only. Derived models may not be used live without a separate licence (§2.4, §4.2). SR-05: Conditional, as before (F-4a; F-4f; F-4i) | F-5b, F-5c (delisted symbols), F-5d (W-1 quote currency, USDT), F-7b (no Binance venue status), F-8 (history and paper on different venues); for SR-05: F-4a, F-4f, F-4g, F-4h, F-4i |
 | Crypto live depth and trades (H-OF1, H-OF2, H-OF3, H-OF5) | **Kraken WebSocket v2 public `book` and `trade` (SR-02)**, only if a later authorisation permits capture | Passes S-3, S-4 and S-6. Open: S-1 (F-4a; no `source_approval` record) and S-2 (F-4a) | F-4a (ambiguous; no reply awaited, DEC-033); capture authorisation (P02 boundary) |
-| Crypto historical trades (H-OF3 history) | **Binance Vision `trades` and `aggTrades` (SR-04)**; Kraken public REST trades as an alternative | SR-04 as for daily bars. Kraken REST narrowed in [round 2](source-followups-2.md#f-4--kraken-data-details): 1,000 trades per call; paging back to the first trade undocumented | F-5b, F-5c; H-OF3 tests one venue's flow against that venue's bars, so a Binance-history, Kraken-live split needs the research agenda's venue rule (BB) applied per venue; F-4d for Kraken |
+| Crypto historical trades (H-OF3 history) | **Binance Vision `trades` and `aggTrades` (SR-04)**; Kraken public REST trades as an alternative | SR-04 as for daily bars; the aggressor side comes from `isBuyerMaker`. Kraken REST narrowed in [round 2](source-followups-2.md#f-4--kraken-data-details): 1,000 trades per call; paging back to the first trade undocumented | F-5b, F-5c; the same-venue rule (BB) applies on Binance (Binance trades against Binance bars); F-4d for Kraken |
 | ETF daily bars | **None proposed** | No candidate passes S-1, S-2 and S-5 | **F-1 closed negatively on 2026-10-25** ([round 2](source-followups-2.md#f-1--free-daily-etf-bars-closed-negatively)), so DEC-029 is triggered: the daily-first baseline runs on crypto spot first. ETFs stay in scope; an ETF daily source stays a G01 dependency |
 | ETF corporate actions | **None proposed** | — | F-2, F-2a |
 | ETF trading calendar | NYSE hours and calendars | Conditional: the terms are unread | ETF-only; deferred with ETFs |
 | Context events (W-7) | FOMC calendar, BLS CPI schedule, CFTC COT, GDELT, FRED/ALFRED (data key; DEC-028), Coin Metrics Community | S-3 passes. S-1: rights are documented (FRED and Coin Metrics for DEC-030 use), but no `source_approval` record exists. **S-2 (retention) is open for all.** S-7 is documented for FOMC (minutes timing only; no statement time), BLS (08:30), CFTC (3:30 p.m. ET) and GDELT (15 minutes), and for FRED at date granularity with a proposed rule ([round 2](source-followups-2.md#context-sources--s-7-publication-timing)); open for Coin Metrics | Retention terms per source; S-7 for Coin Metrics; the FRED rule; `source_approval` records |
-| Crypto venue status (`VenueStatus`) | **Kraken REST `SystemStatus` and WebSocket v2 `status`** (no key; [round 2](source-followups-2.md#venue-status--kraken)). Coinbase is out (DEC-031) | Passes S-3. Open: S-1 and S-2 (F-4a; no `source_approval` record). History comes only from forward capture | F-4a (ambiguous; no reply awaited, DEC-033); capture authorisation. **F-7:** missing venue status blocks new entries, so a historical backtest on the archive needs a reviewer-approved treatment |
+| Crypto venue status (`VenueStatus`) | **Kraken REST `SystemStatus` and WebSocket v2 `status`** (no key; [round 2](source-followups-2.md#venue-status--kraken)). Coinbase is out (DEC-031) | Passes S-3. Open: S-1 and S-2 (F-4a; no `source_approval` record). History comes only from forward capture | F-4a (ambiguous; no reply awaited, DEC-033); capture authorisation. **F-7:** missing venue status blocks new entries, so a historical backtest on the Kraken archive needs a reviewer-approved treatment. **F-7b:** Binance has no venue-status source at all, and Kraken's status cannot gate Binance bars (venue-local) |
 | Per-order (L3) data (H-OF4) | **None.** Kraken `level3` needs an account token, which DEC-028 excludes | — | Recorded gap ([agenda](research-agenda.md#gaps-this-agenda-records-for-g01)) |
-| Second venue (H-OF6) | **Historical trades only:** Binance Vision (SR-04) beside Kraken. No live second venue: Coinbase is out (DEC-031), and Binance live (SR-03) is Unresolved (F-5) | SR-04 as above | Live part remains a recorded gap |
+| Second venue (H-OF6) | **Historical only:** Binance Vision trades (SR-04) against Kraken bars (SR-05); Kraken has no trade history (F-4d). No live second venue: Coinbase is out (DEC-031), and Binance live (SR-03) is Unresolved (F-5) | SR-04 Conditional (F-5b); SR-05 Conditional (F-4a) | F-5b, F-4a, F-4d; the agenda's clock and fee alignment. The live part remains a recorded gap |
 | NOII and issuer holdings (H-OF7) | **None.** NOII is paid, and issuer holdings are Unresolved (F-3) | — | Recorded gap |
 | Derivatives, options and liquidations (H-OF8); on-chain RPC (H-OF9) | **Out of scope until their sources close** (W-7). Coin Metrics Community is the only partial on-chain input | — | F-3 |
 
@@ -36,6 +36,7 @@ This table assesses each source against criteria S-1 to S-7 in the [acceptance-o
 
 | Source | Account | Key | Network action needed later | Cost |
 | --- | --- | --- | --- | --- |
+| Binance Vision SR-04 archive | None | None | Download daily or monthly files from `data.binance.vision` and verify each `.CHECKSUM` | £0 |
 | Kraken SR-05 archive and REST | None: public endpoints need "no API key" (SR-02) | None | Download archive files and verify the published SHA-256. REST pulls only on explicit invocation (`09-CONNECTORS.md` "No hidden spend") | £0 |
 | Kraken SR-02 WebSocket | None | None | Only under a later capture authorisation | £0 |
 | FRED/ALFRED | Registration for an API key (a data key, allowed by DEC-028) | Data key | Key registration is a user action | £0 |
@@ -49,7 +50,15 @@ Purpose: verifying the sources, not producing research results. The plan runs **
 
 The Kraken reply is no longer a precondition (DEC-033).
 
-**0. Binance Vision sample.** For the W-1 candidate symbols, download one month of `1d` klines and one day of `trades`, with their `.CHECKSUM` files. Record: checksum results; the microsecond change at 2025-01-01; whether delisted symbols have files (F-5c); open/close-time alignment; Q-1 and Q-2 results.
+**0. Binance Vision sample.** For the W-1 candidate symbols, download the `1d` klines for December 2024 and January 2025 (either side of the 2025-01-01 change to microseconds), plus one day of `trades`, each with its `.CHECKSUM` file. Record:
+- checksum results;
+- the unit change between the two months;
+- whether delisted symbols have files (F-5c);
+- open/close-time alignment;
+- `isBuyerMaker` coverage;
+- Q-1 and Q-2 results.
+
+Then re-download one file listed as revised in the README and compare checksums, to confirm how revisions appear (T-2a).
 
 **1. Kraken archive sample.**
 - **Download:** the latest quarterly incremental ZIP, plus the full-history multi-part ZIP. The Kraken article says the complete dataset covers "each pair from its first trade on Kraken" (SR-05). Whether the download is a single all-pairs file or one file per pair is unverified. Whichever it is, only the W-1 candidate pairs are used.
@@ -106,7 +115,7 @@ Fields carried by each record:
 
 | Source | Retention | Redistribution | Status |
 | --- | --- | --- | --- |
-| Binance Vision | No limit stated; downloaded Datasets keep the terms in force at download (§1.4) | Derivative works only with attribution to Binance Vision and under CC BY-NC-SA 4.0 (§4.5); no hosting or commercial exploitation (§4.3) | Documented for DEC-030 use; F-5b open |
+| Binance Vision | Not restricted by the dataset terms (CC §2(a)(1); downloaded Datasets keep their terms, §1.4); broader Binance terms open (F-5b) | Derivative works only with attribution to Binance Vision and under CC BY-NC-SA 4.0 (§4.5); no hosting or commercial exploitation (§4.3) | Conditional (F-5b) |
 | Kraken | Not addressed in the terms read | §8 "only for your own benefit" (the coordinator's reading; whether "Our Content" covers API data is open, F-4a) | **Ambiguous** ([reassessment](source-reassessment.md#1-kraken-reassessment-from-the-published-documentation-and-terms)); no reply awaited (DEC-033) |
 | FOMC, BLS, CFTC | Not established | Not established | Open (S-2); US government publications |
 | GDELT | Not established | Allowed, but "must include a citation to the GDELT Project" | Open (S-2) |
@@ -141,6 +150,6 @@ Under DEC-033 (2026-10-25) the user keeps this draft unsent, and no decision wai
 | --- | --- |
 | Proposed baseline | Per the table above: Binance Vision SR-04 for crypto history (primary), Kraken SR-05 as a cross-check, Kraken SR-02 if capture is authorised; the context sources as listed; no ETF source yet |
 | Decision | **Pending** |
-| Dependencies | **Binance Vision:** F-5b; F-5c; F-5d (W-1 quote currency)<br>**Kraken:** F-4a (ambiguous, recorded; no reply awaited under DEC-033); F-4d; F-4f; F-4g; F-4h; F-4i<br>**ETF:** F-1 closed negatively, so DEC-029 applies and an ETF daily source stays open; F-2 and F-2a; NYSE calendar terms<br>**Crypto venue:** venue status, on the Kraken terms (F-4a); F-7 historical venue-status coverage for archived bars<br>**Context:** context retention (S-2); S-7 for Coin Metrics; the FRED date-granularity `available_at` rule (proposed, round 2)<br>**All sources:** `source_approval` records<br>**For the G01 reviewer:** the VAL gaps recorded in the register, its proposed values, and the provisional defaults W-5 (daily first) and S-3 (£0 budget)<br>**Recorded gaps:** H-OF4, H-OF6, H-OF7; H-OF8 and H-OF9 (F-3; out of scope per W-7) |
+| Dependencies | **Binance Vision:** F-5b (eligibility and retention under the broader Binance terms); F-5c; F-5d (W-1 quote currency); F-7b (venue status); F-8 (training and paper venues); the derived-model restriction (§2.4, §4.2: no live use without a separate licence)<br>**Kraken:** F-4a (ambiguous, recorded; no reply awaited under DEC-033); F-4d; F-4f; F-4g; F-4h; F-4i<br>**ETF:** F-1 closed negatively, so DEC-029 applies and an ETF daily source stays open; F-2 and F-2a; NYSE calendar terms<br>**Crypto venue:** venue status, on the Kraken terms (F-4a); F-7 historical venue-status coverage for archived bars<br>**Context:** context retention (S-2); S-7 for Coin Metrics; the FRED date-granularity `available_at` rule (proposed, round 2)<br>**All sources:** `source_approval` records<br>**For the G01 reviewer:** the VAL gaps recorded in the register, its proposed values, and the provisional defaults W-5 (daily first) and S-3 (£0 budget)<br>**Recorded gaps:** H-OF4, H-OF6, H-OF7; H-OF8 and H-OF9 (F-3; out of scope per W-7) |
 | Kraken reply | Not awaited (DEC-033, superseding DEC-032's reply condition) |
 | Reviewer | G01 reviewer not yet designated |
