@@ -1,5 +1,13 @@
 # Change log
 
+## 0.4 — 2026-10-24
+
+- TASK-P00-001: preserved the recovered originals and reviewed them (PRs #3, #4).
+- TASK-P00-002: mapped every v10 section (389 rows) and added the lineage annex (PRs #5–#7, carried by #9).
+- TASK-P00-003: recorded DR-01–DR-12 as DEC-014–DEC-025, wrote the baseline record, and applied it: REQ-013–REQ-020 Proposed and CMP-12–CMP-14 added (PR #11).
+- TASK-P00-004: G00 passed on 2026-10-24 by its reviewer, the user (DEC-027).
+- No application code. Preserved originals are unchanged. G01–G07 are not started.
+
 ## 0.3 — 2026-10-22
 
 - Claude Code ran TASK-DOC-001. The [handoff report](docs/validation/claude-handoff.md) records agent discovery, links, captured-source checksums, repository/publishing readiness and two rounds of independent review.
