@@ -129,5 +129,5 @@ Before selection: F-5b, F-5c, F-5d, F-7b and F-8 (below), and G01.
 | DEC-032 dependency (Kraken reply) | Pending | **Removed** by DEC-033; the draft stays unsent | User decision |
 | Map: daily bars; intraday bars; bar `available_at` | Conditional (SR-05, SR-04) | Conditional (SR-04 F-5b; SR-05 F-4a). SR-04 has next-day publication | This file |
 | Map: historical trades | SR-04 terms unresolved; Kraken REST narrowed (F-4d) | SR-04 `trades` and `aggTrades` Conditional (F-5b); Kraken REST narrowed (F-4d) | This file |
-| Agenda: H-OF6 second venue | Binance Unresolved (F-5) | Historical trades: SR-04 Conditional, beside Kraken. Kraken has no trade history (F-4d), so the comparison uses Binance trades against Kraken bars only (SR-05, Conditional), subject to the agenda's clock and fee alignment. No live second venue | This file |
+| Agenda: H-OF6 second venue | Binance Unresolved (F-5) | Historical trades: SR-04 Conditional, beside Kraken. Kraken has no documented full trade history (F-4d, narrowed), so the comparison uses Binance trades against Kraken bars only (SR-05, Conditional), subject to the agenda's clock and fee alignment. No live second venue | This file |
 | Agenda: H-OF3 history | Kraken REST (F-4d) | SR-04 `trades` Conditional (F-5b), with the same-venue rule (BB) applied on Binance | This file |
