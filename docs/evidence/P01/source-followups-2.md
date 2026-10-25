@@ -12,7 +12,7 @@ The method is unchanged: current primary documentation was read on 2026-10-25, a
 
 | Item | Outcome | Effect |
 | --- | --- | --- |
-| F-1 Free daily ETF bars | **Closed negatively.** Of the routes examined, all four remaining ones are set aside with evidence: Twelve Data (retention not established: tied to the subscription; Basic history depth undocumented), IEX HIST (IEX venue only; twelve months), Stooq (no readable terms) and Yahoo (terms forbid automated collection) | **DEC-029's condition is met for the routes examined**, recorded here by the coordinator. A newly found qualifying source reopens F-1. The daily-first baseline runs on crypto spot first; ETFs stay in scope, and an ETF daily source stays a G01 dependency |
+| F-1 Free daily ETF bars | **Closed negatively.** Of the routes examined, all four remaining ones are set aside with evidence: Twelve Data (retention not established: tied to the subscription; Basic history depth undocumented), IEX HIST (IEX venue only; twelve-month range unconfirmed), Stooq (no readable terms) and Yahoo (terms forbid automated collection) | **DEC-029's condition is met for the routes examined**, recorded here by the coordinator. A newly found qualifying source reopens F-1. The daily-first baseline runs on crypto spot first; ETFs stay in scope, and an ETF daily source stays a G01 dependency |
 | F-2a ETF delistings and point-in-time universe | Not researched; deferred with ETFs under DEC-029 | Unresolved; no effect on the crypto-first baseline |
 | Venue status (map row) | **Kraken publishes it publicly**: REST `SystemStatus` and the WebSocket v2 `status` channel, with no key. No historical status archive was found | Conditional (Kraken terms, F-4a) going forward. Historical coverage for archived bars is a new G01 dependency (F-7) |
 | F-4d Kraken REST trade history | Narrowed: 1,000 trades per call with a `since` cursor; paging back from the first trade is not documented | Unresolved (narrowed) |
@@ -87,8 +87,8 @@ Retention (S-2) is still not established for any context source; none of the pag
 | --- | --- | --- | --- |
 | F-1 as a whole | Narrowed, not closed | **Closed negatively** (coordinator record, 2026-10-25) | All four routes set aside with evidence |
 | DEC-029 | Not triggered | **Triggered**: crypto spot first; ETFs stay in scope as a G01 dependency | F-1 closure |
-| F-1a Twelve Data | Unresolved | Unresolved; set aside | §16 retention bound to the subscription |
-| SR-06 IEX HIST (F-1b) | Unresolved | Unresolved; set aside | Twelve months, IEX venue only; terms page still 404 |
+| F-1a Twelve Data | Unresolved | Unresolved; set aside | S-2 not established (§16 tied to the subscription; no storage timeframe found); Basic history undocumented (S-5) |
+| SR-06 IEX HIST (F-1b) | Unresolved | Unresolved; set aside | IEX venue only; twelve-month range unconfirmed; terms page still 404 |
 | SR-10 Stooq | Unresolved | Unresolved; set aside | No readable terms |
 | SR-11 Yahoo | Unresolved | Unresolved; set aside | Terms forbid automated collection |
 | Map: venue status | Unresolved (Kraken not checked) | **Conditional** going forward (Kraken REST `SystemStatus` and WebSocket v2 `status`; terms F-4a); history is F-7 | Public, documented, no key |
