@@ -1,6 +1,6 @@
 # P01 data-access decision (draft, pending)
 
-[Task](../../tasks/TASK-P01-005.md) · [Source registry](source-registry.md) · [Follow-ups](source-followups.md) · [Acceptance objectives](acceptance-objectives.md) · [Research agenda](research-agenda.md) · [P01 phase](../../phases/01-research-and-data-access/README.md)
+[Task](../../tasks/TASK-P01-005.md) · [Source registry](source-registry.md) · [Follow-ups](source-followups.md) · [Follow-ups, round 2](source-followups-2.md) · [Acceptance objectives](acceptance-objectives.md) · [Research agenda](research-agenda.md) · [P01 phase](../../phases/01-research-and-data-access/README.md)
 
 **Status: draft proposal for the G01 reviewer, 2026-10-24. Decision: pending.**
 
@@ -20,11 +20,11 @@ This table assesses each source against criteria S-1 to S-7 in the [acceptance-o
 | Crypto daily bars (history for H-01 to H-06) | **Kraken OHLCVT archive (SR-05)**, plus Kraken public REST for incremental bars | Passes S-3 and S-6. S-5 is likely met but unconfirmed for each pair. Open: S-1 (F-4a and the Kraken confirmation; no `source_approval` record), S-2 (F-4a) and S-4b (F-4i timestamp semantics; F-4f 30-minute inconsistency) | F-4a (also covers the legacy-page provenance); DEC-032 reply; F-4f, F-4g (delisted pairs), F-4h (availability at bar close), F-4i |
 | Crypto live depth and trades (H-OF1, H-OF2, H-OF3, H-OF5) | **Kraken WebSocket v2 public `book` and `trade` (SR-02)**, only if a later authorisation permits capture | Passes S-3, S-4 and S-6. Open: S-1 (F-4a; no `source_approval` record) and S-2 (F-4a) | F-4a; DEC-032 reply; capture authorisation (P02 boundary) |
 | Crypto historical trades (H-OF3 history) | Kraken public REST trades | Not assessed | F-4d (history and terms) |
-| ETF daily bars | **None proposed** | No candidate passes S-1, S-2 and S-5 | F-1 as a whole: F-1a (Twelve Data), F-1b (IEX HIST), Stooq (SR-10) and Yahoo (SR-11). DEC-029 applies only after all four routes close negatively or are set aside with evidence, and the coordinator has recorded that closure ([follow-ups](source-followups.md#f-1--free-daily-etf-bars)). The user may also apply it earlier |
+| ETF daily bars | **None proposed** | No candidate passes S-1, S-2 and S-5 | **F-1 closed negatively on 2026-10-25** ([round 2](source-followups-2.md#f-1--free-daily-etf-bars-closed-negatively)), so DEC-029 is triggered: the daily-first baseline runs on crypto spot first. ETFs stay in scope; an ETF daily source stays a G01 dependency |
 | ETF corporate actions | **None proposed** | — | F-2, F-2a |
 | ETF trading calendar | NYSE hours and calendars | Conditional: the terms are unread | ETF-only; deferred with ETFs |
 | Context events (W-7) | FOMC calendar, BLS CPI schedule, CFTC COT, GDELT, FRED/ALFRED (data key; DEC-028), Coin Metrics Community | S-3 passes. S-1: rights are documented (FRED and Coin Metrics for DEC-030 use), but no `source_approval` record exists. **S-2 (retention) is open for all.** S-7 is documented for FOMC (minutes timing only; no statement time), BLS (08:30) and CFTC (3:30 p.m. ET), and open for GDELT, FRED and Coin Metrics | Retention terms per source; S-7 for three sources; `source_approval` records |
-| Crypto venue status (`VenueStatus`) | **None.** Kraken status is not checked, and Coinbase is out (DEC-031) | — | Required input, unresolved. Until it closes, missing venue status blocks new entries |
+| Crypto venue status (`VenueStatus`) | **Kraken REST `SystemStatus` and WebSocket v2 `status`** (no key; [round 2](source-followups-2.md#venue-status--kraken)). Coinbase is out (DEC-031) | Passes S-3. Open: S-1 and S-2 (F-4a; no `source_approval` record). History comes only from forward capture | F-4a; DEC-032 reply; capture authorisation. Missing venue status still blocks new entries |
 | Per-order (L3) data (H-OF4) | **None.** Kraken `level3` needs an account token, which DEC-028 excludes | — | Recorded gap ([agenda](research-agenda.md#gaps-this-agenda-records-for-g01)) |
 | Second venue (H-OF6) | **None.** Coinbase is out (DEC-031), and Binance is Unresolved (F-5) | — | Recorded gap |
 | NOII and issuer holdings (H-OF7) | **None.** NOII is paid, and issuer holdings are Unresolved (F-3) | — | Recorded gap |
@@ -137,6 +137,6 @@ Under DEC-032, whether and when to send this is the user's decision.
 | --- | --- |
 | Proposed baseline | Per the table above: Kraken SR-05, and SR-02 if capture is authorised; the context sources as listed; no ETF source yet |
 | Decision | **Pending** |
-| Dependencies | **Kraken:** DEC-032 reply; F-4a (including provenance); F-4d; F-4f; F-4g; F-4h; F-4i<br>**ETF:** F-1 as a whole (F-1a, F-1b, Stooq, Yahoo; otherwise DEC-029); F-2 and F-2a; NYSE calendar terms<br>**Crypto venue:** venue status<br>**Context:** context retention (S-2); S-7 for GDELT, FRED and Coin Metrics<br>**All sources:** `source_approval` records<br>**For the G01 reviewer:** the VAL gaps recorded in the register, its proposed values, and the provisional defaults W-5 (daily first) and S-3 (£0 budget)<br>**Recorded gaps:** H-OF4, H-OF6, H-OF7; H-OF8 and H-OF9 (F-3; out of scope per W-7) |
+| Dependencies | **Kraken:** DEC-032 reply; F-4a (including provenance); F-4d; F-4f; F-4g; F-4h; F-4i<br>**ETF:** F-1 closed negatively, so DEC-029 applies and an ETF daily source stays open; F-2 and F-2a; NYSE calendar terms<br>**Crypto venue:** venue status, on the Kraken terms (F-4a)<br>**Context:** context retention (S-2); S-7 for Coin Metrics; the FRED date-granularity `available_at` rule (proposed, round 2)<br>**All sources:** `source_approval` records<br>**For the G01 reviewer:** the VAL gaps recorded in the register, its proposed values, and the provisional defaults W-5 (daily first) and S-3 (£0 budget)<br>**Recorded gaps:** H-OF4, H-OF6, H-OF7; H-OF8 and H-OF9 (F-3; out of scope per W-7) |
 | If Kraken does not reply, or replies negatively | Return to the user for a decision (DEC-032) |
 | Reviewer | G01 reviewer not yet designated |

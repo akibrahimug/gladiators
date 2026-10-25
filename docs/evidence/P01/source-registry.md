@@ -5,6 +5,8 @@
 **Status: research evidence for G01, 2026-10-24. It selects no source and authorises no access, account, spending, capture or trading.** For each source, a row records what current primary documentation states, what is still unverified and the consequence for P01.
 
 > **Follow-up, 2026-10-24:** the open items F-1 to F-5 are followed up in [source-followups.md](source-followups.md) (TASK-P01-004). Where that file changes a status recorded here, it takes precedence.
+>
+> **Round 2, 2026-10-25:** [source-followups-2.md](source-followups-2.md) (TASK-P01-006) closes F-1 negatively, triggering DEC-029, and records Kraken venue status. Where it changes a status recorded here, it takes precedence.
 
 ## Research assumptions and source constraints
 

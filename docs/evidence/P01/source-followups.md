@@ -6,6 +6,8 @@
 
 This file follows up the open items in the [observability map](observability-map.md#follow-up). Where it changes a status recorded in the [source registry](source-registry.md) or the map (both from TASK-P01-001), this file takes precedence. The [status changes](#status-changes) table lists every change. The registry and map are otherwise unchanged from their reviewed versions, apart from a pointer note.
 
+> **Round 2, 2026-10-25:** [source-followups-2.md](source-followups-2.md) (TASK-P01-006) closes F-1 negatively (DEC-029 triggered), records Kraken venue status and narrows F-4d and F-4h. Where it changes a status recorded here, it takes precedence.
+
 The method is the same as the registry's. Current primary documentation was read on 2026-10-24, and the text behind each claim is quoted. A claim is marked **indirect** when it rests on a search-engine extract of the official page, or on a page that blocked automated fetching. Statuses use only the registry vocabulary: Documented, Conditional, Unresolved and Excluded.
 
 ## Summary
