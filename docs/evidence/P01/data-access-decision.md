@@ -4,6 +4,8 @@
 
 **Status: draft proposal for the G01 reviewer, 2026-10-24; revised 2026-10-25 (TASK-P01-007, TASK-P01-008). Decision: pending.**
 
+**G01 reviewer answers, 2026-10-26** ([gate record](g01-gate-record.md#reviewer-answers-2026-10-26)). The baseline proposed below is approved in substance by DEC-036 to DEC-045, and downloads are authorised by DEC-035. Everything takes effect only when G01 passes (DEC-046), after the reviewer confirms the [`source_approval` records](source-approvals.md). Where these decisions differ from text below, they take precedence.
+
 This is the P01 deliverable "an approved data evaluation plan and access decision, including a representative sample plan and source-dependent acceptance criteria" (P01 README). It covers P01 tasks 4 and 7.
 - **What it does:** proposes a source baseline and an evaluation plan for the G01 reviewer.
 - **What it does not do:** it authorises no account, key registration, download, capture, spending or trading.

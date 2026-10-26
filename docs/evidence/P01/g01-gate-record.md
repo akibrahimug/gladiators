@@ -2,7 +2,7 @@
 
 [Milestones](../../milestones.md) · [Gate-record template](../gate-record-template.md) · [P01 phase](../../phases/01-research-and-data-access/README.md) · [G00 record](../P00/g00-gate-record.md) · [Data-access decision](data-access-decision.md)
 
-**G01 decision: pending. No reviewer has been designated.**
+**G01 decision: pending the reviewer's confirmation of the `source_approval` records (DEC-046).** The reviewer (the user, DEC-034) answered GR-01 to GR-12 on 2026-10-26; see the [reviewer answers](#reviewer-answers-2026-10-26). G01 is **not passed** until that confirmation is recorded here and in the milestone register.
 - **Who prepared what:** the coordinator prepared the evidence fields, the readiness note and the decision requests on 2026-10-26, under [TASK-P01-009](../../tasks/TASK-P01-009.md).
 - **Decision fields:** these stay "Pending" until the reviewer decides.
 - **The PR:** opening or merging this record's PR passes nothing.
@@ -11,7 +11,7 @@
 | --- | --- |
 | Gate and phase | G01 — P01 Research and data access |
 | Baseline / original source manifest hash | The accepted G00 baseline ([baseline record](../P00/baseline-decision.md); DEC-027). v10 archive SHA-256: `502c61404aac90979a73d712e7ff1e7601ba58ea1927351dbfe1d9ead5b3d810` |
-| Date / owner / reviewer | **Date:** evidence prepared 2026-10-26.<br>**Owner:** unassigned in the [milestone register](../../milestones.md). DEC-008 makes the user the decision owner; GR-01 confirms this.<br>**Reviewer:** Pending (GR-01) |
+| Date / owner / reviewer | **Date:** evidence prepared 2026-10-26; reviewer answers 2026-10-26.<br>**Owner:** the user (DEC-008, confirmed by DEC-034).<br>**Reviewer:** the user (DEC-034) |
 | Requirements and components | As in the [P01 traceability](../../phases/01-research-and-data-access/README.md#traceability):<br>**Requirements:** REQ-001 to REQ-007; Proposed REQ-015 (cost and budget, decided by GR-11) and REQ-020.<br>**Components:** CMP-01, CMP-02, CMP-03, CMP-04, CMP-05 and CMP-13 |
 | Upstream passed gate records and versions | [G00](../P00/g00-gate-record.md), passed 2026-10-24 |
 | Exact acceptance criteria and pre-agreed thresholds | **Criteria:** the [G01 exit gate](../../phases/01-research-and-data-access/README.md#g01--exit-gate) and the milestone-register G01 row.<br>**Thresholds:** the proposed values in the [acceptance-objective register](acceptance-objectives.md#for-the-g01-reviewer), to be approved before any measurement (GR-08) |
@@ -19,9 +19,9 @@
 | Method and environment / configuration versions | Primary documentation and terms read on the dates each file states. Quotes were checked by independent `gladiator-reviewer` passes. No account, key, download, capture or vendor contact |
 | Observed outcomes | See the [readiness note](#coordinators-readiness-note). In short:<br>- every required input maps to a proposed source or a recorded gap;<br>- crypto daily bars have two Conditional sources;<br>- ETF daily bars have none (DEC-029 triggered);<br>- no `source_approval` record exists, so S-1 is incomplete for every source;<br>- nothing has been measured |
 | Failed cases, uncertainty and limitations | - **Terms ambiguities:** F-4a (Kraken) and F-5b′ (Binance). Retention (S-2) is open for Kraken and every context source.<br>- **Semantics not yet verified by sample:** F-4d, F-4f, F-4g, F-4h, F-4i and F-5c.<br>- **No historical venue status:** F-7 and F-7b.<br>- **Venues:** training and paper venues differ if Binance is used (F-8).<br>- **Coin Metrics Community:** only "limited assets and 30 days of history"; exchange-flow coverage unverified; S-7 Unresolved.<br>- **NYSE calendar:** terms unread, and the terms page returned 404. Halts and circuit breakers are unchecked.<br>- **Disclaimer:** the coordinator's terms readings are not legal advice |
-| Open issues and disposition | Decision requests GR-01 to GR-12 [below](#decision-requests) |
-| Decision: pending / passed / reopened | **Pending** |
-| Decision rationale and reviewer identity | Pending |
+| Open issues and disposition | Decision requests GR-01 to GR-12 [below](#decision-requests), answered by the reviewer on 2026-10-26 as DEC-034 and DEC-036 to DEC-046 ([answers](#reviewer-answers-2026-10-26)). Downloads were authorised separately as DEC-035, effective after the pass. **Outstanding:** the reviewer's confirmation of the [draft `source_approval` records](source-approvals.md) SA-01 to SA-09 and the §5 amendment (DEC-038, DEC-046) |
+| Decision: pending / passed / reopened | **Pending**: pass after confirmation (DEC-046) |
+| Decision rationale and reviewer identity | Reviewer: the user (DEC-034). Rationale: pending the confirmation |
 | Affected downstream gates if changed | G02 to G07 depend on G01.<br>- **Source baseline:** fixes P02's capture targets.<br>- **Proposed values:** fix the P02 to P05 capture, quality, clock and recovery thresholds.<br>- **Model-evaluation thresholds:** stay with the P06 pre-registration |
 
 ## Coordinator's readiness note
@@ -64,3 +64,28 @@ Each request names the affected IDs and lists options, with the coordinator's re
 - **Steps 0, 1 and 3:** authorising these permits public file downloads and keyless public REST calls. Step 1's Kraken REST comparison falls under F-4a. It permits no account, key or live capture.
 - **Step 2 (live capture):** needs a separate capture authorisation at the P02 boundary.
 - **Whose decision:** this authorisation is the user's to give, and it is not a gate decision.
+
+## Reviewer answers, 2026-10-26
+
+The reviewer is the user (DEC-034). They answered the interactive questions on 2026-10-26, choosing the recommended option each time. The coordinator transcribes the answers below; the options are given verbatim. The GR wording in the questions was condensed from the table above.
+
+| GR | Option chosen (verbatim) | Decision |
+| --- | --- | --- |
+| GR-01 | "Me (the user) (Recommended)" | DEC-034 |
+| Downloads (not a GR) | "Yes, after G01 (Recommended)" | DEC-035 |
+| GR-02 | "Binance primary, Kraken check (Recommended)" | DEC-036 |
+| GR-03 | "Research Binance, paper Kraken (Recommended)" | DEC-037 |
+| GR-04 | "Records + accepted limits (Recommended)" | DEC-038 |
+| GR-05 | "Per-source, never mixed (Recommended)" | DEC-039 |
+| GR-06 | "Approved rule (Recommended)" | DEC-040 |
+| GR-07 | "Forward-only (Recommended)" | DEC-041 |
+| GR-08 | "Approve with amendments (Recommended)" | DEC-042 |
+| GR-09 | "Accept as gaps (Recommended)" | DEC-043 |
+| GR-10 | "Adopt them (Recommended)" | DEC-044 |
+| GR-11 | "Confirm defaults (Recommended)" | DEC-045 |
+| GR-12 | "Pass after records (Recommended)" | DEC-046 |
+
+**Applied, pending the pass:**
+- **Records:** [source approvals](source-approvals.md), drafts SA-01 to SA-09.
+- **Register:** the §5 amendment, and the W-1 and W-7 amendments ([acceptance objectives](acceptance-objectives.md#decisions-recorded-at-g01-2026-10-26)).
+- **Data-access decision:** its status line ([data-access decision](data-access-decision.md)).
