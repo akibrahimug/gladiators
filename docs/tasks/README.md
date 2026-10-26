@@ -57,7 +57,7 @@ G00 passed on 2026-10-24. Candidates become packets once they are expanded again
 | [TASK-P01-006](TASK-P01-006.md) | Source follow-ups, round 2: close F-1, Kraken venue status, F-4d/f/h/i, context S-7 | Research/documentation; TASK-P01-005. **Verified**; Merged [#18](https://github.com/akibrahimug/gladiators/pull/18) |
 | [TASK-P01-007](TASK-P01-007.md) | Reassess Kraken from published terms; evaluate Binance Vision (DEC-033) | Research/documentation; TASK-P01-006. **Verified**; Merged [#19](https://github.com/akibrahimug/gladiators/pull/19) |
 | [TASK-P01-008](TASK-P01-008.md) | Binance general terms and venue status (F-5b, F-7b) | Research/documentation; TASK-P01-007. **Verified**; Merged [#20](https://github.com/akibrahimug/gladiators/pull/20) |
-| [TASK-P01-009](TASK-P01-009.md) | G01 gate record draft and decision requests GR-01 to GR-10 | Documentation; TASK-P01-001 to -008. **In progress**; Not requested |
+| [TASK-P01-009](TASK-P01-009.md) | G01 gate record draft and decision requests GR-01 to GR-12 | Documentation; TASK-P01-001 to -008. **In progress**; Not requested |
 
 ## P02
 
