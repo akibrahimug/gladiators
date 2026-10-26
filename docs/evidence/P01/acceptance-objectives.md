@@ -120,10 +120,10 @@ None of these has been measured.
 ## Decisions recorded at G01 (2026-10-26)
 
 The G01 reviewer (the user, DEC-034) approved the proposed values with amendments (DEC-042). They take effect when G01 passes (DEC-046). Where they differ from the rows above, these decisions take precedence:
-- **W-1** (DEC-036, DEC-039): Binance Vision spot pairs, quoted in USDT, for research history; Kraken pairs, quoted in USD, for the cross-check and for any model used in paper simulation (DEC-037). The quote currency is never mixed within one model. The point-in-time selection and delisting rules are unchanged.
+- **W-1** (DEC-036, DEC-039): Binance Vision spot pairs, quoted in USDT, for research history; Kraken pairs, quoted in USD, for the cross-check and for any model used in paper simulation (DEC-037). The quote currency is never mixed within one model. The point-in-time selection and delisting rules are unchanged. The USDT/USD basis is a recorded limitation (DEC-039).
 - **W-7** (DEC-040, DEC-041, DEC-043):
-  - Crypto venue status is published by Kraken going forward ([round 2](source-followups-2.md#venue-status--kraken)). For archived bars, a missing or zero-volume day is status-unknown, with no new entries that day; otherwise the venue is assumed open.
-  - Coin Metrics is used forward-only, with `available_at` = `retrieved_at`.
+  - Round 2 found crypto venue status published by Kraken going forward, which supersedes the "not checked" statement in W-7 (DEC-042) ([round 2](source-followups-2.md#venue-status--kraken)). For archived bars, a missing or zero-volume day is status-unknown, with no new entries that day; otherwise the venue is assumed open.
+  - Coin Metrics is used forward-only, with `available_at` = `retrieved_at` and no history until completion times are documented. Its asset limits and 30 days of history are recorded (DEC-041).
   - The NYSE calendar is deferred with ETFs.
 - **Also approved:**
   - the FRED `available_at` rule ([round 2](source-followups-2.md#context-sources--s-7-publication-timing));
