@@ -2,6 +2,8 @@
 
 [Task](../../tasks/TASK-P01-002.md) · [Source follow-ups](source-followups.md) · [Observability map](observability-map.md) · [P01 phase](../../phases/01-research-and-data-access/README.md) · [Acceptance scenarios](../../validation/acceptance-scenarios.md)
 
+> **Reassessment, 2026-10-25:** [source-reassessment.md](source-reassessment.md) (TASK-P01-007, DEC-033) changes the data notes for H-OF3 history and H-OF6: Binance Vision trades are now Conditional (F-5b), and history and paper venues are an open G01 item (F-8). Where it changes a data note here, it takes precedence.
+
 **Status: research evidence for G01, 2026-10-24.** This agenda frames hypotheses and baselines only:
 - It selects no model, sets no threshold, runs no experiment and makes no profitability claim.
 - Thresholds and the held-out design are pre-registered later: the acceptance objectives in TASK-P01-003, and the held-out evaluation in P06.
