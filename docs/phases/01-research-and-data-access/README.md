@@ -2,7 +2,7 @@
 
 Claude Code handoff: [P01 task packets and candidates](../../tasks/README.md#p01) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: complete; G01 passed on 2026-10-27 with recorded conditions (DEC-047, [gate record](../../evidence/P01/g01-gate-record.md)).** P01 ran from 2026-10-24, after G00 passed (DEC-027), from the [accepted baseline](../../evidence/P00/baseline-decision.md) under the documented research assumptions (DEC-017, DEC-028, DEC-029).
+**Status: G01 passed on 2026-10-27 with recorded conditions (DEC-047, [gate record](../../evidence/P01/g01-gate-record.md)).** P01 ran from 2026-10-24, after G00 passed (DEC-027), from the [accepted baseline](../../evidence/P00/baseline-decision.md) under the documented research assumptions (DEC-017, DEC-028, DEC-029). The sample plan (steps 0, 1 and 3) is still to run.
 
 **Dependencies:** accepted G00 and the documented baseline from [P00](../00-baseline/README.md).
 
@@ -56,6 +56,6 @@ Pass only when every required event or context input in the selected scope maps 
 
 **Failure and rework:** revise the source choice or research scope; update affected requirements and components. Return to G00 if the needed scope change conflicts with the accepted v1.0 baseline.
 
-**Exact next step:** after G00 acceptance, enumerate the required event and context types for the approved initial scope in the source registry.
+**Exact next step:** run the [sample plan](../../evidence/P01/data-access-decision.md#representative-sample-plan) steps 0, 1 and 3 under DEC-044 and record the results; then expand TASK-P02-001. *(Earlier: after G00 acceptance, enumerate the required event and context types; done by TASK-P01-001.)*
 
 **Implementation boundary:** research and design are future work; this document does not create connections, purchase data, or start capture or trading.

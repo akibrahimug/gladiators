@@ -44,6 +44,6 @@ Pass only when all selected event types have versioned contracts and provenance 
 
 **Failure and rework:** quarantine or mark incomplete inputs, revise the capture design, and repeat affected validation. Return to G01 when the source cannot satisfy the approved contract; notify downstream phases of contract changes.
 
-**Exact next step:** after G01 acceptance, draft the raw and normalized event contract for the approved source baseline.
+**Exact next step:** G01 passed on 2026-10-27; expand TASK-P02-001, the raw and normalized event contract for the approved source baseline.
 
 **Implementation boundary:** connectors, storage, and replay code are future work. This setup does not start data capture or implement trading.
