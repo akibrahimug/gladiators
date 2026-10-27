@@ -33,7 +33,7 @@ Determine which observations are available, what each observation represents, an
 
 **Progress 2026-10-26:** [TASK-P01-009](../../tasks/TASK-P01-009.md) drafted the [G01 gate record](../../evidence/P01/g01-gate-record.md), with a readiness note and decision requests GR-01 to GR-12. At that point no reviewer was designated and no decision was recorded. The same day, the user, as G01 reviewer (DEC-034), answered GR-01 to GR-12 (DEC-036 to DEC-046) and authorised downloads after the pass (DEC-035). [TASK-P01-010](../../tasks/TASK-P01-010.md) recorded the answers and drafted the [`source_approval` records](../../evidence/P01/source-approvals.md). G01 passes only when the reviewer confirms those records (DEC-046).
 
-**Progress 2026-10-27:** [TASK-P01-011](../../tasks/TASK-P01-011.md) logged the independent Codex reviews of PRs #12 to #22 ([log](../../evidence/P01/codex-review-log.md)) and fixed their open findings. The PR #19 fix applies Binance dataset terms §1.2 to §1.5: F-5b′ narrows to F-5b″, and Binance retention is no longer restricted for DEC-030 use. G01 stays pending.
+**Progress 2026-10-27:** [TASK-P01-011](../../tasks/TASK-P01-011.md) logged the independent Codex reviews of PRs #12 to #22 ([log](../../evidence/P01/codex-review-log.md)) and fixed their open findings. The PR #19 fix applies Binance dataset terms §1.2 to §1.5: F-5b′ narrows to F-5b″, and Binance retention is not restricted for DEC-030 use (previously ambiguous). G01 stays pending.
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G01 in the [milestone register](../../milestones.md).
 

@@ -2,7 +2,7 @@
 
 [Task](../../tasks/TASK-P01-010.md) · [G01 gate record](g01-gate-record.md) · [Data-access decision](data-access-decision.md) · [Source registry](source-registry.md) · [Acceptance objectives](acceptance-objectives.md#5-source-evaluation-criteria-for-the-p01-task-7-source-baseline)
 
-**Status: draft, 2026-10-26, awaiting the G01 reviewer's confirmation (DEC-046).**
+**Status: draft, 2026-10-26; SA-01 revised 2026-10-27 (TASK-P01-011: dataset terms §1.2 to §1.5). Awaiting the G01 reviewer's confirmation (DEC-046).**
 - **Basis:** prepared under DEC-038. Nothing here is approved or frozen until the reviewer confirms it.
 - **Authorisation:** these records authorise no account, key registration, download, capture, spending or trading.
 - **Downloads:** they follow DEC-035 and DEC-044, which take effect only when G01 passes.
