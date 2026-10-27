@@ -10,6 +10,8 @@
 >
 > **Reassessment, 2026-10-25:** [source-reassessment.md](source-reassessment.md) (TASK-P01-007, DEC-033) moves SR-04 Binance Vision from Unresolved to Conditional (its dataset terms permit DEC-030 personal, non-production research; broader terms open, F-5b) and finds Kraken ambiguous but not restricted. Where it changes a status recorded here, it takes precedence.
 >
+> **Correction, 2026-10-27:** dataset terms §1.2 to §1.5 narrow F-5b′ to F-5b″; Binance retention is not restricted for DEC-030 use ([correction](binance-general-terms.md#correction-2026-10-27-the-dataset-terms-own-incorporation-and-priority-clauses-f-5b)).
+>
 > **Binance general terms, 2026-10-25:** [binance-general-terms.md](binance-general-terms.md) (TASK-P01-008) narrows F-5b to F-5b′, Unresolved (no UK restriction found; retention ambiguous under the general terms; whether the archive is a Binance Service, and the governing version, unconfirmed) and narrows F-7b, Unresolved (forward platform-wide status only, rights unassessed; no history). SR-04 stays Conditional. Where it changes a status recorded here, it takes precedence.
 
 ## Research assumptions and source constraints
