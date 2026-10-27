@@ -61,7 +61,7 @@ G00 passed on 2026-10-24. Candidates become packets once they are expanded again
 | [TASK-P01-010](TASK-P01-010.md) | Record G01 reviewer answers (DEC-034 to DEC-046); draft `source_approval` records | Documentation; TASK-P01-009. **Verified**; Open [#22](https://github.com/akibrahimug/gladiators/pull/22) |
 | [TASK-P01-011](TASK-P01-011.md) | Address the independent Codex PR reviews (PRs #12 to #22) | Documentation; TASK-P01-010. **Verified**; Open [#23](https://github.com/akibrahimug/gladiators/pull/23) |
 | [TASK-P01-012](TASK-P01-012.md) | Record the G01 pass (DEC-047) | Documentation; TASK-P01-011. **Verified**; Open [#24](https://github.com/akibrahimug/gladiators/pull/24) |
-| [TASK-P01-013](TASK-P01-013.md) | Run the sample plan, steps 0, 1 and 3 | Research/validation; TASK-P01-012. **In progress** |
+| [TASK-P01-013](TASK-P01-013.md) | Run the sample plan, steps 0, 1 and 3 | Research/validation; TASK-P01-012. **Verified** |
 
 ## P02
 
