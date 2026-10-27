@@ -2,7 +2,7 @@
 
 [Task](../../tasks/TASK-P01-010.md) · [G01 gate record](g01-gate-record.md) · [Data-access decision](data-access-decision.md) · [Source registry](source-registry.md) · [Acceptance objectives](acceptance-objectives.md#5-source-evaluation-criteria-for-the-p01-task-7-source-baseline)
 
-**Status: confirmed by the G01 reviewer and frozen, 2026-10-27 (DEC-047).** Drafted 2026-10-26; SA-01 revised 2026-10-27 (TASK-P01-011: dataset terms §1.2 to §1.5), before the confirmation.
+**Status: confirmed by the G01 reviewer and frozen, 2026-10-27 (DEC-047).** Drafted 2026-10-26; SA-01 revised 2026-10-27 (TASK-P01-011: dataset terms §1.2 to §1.5), before the confirmation. The sample-verification field was updated later on 2026-10-27 (TASK-P01-013); no record field changed.
 - **Basis:** prepared under DEC-038; approved for planning and sampling (DEC-046). Any later change reopens the record and needs a new date.
 - **Authorisation:** these records authorise no account, key registration, download, capture, spending or trading.
 - **Downloads:** they follow DEC-035 and DEC-044, effective from the G01 pass on 2026-10-27.
