@@ -56,6 +56,6 @@ Pass only when every required event or context input in the selected scope maps 
 
 **Failure and rework:** revise the source choice or research scope; update affected requirements and components. Return to G00 if the needed scope change conflicts with the accepted v1.0 baseline.
 
-**Exact next step:** the reviewer's answer on the sample results' proposed standing changes; then expand TASK-P02-001. *(Earlier: after G00 acceptance, enumerate the required event and context types; done by TASK-P01-001.)*
+**Exact next step:** expand TASK-P02-001. The reviewer answered the sample items on 2026-10-27 (DEC-048 to DEC-050), and [TASK-P01-014](../../tasks/TASK-P01-014.md) applied them. *(Earlier: after G00 acceptance, enumerate the required event and context types; done by TASK-P01-001.)*
 
 **Implementation boundary:** research and design are future work; this document does not create connections, purchase data, or start capture or trading.

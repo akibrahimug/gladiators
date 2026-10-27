@@ -2,7 +2,7 @@
 
 [Task](../../tasks/TASK-P01-010.md) · [G01 gate record](g01-gate-record.md) · [Data-access decision](data-access-decision.md) · [Source registry](source-registry.md) · [Acceptance objectives](acceptance-objectives.md#5-source-evaluation-criteria-for-the-p01-task-7-source-baseline)
 
-**Status: confirmed by the G01 reviewer and frozen, 2026-10-27 (DEC-047).** Drafted 2026-10-26; SA-01 revised 2026-10-27 (TASK-P01-011: dataset terms §1.2 to §1.5), before the confirmation. The sample-verification field was updated later on 2026-10-27 (TASK-P01-013); no record field changed.
+**Status: confirmed by the G01 reviewer and frozen, 2026-10-27 (DEC-047).** Drafted 2026-10-26; SA-01 revised 2026-10-27 (TASK-P01-011: dataset terms §1.2 to §1.5), before the confirmation. The sample-verification field was updated later on 2026-10-27 (TASK-P01-013). The reviewer then amended SA-01, SA-02, SA-04 and SA-05 the same day (DEC-048 to DEC-050), and those records were re-frozen with that date; see [Amendments, 2026-10-27](#amendments-2026-10-27).
 - **Basis:** prepared under DEC-038; approved for planning and sampling (DEC-046). Any later change reopens the record and needs a new date.
 - **Authorisation:** these records authorise no account, key registration, download, capture, spending or trading.
 - **Downloads:** they follow DEC-035 and DEC-044, effective from the G01 pass on 2026-10-27.
@@ -46,6 +46,18 @@ The amended §5 rule (DEC-038, effective from the G01 pass on 2026-10-27) relaxe
 | **Accepted limitations** (DEC-038), confirmed 2026-10-27 | S-2 retention not established | S-2 as SA-04 | S-2 as SA-04 | S-2 not stated | S-2 not stated. A data key is a user action (DEC-028); bandwidth may be limited | S-2 not stated; the asset and 30-day limits; exchange-flow coverage unverified |
 | Other S-criteria (S-3 passes for all) | **S-7:** minutes timing documented. **Statement release time is not documented**, so statement events are forward-only, with `available_at` = the observed publication time, as DEC-041 does for Coin Metrics. **Confirmed with the records, 2026-10-27.** The calendar lists 2026–27 meetings only; historical meeting and minutes dates are to be confirmed by sample step 3, or as a P02 dependency. This amends W-7's first-publication rule for statements | S-7: 08:30 documented. The page lists only Oct–Dec 2026; historical release dates are to be confirmed by sample step 3, or as a P02 dependency | S-7: Friday 3:30 p.m. ET documented; holidays may delay release. Historical release dates are to be confirmed by sample step 3, or as a P02 dependency | S-7: 15-minute cadence documented | S-7: date granularity; met by the FRED `available_at` rule (DEC-042, in effect from 2026-10-27) | **S-7 is not met for history.** Forward use meets it through DEC-041's rule (`available_at` = `retrieved_at`); historical use stays barred until completion times are documented |
 | Operating conditions | DEC-044 | DEC-044 | DEC-044 | DEC-044 | DEC-044; key registration by the user | DEC-044; 10 requests per 6 s |
+
+## Amendments, 2026-10-27
+
+These amendments come from the [sample results](sample-results.md) and the reviewer's answers (DEC-048 to DEC-050). Where they differ from the cells above, they take precedence.
+
+| Record | Amendment |
+| --- | --- |
+| SA-01 | **Coverage:** revisions replace files in place. Daily revisions are listed in the README's changelog; monthly rewrites are not. We keep every retrieved file version with its checksum and `Last-Modified` (DEC-048). **S-5:** delisted symbols keep their files (F-5c Documented). **New limitation:** a symbol can cover two assets over time, as LUNAUSDT does (F-5e, Unresolved); P02 needs an instrument-identity rule |
+| SA-02 | **S-4b:** timestamp semantics closed: bars are stamped at bar start (F-4i), with 7 standard intervals (F-4f). Integrity is met for the full archive (published part checksums); the quarterly increment has no published checksum. **S-5:** met for XBTUSD and ETHUSD; delisted pairs are present, but no delisting date is given (F-4j, Unresolved). F-4h stays Unresolved (narrowed) |
+| SA-04 | **S-7:** historical statement events use `available_at` = the release time stated on each statement page (DEC-049). Minutes keep the first-publication rule. A page with no stated time falls back to forward-only |
+| SA-05 | **S-7:** the CPI sample result was dropped (DEC-050). CPI release timing, current and historical, is a P02 dependency. BLS pages refuse automated access, so they are read only from a published file or by the user |
+| All records | **Q-2** now has three classes (DEC-048; [register](acceptance-objectives.md)) |
 
 ## Not in the baseline (no record)
 
