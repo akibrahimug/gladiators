@@ -15,7 +15,7 @@ The amended §5 rule (DEC-038, effective from the G01 pass on 2026-10-27) relaxe
 
 **Common to every record:**
 - **Intended use:** DEC-030. This means personal, non-commercial research and paper simulation, with no product, clients or redistribution.
-- **Sample verification:** pending. Each record is approved for planning and sampling (DEC-046, DEC-047), with its open data-semantics items carried to P02 as dependencies (DEC-045). When the sample plan completes, the coordinator updates this field and the record is re-frozen with a new date. That update needs the reviewer's confirmation only if a result changes an accepted limitation or an S-criterion standing.
+- **Sample verification:** steps 0, 1 and 3 ran on 2026-10-27 ([results](sample-results.md)); they cover SA-01, SA-02, SA-04, SA-05 and SA-06. Their proposed standing changes await the reviewer's confirmation and are not yet applied here. SA-03 (step 2) and SA-07 to SA-09 are not sampled. Each record is approved for planning and sampling (DEC-046, DEC-047), with its open data-semantics items carried to P02 as dependencies (DEC-045). When the sample plan completes, the coordinator updates this field and the record is re-frozen with a new date. That update needs the reviewer's confirmation only if a result changes an accepted limitation or an S-criterion standing.
 - **Terms readings:** these are the coordinator's, not legal advice.
 
 ## Crypto market data

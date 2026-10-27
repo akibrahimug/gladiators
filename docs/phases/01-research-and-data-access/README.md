@@ -2,7 +2,7 @@
 
 Claude Code handoff: [P01 task packets and candidates](../../tasks/README.md#p01) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: G01 passed on 2026-10-27 with recorded conditions (DEC-047, [gate record](../../evidence/P01/g01-gate-record.md)).** P01 ran from 2026-10-24, after G00 passed (DEC-027), from the [accepted baseline](../../evidence/P00/baseline-decision.md) under the documented research assumptions (DEC-017, DEC-028, DEC-029). The sample plan (steps 0, 1 and 3) is still to run.
+**Status: G01 passed on 2026-10-27 with recorded conditions (DEC-047, [gate record](../../evidence/P01/g01-gate-record.md)).** P01 ran from 2026-10-24, after G00 passed (DEC-027), from the [accepted baseline](../../evidence/P00/baseline-decision.md) under the documented research assumptions (DEC-017, DEC-028, DEC-029). The sample plan's steps 0, 1 and 3 ran on 2026-10-27 ([results](../../evidence/P01/sample-results.md)).
 
 **Dependencies:** accepted G00 and the documented baseline from [P00](../00-baseline/README.md).
 
@@ -33,7 +33,7 @@ Determine which observations are available, what each observation represents, an
 
 **Progress 2026-10-26:** [TASK-P01-009](../../tasks/TASK-P01-009.md) drafted the [G01 gate record](../../evidence/P01/g01-gate-record.md), with a readiness note and decision requests GR-01 to GR-12. At that point no reviewer was designated and no decision was recorded. The same day, the user, as G01 reviewer (DEC-034), answered GR-01 to GR-12 (DEC-036 to DEC-046) and authorised downloads after the pass (DEC-035). [TASK-P01-010](../../tasks/TASK-P01-010.md) recorded the answers and drafted the [`source_approval` records](../../evidence/P01/source-approvals.md). G01 passes only when the reviewer confirms those records (DEC-046).
 
-**Progress 2026-10-27:** [TASK-P01-011](../../tasks/TASK-P01-011.md) logged the independent Codex reviews of PRs #12 to #22 ([log](../../evidence/P01/codex-review-log.md)) and fixed their open findings. The PR #19 fix applies Binance dataset terms §1.2 to §1.5: F-5b′ narrows to F-5b″, and Binance retention is not restricted for DEC-030 use (previously ambiguous). The reviewer then confirmed the `source_approval` records and the §5 amendment on the revised text, and G01 passed (DEC-047). [TASK-P01-012](../../tasks/TASK-P01-012.md) recorded the pass. The sample plan's steps 0, 1 and 3 may now run under DEC-044; their results update each record's sample-verification field.
+**Progress 2026-10-27:** [TASK-P01-011](../../tasks/TASK-P01-011.md) logged the independent Codex reviews of PRs #12 to #22 ([log](../../evidence/P01/codex-review-log.md)) and fixed their open findings. The PR #19 fix applies Binance dataset terms §1.2 to §1.5: F-5b′ narrows to F-5b″, and Binance retention is not restricted for DEC-030 use (previously ambiguous). The reviewer then confirmed the `source_approval` records and the §5 amendment on the revised text, and G01 passed (DEC-047). [TASK-P01-012](../../tasks/TASK-P01-012.md) recorded the pass. The sample plan's steps 0, 1 and 3 may now run under DEC-044; their results update each record's sample-verification field. [TASK-P01-013](../../tasks/TASK-P01-013.md) ran them the same day ([results](../../evidence/P01/sample-results.md)). Every published checksum verified. F-4f, F-4g, F-4h, F-4i and F-5c are now Documented. Two new items were found: F-4j (Kraken delisting dates) and F-5e (Binance symbol reuse). The FOMC statement pages state their own release times, which may allow historical statement events (a proposal for the reviewer).
 
 **Architecture:** [architecture index](../../architecture/README.md). **Gate:** G01 in the [milestone register](../../milestones.md).
 
@@ -56,6 +56,6 @@ Pass only when every required event or context input in the selected scope maps 
 
 **Failure and rework:** revise the source choice or research scope; update affected requirements and components. Return to G00 if the needed scope change conflicts with the accepted v1.0 baseline.
 
-**Exact next step:** run the [sample plan](../../evidence/P01/data-access-decision.md#representative-sample-plan) steps 0, 1 and 3 under DEC-044 and record the results; then expand TASK-P02-001. *(Earlier: after G00 acceptance, enumerate the required event and context types; done by TASK-P01-001.)*
+**Exact next step:** the reviewer's answer on the sample results' proposed standing changes; then expand TASK-P02-001. *(Earlier: after G00 acceptance, enumerate the required event and context types; done by TASK-P01-001.)*
 
 **Implementation boundary:** research and design are future work; this document does not create connections, purchase data, or start capture or trading.

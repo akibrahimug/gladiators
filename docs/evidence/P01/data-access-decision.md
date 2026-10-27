@@ -85,6 +85,8 @@ Then re-download one file listed as revised in the README and compare checksums,
 
 Results go into P02 `capture-validation-plan.md`. They are not research evidence.
 
+**Run 2026-10-27 (steps 0, 1 and 3):** see the [sample results](sample-results.md), held there until P02's plan exists. Step 2 has not run.
+
 ## Provenance fields
 
 Each source gets a manifest, drawn from reinstated L-010 item 2 and L-025 `source_approval`:

@@ -34,6 +34,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/evidence/P01/g01-gate-record.md](<evidence/P01/g01-gate-record.md>) |
 | [docs/evidence/P01/observability-map.md](<evidence/P01/observability-map.md>) |
 | [docs/evidence/P01/research-agenda.md](<evidence/P01/research-agenda.md>) |
+| [docs/evidence/P01/sample-results.md](<evidence/P01/sample-results.md>) |
 | [docs/evidence/P01/source-approvals.md](<evidence/P01/source-approvals.md>) |
 | [docs/evidence/P01/source-followups.md](<evidence/P01/source-followups.md>) |
 | [docs/evidence/P01/source-followups-2.md](<evidence/P01/source-followups-2.md>) |
@@ -503,6 +504,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P01-010.md](<tasks/TASK-P01-010.md>) |
 | [docs/tasks/TASK-P01-011.md](<tasks/TASK-P01-011.md>) |
 | [docs/tasks/TASK-P01-012.md](<tasks/TASK-P01-012.md>) |
+| [docs/tasks/TASK-P01-013.md](<tasks/TASK-P01-013.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
 | [docs/traceability/components.md](<traceability/components.md>) |
 | [docs/traceability/requirements-matrix.md](<traceability/requirements-matrix.md>) |
