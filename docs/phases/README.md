@@ -1,13 +1,13 @@
 # Phase documentation
 
-**Status: PROPOSED. P00 is complete and G00 passed on 2026-10-24; P01–P07 are not started.**
+**Status: PROPOSED. P00 is complete and G00 passed on 2026-10-24. P01 is complete and G01 passed on 2026-10-27. P02–P07 are not started.**
 
 These folders make the documentation navigable. Their presence does not establish that a phase, component, experiment, or gate has been completed. The original architecture was recovered and reconciled, and G00 passed on 2026-10-24 ([gate record](../evidence/P00/g00-gate-record.md)).
 
 | Phase | Planning document | Required predecessor | Exit gate | Current state |
 | --- | --- | --- | --- | --- |
 | P00 | [Baseline and source reconciliation](00-baseline/README.md) | None | G00 | Complete; G00 passed on 2026-10-24 |
-| P01 | [Research and data access](01-research-and-data-access/README.md) | Accepted G00 | G01 | Not started |
+| P01 | [Research and data access](01-research-and-data-access/README.md) | Accepted G00 | G01 | Complete; G01 passed on 2026-10-27 |
 | P02 | [Event capture](02-event-capture/README.md) | Accepted G01 | G02 | Not started |
 | P03 | [Market state and ledger](03-market-state-and-ledger/README.md) | Accepted G02 | G03 | Not started |
 | P04 | [Features and context](04-features-and-context/README.md) | Accepted G03 | G04 | Not started |

@@ -45,7 +45,7 @@ The retrieved chat contains five user turns; its assistant messages contain refe
 | Documentation structure and navigation | Created; see [setup verification](docs/validation/setup-report.md) |
 | Original v1.0 specification import | Done 2026-10-23 — [SRC-003](docs/sources/README.md), [preservation review](docs/evidence/P00/preservation-review.md) |
 | G00 baseline gate | Passed 2026-10-24 ([gate record](docs/evidence/P00/g00-gate-record.md)) |
-| G01–G07 development gates | G01: reviewer answers recorded 2026-10-26, pass pending ([gate record](docs/evidence/P01/g01-gate-record.md)); G02–G07 not started |
+| G01–G07 development gates | G01: passed 2026-10-27, with recorded conditions ([gate record](docs/evidence/P01/g01-gate-record.md)); G02–G07 not started |
 | Implementation and trading | Not started |
 
 See the [open backlog](docs/backlog.md), [decisions](docs/decisions/README.md) and [change log](CHANGELOG.md).

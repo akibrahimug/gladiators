@@ -64,7 +64,7 @@ Each objective has one of three kinds:
 
 Each criterion applies to the source classes listed. A source of a listed class that fails a criterion cannot be part of the approved baseline.
 
-**Amendment (DEC-038, 2026-10-26; effective at the G01 pass).** For S-1 and S-2 only, a limitation recorded in the source's [`source_approval` record](source-approvals.md) and accepted by the G01 reviewer satisfies the criterion for personal, non-commercial research (DEC-030). Any change of use reopens the record. Every other criterion still applies as written.
+**Amendment (DEC-038, 2026-10-26; effective from the G01 pass on 2026-10-27, DEC-047).** For S-1 and S-2 only, a limitation recorded in the source's [`source_approval` record](source-approvals.md) and accepted by the G01 reviewer satisfies the criterion for personal, non-commercial research (DEC-030). Any change of use reopens the record. Every other criterion still applies as written.
 
 | ID | Criterion | Applies to | Basis |
 | --- | --- | --- | --- |
@@ -119,7 +119,7 @@ None of these has been measured.
 
 ## Decisions recorded at G01 (2026-10-26)
 
-The G01 reviewer (the user, DEC-034) approved the proposed values with amendments (DEC-042). They take effect when G01 passes (DEC-046). Where they differ from the rows above, these decisions take precedence:
+The G01 reviewer (the user, DEC-034) approved the proposed values with amendments (DEC-042). They took effect when G01 passed on 2026-10-27 (DEC-046, DEC-047). Where they differ from the rows above, these decisions take precedence:
 - **W-1** (DEC-036, DEC-039): Binance Vision spot pairs, quoted in USDT, for research history; Kraken pairs, quoted in USD, for the cross-check and for any model used in paper simulation (DEC-037). The quote currency is never mixed within one model. The point-in-time selection and delisting rules are unchanged. The USDT/USD basis is a recorded limitation (DEC-039).
 - **W-7** (DEC-040, DEC-041, DEC-043):
   - Round 2 found crypto venue status published by Kraken going forward, which supersedes the "not checked" statement in W-7 (DEC-042) ([round 2](source-followups-2.md#venue-status--kraken)). For archived bars, a missing or zero-volume day is status-unknown, with no new entries that day; otherwise the venue is assumed open.

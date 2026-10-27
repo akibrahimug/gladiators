@@ -2,7 +2,7 @@
 
 Claude Code handoff: [P02 task packets and candidates](../../tasks/README.md#p02) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: PROPOSED; not started.** Original v1.0 reconciliation is required before this phase can be accepted.
+**Status: PROPOSED; not started.** G01 passed on 2026-10-27 (DEC-047), so P02 may start once its task packets are expanded. Its inputs are the G01 conditions: the [`source_approval` records](../../evidence/P01/source-approvals.md), the P02 dependencies F-4d, F-4f, F-4g, F-4h, F-4i and F-5c (DEC-045), and the three VAL gaps as test obligations (DEC-042).
 
 **Dependencies:** accepted G01 and the source contracts from [P01](../01-research-and-data-access/README.md).
 

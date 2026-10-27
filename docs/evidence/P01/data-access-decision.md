@@ -1,17 +1,17 @@
-# P01 data-access decision (draft, pending G01)
+# P01 data-access decision (approved at G01)
 
 [Task](../../tasks/TASK-P01-005.md) · [Source registry](source-registry.md) · [Follow-ups](source-followups.md) · [Follow-ups, round 2](source-followups-2.md) · [Reassessment](source-reassessment.md) · [Acceptance objectives](acceptance-objectives.md) · [Research agenda](research-agenda.md) · [P01 phase](../../phases/01-research-and-data-access/README.md)
 
-**Status: draft proposal for the G01 reviewer, 2026-10-24; revised 2026-10-25 (TASK-P01-007, TASK-P01-008); corrected 2026-10-27 (TASK-P01-011). Decision: pending.**
+**Status: draft proposal for the G01 reviewer, 2026-10-24; revised 2026-10-25 (TASK-P01-007, TASK-P01-008); corrected 2026-10-27 (TASK-P01-011). Decision: approved with conditions at the G01 pass, 2026-10-27 (DEC-047).**
 
 **Correction, 2026-10-27:** Binance dataset terms §1.2 to §1.5 narrow F-5b′ to F-5b″, and Binance retention is not restricted for DEC-030 use ([correction](binance-general-terms.md#correction-2026-10-27-the-dataset-terms-own-incorporation-and-priority-clauses-f-5b)). The Binance cells below are updated to match.
 
-**G01 reviewer answers, 2026-10-26** ([gate record](g01-gate-record.md#reviewer-answers-2026-10-26)). The baseline proposed below is approved in substance by DEC-036 to DEC-045, and downloads are authorised by DEC-035. Everything takes effect only when G01 passes (DEC-046), after the reviewer confirms the [`source_approval` records](source-approvals.md). Where these decisions differ from text below, they take precedence.
+**G01 reviewer answers, 2026-10-26** ([gate record](g01-gate-record.md#reviewer-answers-2026-10-26)). The baseline proposed below is approved in substance by DEC-036 to DEC-045, and downloads are authorised by DEC-035. Everything took effect when G01 passed on 2026-10-27 (DEC-046, DEC-047), after the reviewer confirmed the [`source_approval` records](source-approvals.md). Where these decisions differ from text below, they take precedence.
 
 This is the P01 deliverable "an approved data evaluation plan and access decision, including a representative sample plan and source-dependent acceptance criteria" (P01 README). It covers P01 tasks 4 and 7.
 - **What it does:** proposes a source baseline and an evaluation plan for the G01 reviewer.
 - **What it does not do:** it authorises no account, key registration, download, capture, spending or trading.
-- **Why it is pending:** it awaits the G01 review and the open items below. It no longer waits for Kraken: under [DEC-033](../../decisions/README.md) (2026-10-25) no reply is awaited, the draft email stays unsent, and Kraken was reassessed from its published text, with Binance Vision evaluated as the alternative ([reassessment](source-reassessment.md)).
+- **Why it was pending** *(until the G01 pass on 2026-10-27)*: it awaited the G01 review and the open items below. It no longer waits for Kraken: under [DEC-033](../../decisions/README.md) (2026-10-25) no reply is awaited, the draft email stays unsent, and Kraken was reassessed from its published text, with Binance Vision evaluated as the alternative ([reassessment](source-reassessment.md)).
 
 **No `source_approval` record (L-025) exists yet for any source.** Criterion S-1 requires one, so S-1 is incomplete for every row below, even where the rights are documented. *(Superseded 2026-10-26: draft records SA-01 to SA-09 are in [source-approvals.md](source-approvals.md), awaiting the reviewer's confirmation, DEC-038 and DEC-046.)*
 
@@ -153,7 +153,7 @@ Under DEC-033 (2026-10-25) the user keeps this draft unsent, and no decision wai
 | Field | Value |
 | --- | --- |
 | Proposed baseline | Per the table above: Binance Vision SR-04 for crypto history (primary), Kraken SR-05 as a cross-check, Kraken SR-02 if capture is authorised; the context sources as listed; no ETF source yet |
-| Decision | **Pending** |
+| Decision | **Approved with conditions, 2026-10-27** (DEC-047), as amended by DEC-035 to DEC-045. The dependencies below are the recorded conditions |
 | Dependencies | **Binance Vision:** F-5b″ (confirm that the Terms of Use linked in dataset terms §1.2 is BT-1, and whether UK Local Terms apply); the download operating conditions (no unreasonable load; respect robot exclusion; dataset terms §7); F-5c; F-5d (W-1 quote currency); F-7b (narrowed: no historical venue status); F-8 (training and paper venues); the derived-model restriction (§2.4, §4.2: no live use without a separate licence)<br>**Kraken:** F-4a (ambiguous, recorded; no reply awaited under DEC-033); F-4d; F-4f; F-4g; F-4h; F-4i<br>**ETF:** F-1 closed negatively, so DEC-029 applies and an ETF daily source stays open; F-2 and F-2a; NYSE calendar terms<br>**Crypto venue:** venue status, on the Kraken terms (F-4a); F-7 historical venue-status coverage for archived bars<br>**Context:** context retention (S-2); S-7 for Coin Metrics; the FRED date-granularity `available_at` rule (proposed, round 2)<br>**All sources:** `source_approval` records<br>**For the G01 reviewer:** the VAL gaps recorded in the register, its proposed values, and the provisional defaults W-5 (daily first) and S-3 (£0 budget)<br>**Recorded gaps:** H-OF4, H-OF6, H-OF7; H-OF8 and H-OF9 (F-3; out of scope per W-7) |
 | Kraken reply | Not awaited (DEC-033, superseding DEC-032's reply condition) |
 | Reviewer | The user (DEC-034, 2026-10-26) |
