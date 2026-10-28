@@ -56,7 +56,7 @@ These amendments come from the [sample results](sample-results.md) and the revie
 | SA-01 | **Coverage:** revisions replace files in place. Daily revisions are listed in the README's changelog; monthly rewrites are not. We keep every retrieved file version with its checksum and `Last-Modified` (DEC-048). **S-5:** delisted symbols keep their files (F-5c Documented). **New limitation:** a symbol can cover two assets over time, as LUNAUSDT does (F-5e, Unresolved); P02 needs an instrument-identity rule |
 | SA-02 | **S-4b:** timestamp semantics closed: bars are stamped at bar start (F-4i), with 7 standard intervals (F-4f). Integrity is met for the full archive (published part checksums); the quarterly increment has no published checksum. **S-5:** met for XBTUSD and ETHUSD; delisted pairs are present, but no delisting date is given (F-4j, Unresolved). F-4h stays Unresolved (narrowed) |
 | SA-04 | **S-7:** historical statement events use `available_at` = the release time stated on each statement page (DEC-049). Minutes keep the first-publication rule |
-| SA-05 | **S-7:** the CPI sample result was dropped (DEC-050). CPI release timing, current and historical, is a P02 dependency. Per the answer, "future reads use the browser or a published file" |
+| SA-05 | **S-7:** the CPI sample result was dropped (DEC-050). CPI release timing, current and historical, is a P02 dependency. Per the answer, "future reads use the browser or a published file"; "the browser" means the user's own browsing (DEC-051) |
 | All records | **Q-2** now has three classes (DEC-048; [register](acceptance-objectives.md)) |
 
 ## Not in the baseline (no record)
