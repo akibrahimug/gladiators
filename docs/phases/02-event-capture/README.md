@@ -46,6 +46,8 @@ Pass only when all selected event types have versioned contracts and provenance 
 
 **Progress 2026-10-28:** [TASK-P02-001](../../tasks/TASK-P02-001.md) drafted the [event contract](../../evidence/P02/event-contract.md), covering tasks 1 to 4. It applies the user's decisions DEC-052 to DEC-055 and proposes resolutions for the reviewer. It adds F-4j, F-5e and CPI timing to the P02 inputs.
 
-**Exact next step:** P02 task 5, the capture validation plan: thresholds, representative windows and recovery scenarios, approved before any measurement. This includes a route to close F-4h for Kraken history.
+[TASK-P02-004](../../tasks/TASK-P02-004.md) drafted task 5: the [capture and recovery design](../../evidence/P02/capture-and-recovery.md) and the [capture validation plan](../../evidence/P02/capture-validation-plan.md). Its new thresholds (TH-1 to TH-6) and the F-4h closure route await the reviewer.
+
+**Exact next step:** the reviewer approves the thresholds and decides on the F-4h route. Then the reviewer reviews the contract and plan (task 6) and decides whether to assign an implementation (TASK-P02-002). G02 needs that implementation's evidence.
 
 **Implementation boundary:** connectors, storage, and replay code are future work. This setup does not start data capture or implement trading.
