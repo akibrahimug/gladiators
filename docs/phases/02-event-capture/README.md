@@ -48,6 +48,8 @@ Pass only when all selected event types have versioned contracts and provenance 
 
 [TASK-P02-004](../../tasks/TASK-P02-004.md) drafted task 5: the [capture and recovery design](../../evidence/P02/capture-and-recovery.md) and the [capture validation plan](../../evidence/P02/capture-validation-plan.md). Its new thresholds (TH-1 to TH-6) and the F-4h closure route await the reviewer.
 
-**Exact next step:** the reviewer approves the thresholds and decides on the F-4h route. Then the reviewer reviews the contract and plan (task 6) and decides whether to assign an implementation (TASK-P02-002). G02 needs that implementation's evidence.
+On 2026-10-28 the user approved the thresholds (DEC-056), authorised the retrievals (DEC-057) and assigned the implementation on held files (DEC-058). [TASK-P02-002](../../tasks/TASK-P02-002.md) built it and ran the plan on held files ([results](../../evidence/P02/capture-validation-results.md)). Seventeen of eighteen fixtures pass. One archive/REST difference was found (F-4h).
+
+**Exact next step:** the DEC-057 retrievals and live capture (CV-11, CV-12, F-15), then the user's review for G02.
 
 **Implementation boundary:** connectors, storage, and replay code are future work. This setup does not start data capture or implement trading.
