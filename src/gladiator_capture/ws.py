@@ -11,6 +11,8 @@ import struct
 import urllib.parse
 
 GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+MAX_FRAME = 16 * 1024 * 1024
+MAX_HANDSHAKE = 64 * 1024
 
 
 class WebSocketClosed(ConnectionError):
@@ -36,9 +38,10 @@ def encode_frame(payload: bytes, opcode: int = 0x1, mask: bool = True) -> bytes:
 class FrameReader:
     """Parses frames from a byte stream; handles fragmentation, ping and close."""
 
-    def __init__(self, recv):
+    def __init__(self, recv, allow_masked: bool = False):
         self.recv = recv
         self.buf = b""
+        self.allow_masked = allow_masked
 
     def _need(self, n: int) -> bytes:
         while len(self.buf) < n:
@@ -52,11 +55,17 @@ class FrameReader:
     def frame(self) -> tuple:
         b1, b2 = self._need(2)
         fin, opcode = b1 & 0x80, b1 & 0x0F
+        if b1 & 0x70:
+            raise WebSocketClosed("reserved bits set")
+        if b2 & 0x80 and not self.allow_masked:
+            raise WebSocketClosed("masked frame from server")
         n = b2 & 0x7F
         if n == 126:
             n = struct.unpack("!H", self._need(2))[0]
         elif n == 127:
             n = struct.unpack("!Q", self._need(8))[0]
+        if n > MAX_FRAME:
+            raise WebSocketClosed("frame too large")
         key = self._need(4) if b2 & 0x80 else None
         data = self._need(n)
         if key:
@@ -83,6 +92,8 @@ class WebSocket:
             if not chunk:
                 raise WebSocketClosed("handshake closed")
             resp += chunk
+            if len(resp) > MAX_HANDSHAKE:
+                raise ConnectionError("handshake too large")
         head, rest = resp.split(b"\r\n\r\n", 1)
         lines = head.decode(errors="replace").split("\r\n")
         if " 101 " not in lines[0] + " ":
@@ -91,6 +102,8 @@ class WebSocket:
         headers = {k.lower(): v.strip() for k, _, v in (l.partition(":") for l in lines[1:])}
         if headers.get("sec-websocket-accept") != accept:
             raise ConnectionError("bad Sec-WebSocket-Accept")
+        if headers.get("upgrade", "").lower() != "websocket" or "upgrade" not in headers.get("connection", "").lower():
+            raise ConnectionError("missing Upgrade/Connection headers")
         self.reader = FrameReader(self.sock.recv)
         self.reader.buf = rest
 
@@ -107,10 +120,14 @@ class WebSocket:
             if opcode == 0xA:  # pong
                 continue
             if opcode == 0x8:
+                try:
+                    self.sock.sendall(encode_frame(data[:2], 0x8))
+                except OSError:
+                    pass
                 raise WebSocketClosed("close frame")
             parts.append(data)
             if fin:
-                return b"".join(parts).decode()
+                return b"".join(parts).decode("utf-8", errors="replace")
 
     def settimeout(self, t: float) -> None:
         self.sock.settimeout(t)

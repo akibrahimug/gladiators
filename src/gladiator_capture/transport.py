@@ -5,6 +5,8 @@ Standard library only. Only keyless public endpoints named in DEC-057 are called
 
 from __future__ import annotations
 
+import http.client
+import socket
 import time
 import urllib.error
 import urllib.parse
@@ -19,9 +21,21 @@ USER_AGENT = "gladiator-capture/p02 (personal non-commercial research)"
 TIMEOUT_S = 60
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Redirects are not followed: a 3xx comes back as a Response, so a redirect can never leave
+    HTTPS, leave the robots-checked host, or turn a HEAD into a GET."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+_OPENER = urllib.request.build_opener(_NoRedirect)
+
+
 class HttpsTransport:
-    """GET or HEAD over HTTPS. HTTP errors become Responses, so fetch() applies the RC rules;
-    timeouts and resets raise TimeoutError or ConnectionError."""
+    """GET or HEAD over HTTPS with TLS verification (the default context). HTTP errors and
+    redirects become Responses, so fetch() applies the RC rules; timeouts, resets and truncated
+    reads raise TimeoutError or ConnectionError."""
 
     def __init__(self, method: str = "GET", timeout: float = TIMEOUT_S):
         self.method = method
@@ -32,15 +46,16 @@ class HttpsTransport:
             raise ValueError("HTTPS only")
         req = urllib.request.Request(request, method=self.method, headers={"User-Agent": USER_AGENT})
         try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as r:
+            with _OPENER.open(req, timeout=self.timeout) as r:
                 body = b"" if self.method == "HEAD" else r.read()
                 return Response(r.status, body, dict(r.headers.items()))
-        except urllib.error.HTTPError as e:
+        except urllib.error.HTTPError as e:  # includes the unfollowed 3xx
             return Response(e.code, b"", dict(e.headers.items()) if e.headers else {})
-        except (urllib.error.URLError, OSError) as e:
-            if isinstance(getattr(e, "reason", None), TimeoutError) or isinstance(e, TimeoutError):
+        except (urllib.error.URLError, OSError, http.client.HTTPException) as e:
+            reason = getattr(e, "reason", None)
+            if isinstance(e, (TimeoutError, socket.timeout)) or isinstance(reason, (TimeoutError, socket.timeout)):
                 raise TimeoutError(str(e))
-            raise ConnectionError(str(e))
+            raise ConnectionError(f"{type(e).__name__}: {e}")
 
 
 class Robots:

@@ -41,7 +41,10 @@ def cmd_head(out: Path) -> dict:
             if not ok:
                 results.append({"url": url, "skipped": note})
                 continue
-            results.append(head_capture(url, store, source_id="SR-04", source_approval_id="SA-01"))
+            try:
+                results.append(head_capture(url, store, source_id="SR-04", source_approval_id="SA-01"))
+            except (TimeoutError, ConnectionError) as e:
+                results.append({"url": url, "error": f"{type(e).__name__}: {e}"[:200]})
             polite_pause()
     return {"robots": {h: n for h, (_, n) in robots.cache.items()}, "heads": results}
 
@@ -70,8 +73,14 @@ def cmd_daily(out: Path) -> dict:
             res[name] = {"skipped": note}
             continue
         r = F.fetch(url, t, store, source_id="SR-05", source_approval_id="SA-02")
+        api_error = None
+        if r.raw is not None:
+            try:
+                api_error = json.loads(store.read(r.raw.raw_id)).get("error") or None
+            except ValueError:
+                api_error = ["non_json_body"]
         res[name] = {"raw_id": r.raw.raw_id if r.raw else None, "gap": r.gap.evidence if r.gap else None,
-                     "attempts": r.attempts}
+                     "attempts": r.attempts, "api_error": api_error}
         polite_pause(1.0)
     return {"day": today.isoformat(), "started": started.isoformat(), "results": res}
 
