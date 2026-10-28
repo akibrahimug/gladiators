@@ -346,7 +346,7 @@ class Run:
         a2 = self.store.ingest_file(base_zip, source_id="SR-04", source_approval_id="SA-01", request="fixture:F-02a")
         outcomes = [e.outcome for e in self.store.journal_entries()[n_before:]]
         fx["F-02a"] = {"input": base_hash, "same_raw_object": a1 is a2, "journal": outcomes,
-                       "pass": a1 is a2 and outcomes == ["stored", "duplicate"]}
+                       "pass": a1 is a2 and outcomes == ["started", "stored", "duplicate"]}
         t, h = text_of(rows + [rows[4]])
         c = counts(parse(t))
         fx["F-02b"] = {"input": h, **c, "pass": c["quarantined"] == 2 and c["valid"] == 30 and c["reasons"] == ["duplicate_timestamp"]}

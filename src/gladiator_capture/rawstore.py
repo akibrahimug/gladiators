@@ -137,10 +137,17 @@ class RawStore:
             quarantined=quarantined, reason="checksum_mismatch" if quarantined else None,
         )
         dest = self.object_path(raw_id)
+        self.journal(JournalEntry(now, request, "started", raw_id, http_status, size))  # RC-05 marker
         if not dest.exists():
             dest.parent.mkdir(parents=True, exist_ok=True)
             tmp = dest.with_suffix(".part")
-            shutil.copyfile(path, tmp)
+            try:
+                self._copy(path, tmp)
+            except OSError as exc:  # RC-06: write failure; nothing partial is kept
+                tmp.unlink(missing_ok=True)
+                self.journal(JournalEntry(self.clock(), request, "failed", raw_id, http_status, size,
+                                          f"write_failed:{type(exc).__name__}"))
+                raise
             if sha256_file(tmp) != raw_id:
                 tmp.unlink()
                 self.journal(JournalEntry(now, request, "failed", None, http_status, size, "copy_hash_mismatch"))
@@ -154,6 +161,29 @@ class RawStore:
         self.journal(JournalEntry(now, request, "quarantined" if quarantined else "stored", raw_id, http_status, size,
                                   obj.reason))
         return obj
+
+    _copy = staticmethod(shutil.copyfile)  # replaceable in fault-injection tests (RC-06)
+
+    def recover(self) -> dict:
+        """RC-05: after a crash, find ingests journalled as `started` with no completion entry,
+        remove their partial files, and journal each as `recovered_incomplete`. Completed objects
+        are untouched; re-running the same ingest is idempotent (S-02a)."""
+        done_outcomes = {"stored", "quarantined", "duplicate", "failed", "recovered_incomplete"}
+        open_: dict = {}
+        for e in self.journal_entries():
+            key = (e.request, e.raw_id)
+            if e.outcome == "started":
+                open_[key] = e
+            elif e.outcome in done_outcomes:
+                open_.pop(key, None)
+        removed = []
+        for p in self.root.glob("objects/*/*.part"):
+            p.unlink()
+            removed.append(p.name)
+        for (request, raw_id), e in open_.items():
+            self.journal(JournalEntry(self.clock(), request, "recovered_incomplete", raw_id, e.http_status,
+                                      e.byte_length, "no completion marker"))
+        return {"incomplete": [{"request": k[0], "raw_id": k[1]} for k in open_], "partials_removed": removed}
 
     def _member_obj(self, container: RawObject, name: str, data: bytes) -> RawObject:
         rid = sha256_bytes(data)
