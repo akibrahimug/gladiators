@@ -33,7 +33,7 @@ DEPTH = 10
 RECONNECT_DELAYS_S = (1, 2, 5, 10, 30, 60)
 RESYNC_MAX_PER_MIN = 6
 SEGMENT_NS = 3600 * 1_000_000_000
-NTP_INTERVAL_NS = 30 * 1_000_000_000  # DEC-066: every 30 s, so one failed query keeps T-6's 1-minute rule
+NTP_INTERVAL_NS = 30 * 1_000_000_000  # DEC-066: every 30 s; after one failed query the next good sample is ~60 s + query time later
 
 
 def _fmt(value: Decimal, decimals: int) -> str:

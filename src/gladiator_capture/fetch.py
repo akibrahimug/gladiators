@@ -76,8 +76,9 @@ def fetch(request: str, transport: Transport, store: RawStore, *, source_id: str
                     reason = "truncated"
                 else:
                     obj = None
-                    tmp = tempfile.NamedTemporaryFile(delete=False)
+                    tmp = None
                     try:
+                        tmp = tempfile.NamedTemporaryFile(delete=False)
                         tmp.write(resp.body)
                         tmp.close()
                         obj = store.ingest_file(Path(tmp.name), source_id=source_id,
@@ -90,8 +91,9 @@ def fetch(request: str, transport: Transport, store: RawStore, *, source_id: str
                         reason = "copy_hash_mismatch" if isinstance(exc, CopyHashMismatch) else f"write_failed:{type(exc).__name__}"
                         break
                     finally:
-                        tmp.close()
-                        Path(tmp.name).unlink(missing_ok=True)
+                        if tmp is not None:
+                            tmp.close()
+                            Path(tmp.name).unlink(missing_ok=True)
                     if not obj.quarantined:
                         return FetchResult(obj, None, attempts)
                     reason = "checksum_mismatch"

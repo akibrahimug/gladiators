@@ -99,5 +99,117 @@ class ClockTests(unittest.TestCase):
         self.assertIn("clock_offset_unknown", r.quality_flags)  # the sample came after the frame
 
 
+class StoreFailureTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.f = self.root / "a.bin"
+        self.f.write_bytes(b"y" * 100)
+
+    def tearDown(self):
+        RawStore._copy = staticmethod(__import__("shutil").copyfile)
+        self.tmp.cleanup()
+
+    def test_second_writer_refused(self):
+        s = RawStore(self.root / "s")
+        with self.assertRaises(RuntimeError):
+            RawStore(self.root / "s")
+        s.close()
+        RawStore(self.root / "s").close()
+
+    def test_truncated_tail_repaired_and_store_stays_usable(self):
+        s = RawStore(self.root / "s")
+        s.ingest_file(self.f, source_id="S", source_approval_id="A", request="u")
+        s.close()
+        with open(self.root / "s" / "journal.jsonl", "ab") as fh:
+            fh.write(b'{"at_ns": 1, "outco')  # fragment from a failed write
+        s2 = RawStore(self.root / "s")
+        self.assertEqual(s2.repaired[0]["file"], "journal.jsonl")
+        g = self.root / "b.bin"
+        g.write_bytes(b"z")
+        s2.ingest_file(g, source_id="S", source_approval_id="A", request="v")
+        s2.close()
+        s3 = RawStore(self.root / "s")  # would raise JSONDecodeError without the repair
+        self.assertEqual([e.outcome for e in s3.journal_entries()][-2:], ["started", "stored"])
+        s3.close()
+
+    def test_read_only_changes_nothing(self):
+        s = RawStore(self.root / "s")
+        s.ingest_file(self.f, source_id="S", source_approval_id="A", request="u")
+        s.close()
+        part = self.root / "s" / "objects" / "zz" / "x.part"
+        part.parent.mkdir(parents=True, exist_ok=True)
+        part.write_bytes(b"in progress")
+        before = sorted((p.name, p.stat().st_size) for p in (self.root / "s").rglob("*") if p.is_file())
+        ro = RawStore(self.root / "s", read_only=True)
+        self.assertEqual(len(ro.objects), 1)
+        with self.assertRaises(PermissionError):
+            ro.ingest_file(self.f, source_id="S", source_approval_id="A", request="w")
+        after = sorted((p.name, p.stat().st_size) for p in (self.root / "s").rglob("*") if p.is_file())
+        self.assertEqual(before, after)
+        self.assertTrue(part.exists())
+
+    def test_recovered_complete_after_index(self):
+        s = RawStore(self.root / "s")
+        s.ingest_file(self.f, source_id="S", source_approval_id="A", request="u")
+        lines = (self.root / "s" / "journal.jsonl").read_text().splitlines()
+        (self.root / "s" / "journal.jsonl").write_text(lines[0] + "\n")  # crash before `stored` was journalled
+        s.close()
+        s2 = RawStore(self.root / "s")
+        self.assertEqual(len(s2.last_recovery["completed_before_crash"]), 1)
+        self.assertEqual(s2.journal_entries()[-1].outcome, "recovered_complete")
+        s2.close()
+
+    def test_copy_hash_mismatch_labelled_with_raw_id(self):
+        def bad_copy(a, b):
+            Path(b).write_bytes(b"not the same")
+
+        s = RawStore(self.root / "s")
+        RawStore._copy = staticmethod(bad_copy)
+        res = Fe.fetch("u", type("T", (), {"get": lambda self, u: Fe.Response(200, b"abc", {"Content-Length": "3"})})(),
+                       s, source_id="S", source_approval_id="A", sleep=lambda x: None)
+        e = s.journal_entries()[-2]
+        self.assertEqual((e.outcome, e.detail, e.raw_id is not None), ("failed", "copy_hash_mismatch", True))
+        self.assertEqual(res.gap.evidence, "copy_hash_mismatch")
+        self.assertEqual(list((self.root / "s").glob("objects/*/*.part")), [])
+        self.assertEqual(s.recover()["incomplete"], [])
+        s.close()
+
+    def test_rename_failure_cleans_up(self):
+        s = RawStore(self.root / "s")
+        orig = Path.rename
+
+        def boom(self_, target):
+            raise OSError(errno.EIO, "I/O error")
+
+        Path.rename = boom
+        try:
+            with self.assertRaises(OSError):
+                s.ingest_file(self.f, source_id="S", source_approval_id="A", request="u")
+        finally:
+            Path.rename = orig
+        self.assertEqual(list((self.root / "s").glob("objects/*/*.part")), [])
+        self.assertEqual(s.journal_entries()[-1].outcome, "failed")
+        s.close()
+
+    def test_fetch_temp_file_failure(self):
+        import tempfile as tf
+        orig = tf.NamedTemporaryFile
+
+        def no_inodes(*a, **k):
+            raise OSError(errno.ENOSPC, "No space left on device")
+
+        s = RawStore(self.root / "s")
+        Fe.tempfile.NamedTemporaryFile = no_inodes
+        try:
+            res = Fe.fetch("u", type("T", (), {"get": lambda self, u: Fe.Response(200, b"abc", {"Content-Length": "3"})})(),
+                           s, source_id="S", source_approval_id="A", sleep=lambda x: None)
+        finally:
+            Fe.tempfile.NamedTemporaryFile = orig
+        self.assertEqual((res.raw, res.gap.availability_state), (None, "SOURCE_UNAVAILABLE"))
+        self.assertTrue(res.gap.evidence.startswith("write_failed"))
+        s.close()
+
+
 if __name__ == "__main__":
     unittest.main()

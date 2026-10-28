@@ -30,7 +30,6 @@ T5_STALE_NS = 3600 * 10**9  # T-5: offset logged at least hourly
 T6_INTRADAY_MS = 1_000  # T-6 (DEC-042)
 T6_DAILY_MS = 60_000
 T6_STALE_NS = 60 * 10**9  # T-6: <= 1 min logging when intraday-dependent decisions exist
-QUOTE = {"BTC/USD": "USD", "ETH/USD": "USD"}
 API_VERSION = "v2"
 
 
@@ -79,7 +78,7 @@ def normalize(frames: Iterable[tuple], offsets: list, *, raw_id: str, ingested_a
         for i, d in enumerate(msg.get("data", [])):
             sym = d.get("symbol")
             fields = {"message_type": typ, "timestamp_uncertainty_ms": unc, "size_unit": "base",
-                      "quote_currency": QUOTE.get(sym), "source_version": API_VERSION}
+                      "quote_currency": sym.split("/")[1] if sym and "/" in sym else None, "source_version": API_VERSION}
             if ch == "trade":
                 fields.update(price=d["price"], qty=d["qty"], side=d.get("side"), ord_type=d.get("ord_type"),
                               side_semantics="taker_side", native_sequence=d["trade_id"])
