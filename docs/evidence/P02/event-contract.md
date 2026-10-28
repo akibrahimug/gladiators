@@ -91,7 +91,7 @@ Every normalized record carries the fields below. The four times and the basis a
 
 | Field | Meaning | Rule |
 | --- | --- | --- |
-| `record_key` | Natural key: (`source_id`, `feed_id`, `native_symbol`, `source_event_time`, native ID or row index) | Proposed. It does **not** include the epoch or the version, so it stays stable when either changes (L-023 idempotency) |
+| `record_key` | Natural key: (`source_id`, `feed_id`, `native_symbol`, `source_event_time`, native ID or row index). **For bars, the bar start, not the row index (DEC-060)** | Proposed. It does **not** include the epoch or the version, so it stays stable when either changes (L-023 idempotency) |
 | `record_id` | Hash of (`record_key`, `version`) | Proposed. One per version |
 | `schema_version` | Contract version of this record type | An unknown version is quarantined (v10 08:18) |
 | `source_id`, `feed_id` | The registry source, and the specific feed or file series (for example `binance:spot:klines:1d:monthly`) | Q-7: "Every record carries its venue and feed identity" |
@@ -199,7 +199,7 @@ The base is v10 10:9. Each `BarEvent` has the common fields (§3) plus:
 | `quote_currency` | From the symbol (USDT) | From the pair (USD) | From the pair (USD) |
 | Kept in the raw object only | col 12 `ignore` | — | `last` (pagination cursor) |
 
-- **Numbers (Proposed; C15).** Prices and volumes are stored as **decimal strings exactly as received**. There is no float conversion ("Preserve integer/decimal precision", 27:50). When the two sources are compared (F-4h), Kraken archive volumes are rounded to 8 decimals. The stored value is never rounded.
+- **Numbers (Proposed; C15).** Prices and volumes are stored as **decimal strings exactly as received**. There is no float conversion ("Preserve integer/decimal precision", 27:50). The stored value is never rounded. **Comparison (F-4h), DEC-059, 2026-10-28:** prices and trade counts must match exactly, and volumes may differ by at most 10⁻⁹ relative. This supersedes the earlier rule, which rounded volumes to 8 decimals.
 - **Nulls.** A field the source lacks is null, never zero ("nullable fields reflect nonapplicability rather than guesses", 27:50).
 - **Sparse series.** Kraken omits no-trade bars: "the series is sparse, not padded". A missing bar produces a `GapInterval` (§4.5), never a `BarEvent`.
 - **Zero-volume bar.** It is kept, with `quality_flags` containing `zero_volume`. It also produces a `GapInterval` of class `status_unknown` (DEC-040).
