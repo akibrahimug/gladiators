@@ -33,6 +33,7 @@ DEPTH = 10
 RECONNECT_DELAYS_S = (1, 2, 5, 10, 30, 60)
 RESYNC_MAX_PER_MIN = 6
 SEGMENT_NS = 3600 * 1_000_000_000
+NTP_INTERVAL_NS = 30 * 1_000_000_000  # DEC-066: every 30 s, so one failed query keeps T-6's 1-minute rule
 
 
 def _fmt(value: Decimal, decimals: int) -> str:
@@ -289,7 +290,7 @@ class Capture:
                         self.offset_ms = off
                         self.st["ntp_offsets_ms"].append(off)
                         self.event("ntp", offset_ms=off)
-                        next_ntp = self.mono() + 60 * 1_000_000_000
+                        next_ntp = self.mono() + NTP_INTERVAL_NS
                     text = ws.recv_text()
                     recv_ns = self.clock()
                     self.journal(recv_ns, text)

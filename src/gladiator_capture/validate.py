@@ -500,12 +500,12 @@ class Run:
     def recovery_rc05_to_rc08(self):
         """RC-05 crash marker, RC-06 disk full, RC-07/RC-08 clock offset (DEC-065)."""
         import errno
-        import shutil
         from . import live_records as LR
 
         class Crash(BaseException):
             pass
 
+        orig_copy = RawStore.__dict__["_copy"]
         out = {}
         src = self.out / "fixtures" / "rc-src.bin"
         src.write_bytes(b"rc" * 500)
@@ -521,38 +521,66 @@ class Run:
         except Crash:
             pass
         finally:
-            RawStore._copy = staticmethod(shutil.copyfile)
-        restarted = RawStore(self.out / "rc05-store")
-        rec = restarted.recover()
+            RawStore._copy = orig_copy
+        store.close()  # the crashed process's lock is released
+        restarted = RawStore(self.out / "rc05-store")  # recover() runs on opening
+        rec = restarted.last_recovery
         obj = restarted.ingest_file(src, source_id="SR-99", source_approval_id="fixture", request="fixture:RC-05")
         outcomes = [e.outcome for e in restarted.journal_entries()]
-        out["RC-05_crash_marker"] = {"incomplete_found": len(rec["incomplete"]), "partials_removed": len(rec["partials_removed"]),
-                                     "journal": outcomes, "pass": len(rec["incomplete"]) == 1 and len(rec["partials_removed"]) == 1
-                                     and outcomes == ["started", "recovered_incomplete", "started", "stored"]
-                                     and restarted.object_path(obj.raw_id).exists()}
+        byte_identical = restarted.read(obj.raw_id) == src.read_bytes()
+        restarted.close()
+        clean = RawStore(self.out / "rc05-clean")  # the same ingest with no crash
+        obj2 = clean.ingest_file(src, source_id="SR-99", source_approval_id="fixture", request="fixture:RC-05")
+        same_object = obj2.raw_id == obj.raw_id and clean.read(obj2.raw_id) == restarted.read(obj.raw_id)
+        clean.close()
+        out["RC-05_crash_marker"] = {
+            "incomplete_found": len(rec["incomplete"]), "partials_removed": len(rec["partials_removed"]), "journal": outcomes,
+            "reingest_byte_identical_to_source": byte_identical, "identical_to_uncrashed_ingest": same_object,
+            "pass": len(rec["incomplete"]) == 1 and len(rec["partials_removed"]) == 1
+            and outcomes == ["started", "recovered_incomplete", "started", "stored"] and byte_identical and same_object}
 
         def enospc(a, b):
             Path(b).write_bytes(b"partial")
             raise OSError(errno.ENOSPC, "No space left on device")
 
         store6 = RawStore(self.out / "rc06-store")
+        transport = FakeTransport([F.Response(200, b"payload", {"Content-Length": "7"})] * 4)
         RawStore._copy = staticmethod(enospc)
         try:
-            body = b"payload"
-            res = F.fetch("fixture:RC-06", FakeTransport([F.Response(200, body, {"Content-Length": str(len(body))})]), store6,
-                          source_id="SR-99", source_approval_id="fixture", sleep=lambda s: None)
+            res = F.fetch("fixture:RC-06", transport, store6, source_id="SR-99", source_approval_id="fixture",
+                          sleep=lambda s: None)
         finally:
-            RawStore._copy = staticmethod(shutil.copyfile)
+            RawStore._copy = orig_copy
         parts = list((self.out / "rc06-store").glob("objects/*/*.part"))
-        out["RC-06_disk_full"] = {"gap_reason": res.gap.evidence if res.gap else None, "partials_left": len(parts),
-                                  "pass": res.raw is None and res.gap is not None and res.gap.evidence.startswith("write_failed")
-                                  and not parts}
-        cases = {"50ms": 50.0, "150ms": 150.0, "1500ms": 1500.0, "70000ms": 70000.0}
-        flags = {k: LR.clock_flags(v) for k, v in cases.items()}
-        out["RC-07_RC-08_clock"] = {k: {"uncertainty_ms": u, "flags": f} for k, (u, f) in flags.items()}
-        out["RC-07_RC-08_clock"]["pass"] = (flags["50ms"] == (None, []) and flags["150ms"] == (150.0, [])
-                                            and flags["1500ms"][1] == ["clock_abstain_intraday"]
-                                            and flags["70000ms"][1] == ["clock_abstain_intraday", "clock_abstain_daily"])
+        store6.close()
+        out["RC-06_disk_full"] = {
+            "gap_reason": res.gap.evidence if res.gap else None, "gap_state": res.gap.availability_state if res.gap else None,
+            "calls": transport.calls, "partials_left": len(parts),
+            "pass": res.raw is None and res.gap is not None and res.gap.evidence.startswith("write_failed")
+            and res.gap.availability_state == "SOURCE_UNAVAILABLE" and transport.calls == 1 and not parts}
+        t0 = 1_793_181_600_000_000_000
+        frame = ('{"channel":"trade","type":"update","data":[{"symbol":"BTC/USD","side":"buy","price":1.50,'
+                 '"qty":0.00000010,"ord_type":"market","trade_id":7,"timestamp":"2026-10-28T10:00:00.000001Z"}]}')
+
+        def one(offsets, recv=t0):
+            r = LR.normalize([(0, recv, frame)], offsets, raw_id="fixture", ingested_at=0)[0]
+            return r.fields["timestamp_uncertainty_ms"], r.quality_flags
+
+        cases = {"50ms": one([(t0 - 1, 50.0)]), "150ms": one([(t0 - 1, 150.0)]),
+                 "minus1500ms": one([(t0 - 1, -1500.0)]), "70000ms": one([(t0 - 1, 70000.0)]),
+                 "sample_after_frame": one([(t0 + 1, 50.0)]), "sample_2min_old": one([(t0 - 120 * 10**9, 50.0)]),
+                 "sample_2h_old": one([(t0 - 7200 * 10**9, 50.0)])}
+        r = LR.normalize([(0, t0, frame)], [(t0 - 1, 50.0)], raw_id="fixture", ingested_at=0)[0]
+        out["RC-07_RC-08_clock"] = {k: {"uncertainty_ms": u, "flags": f} for k, (u, f) in cases.items()}
+        out["RC-07_RC-08_clock"]["strings_kept"] = [r.fields["price"], r.fields["qty"]]
+        out["RC-07_RC-08_clock"]["pass"] = (
+            cases["50ms"] == (None, []) and cases["150ms"] == (150.0, [])
+            and cases["minus1500ms"] == (1500.0, ["clock_abstain_intraday"])
+            and cases["70000ms"][1] == ["clock_abstain_intraday", "clock_abstain_daily"]
+            and cases["sample_after_frame"][1] == ["clock_offset_unknown", "clock_abstain_intraday"]
+            and cases["sample_2min_old"][1] == ["clock_abstain_intraday"]
+            and cases["sample_2h_old"][1] == ["clock_abstain_intraday", "clock_offset_stale"]
+            and [r.fields["price"], r.fields["qty"]] == ["1.50", "0.00000010"])
         return out
 
     def criteria(self):
