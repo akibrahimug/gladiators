@@ -255,6 +255,7 @@ class RawStore:
         """RC-05: after a crash, find ingests journalled as `started` with no completion entry,
         remove their partial files, and journal each as `recovered_incomplete`. Completed objects
         are untouched; re-running the same ingest is idempotent (S-02a)."""
+        self._writable()
         done_outcomes = {"stored", "quarantined", "duplicate", "failed", "recovered_incomplete", "recovered_complete"}
         open_: dict = {}
         for e in self.journal_entries():
@@ -280,6 +281,7 @@ class RawStore:
                 "tail_repairs": list(self.repaired)}
 
     def _member_obj(self, container: RawObject, name: str, data: bytes) -> RawObject:
+        self._writable()
         rid = sha256_bytes(data)
         dest = self.object_path(rid)
         if not dest.exists():

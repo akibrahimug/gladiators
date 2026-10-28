@@ -148,6 +148,9 @@ class StoreFailureTests(unittest.TestCase):
         after = sorted((p.name, p.stat().st_size) for p in (self.root / "s").rglob("*") if p.is_file())
         self.assertEqual(before, after)
         self.assertTrue(part.exists())
+        with self.assertRaises(PermissionError):
+            ro.recover()
+        self.assertTrue(part.exists())
 
     def test_recovered_complete_after_index(self):
         s = RawStore(self.root / "s")
