@@ -52,6 +52,8 @@ On 2026-10-28 the user approved the thresholds (DEC-056), authorised the retriev
 
 [TASK-P02-005](../../tasks/TASK-P02-005.md) built the network side and ran the authorised calls ([results](../../evidence/P02/network-capture.md)): 18 HEAD requests, one daily REST test, and a 1-hour live capture. In the live capture, Q-5, R-1 to R-5 passed, T-5 was flagged (the clock is 34–258 ms off), and T-6 was not triggered.
 
-**Exact next step:** the user installs the 30-day job and decides when to start the 7-day live window; then RC-05 to RC-08 injection, and the user's review for G02.
+On the same day, the 7-day live window started at 10:35 UTC (DEC-064). [TASK-P02-006](../../tasks/TASK-P02-006.md) added RC-05 to RC-08 ([results](../../evidence/P02/recovery-results.md)), so CV-11 now passes.
+
+**Exact next step:** the user installs the 30-day job (DEC-061). The 7-day window ends about 2026-11-04 10:35 UTC; its results then go to the user for the G02 review.
 
 **Implementation boundary:** capture code for held files exists (`src/gladiator_capture/`, DEC-058). Network transports, live capture and the DEC-057 retrievals are later tasks. Trading is out of scope.
