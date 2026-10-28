@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  DEC-061: the 30-day Kraken REST pull, run daily at 00:15 UTC.
+  Before installing, replace REPO_PATH and DATA_PATH with absolute paths (DATA_PATH outside the repository).
+  StartCalendarInterval uses local time: set Hour/Minute to the local equivalent of 00:15 UTC
+  (London: 00:15 in winter, 01:15 in summer).
+  Install:  cp com.gladiator.rest-daily.plist ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.gladiator.rest-daily.plist
+  Remove:   launchctl unload ~/Library/LaunchAgents/com.gladiator.rest-daily.plist && rm ~/Library/LaunchAgents/com.gladiator.rest-daily.plist
+  The script stops pulling by itself 30 days after its first run.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.gladiator.rest-daily</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>-I</string>
+    <string>REPO_PATH/capture.py</string>
+    <string>daily</string>
+    <string>--out</string>
+    <string>DATA_PATH/rest-daily</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>0</integer>
+    <key>Minute</key>
+    <integer>15</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>DATA_PATH/rest-daily/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>DATA_PATH/rest-daily/launchd.err.log</string>
+</dict>
+</plist>

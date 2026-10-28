@@ -22,7 +22,7 @@ from . import records as R
 from .rawstore import RawStore, sha256_bytes, sha256_file
 
 DAY_NS = 86_400 * R.NS["s"]
-VOLUME_REL_TOL = Decimal("1e-9")  # Proposed F-4h comparison (results §4); the current §4.1 rule is reported too
+VOLUME_REL_TOL = Decimal("1e-9")  # F-4h comparison, DEC-059 (supersedes the 8-decimal rule)
 SYMBOLS = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT", "ADAUSDT", "DOGEUSDT", "LTCUSDT", "LINKUSDT", "DOTUSDT"]
 MARKER = ".gladiator_validation_output"
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -284,14 +284,14 @@ class Run:
                 va, vr = Decimal(a.fields["volume"]), Decimal(r.fields["volume"])
                 detail = {"date": ts_date(r.event_time_ns()), "trade_count": [a.fields["trade_count"], r.fields["trade_count"]],
                           "volume": [a.fields["volume"], r.fields["volume"]]}
-                if not (same and va.quantize(Decimal("1e-8")) == vr):  # current event contract §4.1 rule
+                if not (same and va.quantize(Decimal("1e-8")) == vr):  # superseded 8-decimal rule, kept for comparison
                     current_rule.append(detail)
-                if not (same and abs(va - vr) <= VOLUME_REL_TOL * max(abs(va), abs(vr))):  # Proposed rule
+                if not (same and abs(va - vr) <= VOLUME_REL_TOL * max(abs(va), abs(vr))):  # DEC-059 rule
                     proposed_rule.append(detail)
             out[pair] = {"completed_bars": len(res.records), "dropped_incomplete": res.dropped_incomplete,
                          "late_flags": sum("late" in r.quality_flags for r in res.records),
                          "response_key": res.records[0].fields["native_response_key"], "compared_with_archive": compared,
-                         "mismatches_current_rule": current_rule, "mismatches_proposed_rule": proposed_rule}
+                         "mismatches_dec059_rule": proposed_rule, "mismatches_superseded_8dp_rule": current_rule}
         self.report["windows"]["W-H"] = out
 
     def w_i(self):
