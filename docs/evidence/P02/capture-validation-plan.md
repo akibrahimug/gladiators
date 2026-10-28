@@ -2,7 +2,7 @@
 
 [Task](../../tasks/TASK-P02-004.md) · [Event contract](event-contract.md) · [Capture and recovery](capture-and-recovery.md) · [Sample results](../P01/sample-results.md) · [Acceptance objectives](../P01/acceptance-objectives.md) · [Validation scenarios](../../validation/acceptance-scenarios.md)
 
-**Status: proposed plan, 2026-10-28, for the G02 reviewer (the user, DEC-034).** This is P02 task 5, "Select quantitative capture criteria and recovery scenarios from source behavior; obtain approval before evaluating results". It also delivers P02's "replay fixture and validation plan tied to the approved source baseline". The [sample plan](../P01/data-access-decision.md#representative-sample-plan) sent its results here, and [§5](#5-p01-sample-results-carried-forward) carries them forward.
+**Status: plan, 2026-10-28. The thresholds were approved by the user on 2026-10-28 (DEC-056), and the retrievals were authorised (DEC-057, DEC-058); see [Decisions asked](#decisions-asked-2026-10-28).** Before that, it was a proposed plan for the G02 reviewer (the user, DEC-034). This is P02 task 5, "Select quantitative capture criteria and recovery scenarios from source behavior; obtain approval before evaluating results". It also delivers P02's "replay fixture and validation plan tied to the approved source baseline". The [sample plan](../P01/data-access-decision.md#representative-sample-plan) sent its results here, and [§5](#5-p01-sample-results-carried-forward) carries them forward.
 
 **Before any measurement:** nothing here has been measured against these criteria. The thresholds in [§3](#3-thresholds) are fixed first, and each needs the user's approval. An agent review is not approval.
 
@@ -119,3 +119,17 @@ The P01 sample results ([sample results](../P01/sample-results.md)) are this pla
 3. Results are reported per criterion, at that revision. A failure is not re-run with changed thresholds; it is reworked and the affected validation repeated (P02 failure and rework rule).
 4. W-J runs only after a capture authorisation.
 5. G02 is sought only with this evidence and the user's dated approval.
+
+## Decisions asked, 2026-10-28
+
+The user's answers. Each question and the chosen option are quoted verbatim.
+
+| Decision | Question (verbatim) | Chosen (verbatim) |
+| --- | --- | --- |
+| DEC-056 | "Approve the new P02 thresholds before any measurement? TH-1/TH-2: a symbol gets a new instrument epoch after a gap of more than 7 days AND a price jump of more than 10×. This would propose 14 breaks across the full Kraken archive; all are held for your review. TH-3: retry failures 3 times (30 s, 2 min, 10 min); on 429, wait for Retry-After if it is 10 min or less, then retry once. TH-4: flag a Binance file as rewritten only if it is in Binance's changelog or new bytes appear on re-download (no lag rule). TH-5: an observation is stale at 2× its update interval (COT 14 days, Coin Metrics 2 days, GDELT 30 min). TH-6: daily files, REST and live records are late when they arrive more than 48 h after their period; monthly files and Kraken archives are exempt." | "Approve all as proposed (Recommended)" — "Each is set from the held sample data, and none would misfire on normal files; epoch breaks still need your per-case review." |
+| DEC-057 | "Which new retrievals do you authorise? None has run yet." (multi-select) | "30-day Kraken REST pull (Recommended)"; "2026Q4 Kraken archive download"; "Binance HEAD requests (18)"; "Live WebSocket capture" |
+| DEC-058 | "G02 can't pass on documents alone; it needs a real capture and replay run. Should I start the implementation (TASK-P02-002): code for archive retrieval, the raw journal, normalisation and fixtures, run only on files already held?" | "Yes, held files only (Recommended)" — "Python code in a new src/ tree with tests; runs W-A to W-I and fixtures F-01 to F-18 on the P01 sample files; no network, no live capture. The repo stops being docs-only." |
+
+Unchosen options: "Approve, but tighten epochs"; "Hold for later"; "Not yet; docs only".
+
+**Coordinator's reading.** DEC-057 authorises the retrievals, and DEC-058 limits TASK-P02-002 to held files. The authorised retrievals therefore run in later tasks, once code supports them. The 30-day pull needs something to run it daily, such as a scheduled job, and how it is scheduled will be put to the user before it starts.
