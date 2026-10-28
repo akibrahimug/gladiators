@@ -83,7 +83,7 @@ Every retrieved object is preserved before any parsing. Sources:
 2. **Layout.** The layout is "`data/raw/{provider}/{ingest_date}/`" (v10 10:6), keyed by `raw_id`. Two versions never share a path.
 3. **Checksum mismatch.** The object is quarantined, and nothing is parsed from it. How many retries are allowed, and when to declare the source `SOURCE_UNAVAILABLE`, are thresholds for P02 task 5.
 4. **Archives.** Each ZIP member gets its own `raw_id`, linked to its container. Kraken's full-history parts are verified one by one and then joined, and the joined ZIP gets its own `raw_id`.
-5. **Change detection.** On re-retrieval, `raw_id` is compared. A different hash at the same `request` is a revision (S-09). For a Binance file, a `Last-Modified` later than the bars it covers is also recorded. It shows a possible rewrite even on the first retrieval.
+5. **Change detection.** On re-retrieval, `raw_id` is compared. A different hash at the same `request` is a revision (S-09). For a Binance file, the `last_modified_after_period` flag is set when either the file appears in the README changelog, or its `Last-Modified` lag after the covered period exceeds a limit set by task 5. That marks a possible rewrite even on the first retrieval; normal publication runs 2 to 3 hours after the period ends.
 
 ## 3. Common envelope and time model
 
@@ -108,7 +108,7 @@ Every normalized record carries the fields below. The four times and the basis a
 | `raw_id`, `raw_locator` | The raw object, and the row or byte offset inside it | REQ-003; VAL-002 |
 | `version`, `supersedes_record_id` | `version` increments when a revision replaces a record | DEC-048, DEC-053 |
 | `quality_state` | `valid` or `quarantined` | §5 |
-| `quality_flags` | Non-blocking notes, for example `zero_volume`, `last_modified_after_period` | 24:113 |
+| `quality_flags` | Non-blocking notes, for example `zero_volume`, `last_modified_after_period` (§2 rule 5) | 24:113 |
 | `rights_id` | The `source_approval` ID in force at retrieval | L-025 (Proposed; resolves C13) |
 
 ### 3.1 Time rules
@@ -165,6 +165,7 @@ A file whose digit count contradicts its era is quarantined as a schema mismatch
 | `occurred_at_utc`, `available_at_utc`, `ingested_at_utc` | L-008 | `source_event_time`, `available_at`, `ingested_at` |
 | `dataset_version` | L-008 | `RawObject.raw_id`, plus `version` |
 | `payload_hash`, `raw_payload_hash` | L-008; 27:50; 24:109 | `raw_id` (file level) and `raw_locator` (row level) |
+| `type` | v10 08:9 | The record type (`BarEvent`, `TradeEvent`, …), versioned by `schema_version` |
 | `created_at_utc`, `effective_at_utc` | v10 08:9 | `ingested_at`; `source_event_time` |
 | `payload` | v10 08:9 | Kept in the raw object, not copied into the record |
 | `bar_start_utc`, `bar_end_utc` | v10 10:9 | `bar_start`, `bar_end` (§3.1) |
@@ -296,21 +297,22 @@ These are specified so the contract is complete. **No capture is authorised.**
 | F-03 | S-03 | The same CSV | Duplicate row 5 with `close` changed | 2 rows quarantined; conflict recorded; 30 valid |
 | F-04 | S-04 | `XBTUSD_1440.csv`, a member of `Kraken_OHLCVT_Full.zip` (`bc273e90…`) | None | 12 `GapInterval`s, all `status_unknown` (2013-10-11 … 2014-12-25) |
 | F-05 | S-05 | `ETHUSDT-trades-2025-01-15.csv` (ZIP `0fc1d699…`) | Delete row 1,000 | 1 `data_gap`; 2,689,487 valid |
-| F-06 | S-06 | `BTCUSDT-1d-2024-12.csv` | Three edits: set `high` < `low` in row 1; `close` = `NaN` in row 2; an ISO time with no zone in row 3 | 3 rows quarantined; 28 valid |
+| F-06 | S-06 | `BTCUSDT-1d-2024-12.csv` | Two edits: set `high` < `low` in row 1; `close` = `NaN` in row 2. The parser checks values per row, so a bad value quarantines only its row | 2 rows quarantined; 29 valid |
+| F-06b | S-06 (naive time) | A constructed context observation whose source time is an ISO string with no zone, for example a `published_at` of `2026-10-14T08:30:00` | Constructed. Binance's integer epoch column cannot hold a naive time; a non-integer there is a type error, which falls under S-13 | The record is quarantined |
 | F-07 | S-07 | `BTCUSDT-1d-2025-01.csv` | Divide row 1's `open_time` by 1,000, giving ms in a µs-era file | The file is quarantined |
 | F-08 | S-08 | `BTCUSDT-1d-2024-12.csv` | Swap rows 3 and 4 | 31 valid; the replay order is unchanged from the unedited file |
 | F-09 | S-09 | `1INCHUSDT-1d-2022-03-08.zip`, the new version (`f7398aba…`). The old version is not served, so it is **constructed**: the new file with one value changed, standing in for the changelog's old checksum `4b9e5c51…` | Ingest the constructed old version, then the real new one | 2 versions. A replay before the second `retrieved_at` sees version 1 |
-| F-10 | S-10 | LUNAUSDT 2022-04 to 2022-06 (`dc79e0d8…`, `bb63b3c8…`, `7d36dcce…`) | None | 1 proposed epoch break on 2022-05-31 |
+| F-10 | S-10 | LUNAUSDT 2022-04 to 2022-06 (`dc79e0d8…`, `bb63b3c8…`, `7d36dcce…`) | None | With the example placeholders *G* = 7 days and *K* = 10×: 1 proposed epoch break on 2022-05-31 (a 17-day gap, then 0.00005 → 1.00) |
 | F-11 | S-11 | `ANKRGBP_1440.csv`, a member of the full ZIP | None | The series ends 2022-12-31. The delisting date is recorded as ≤ 2022-12-31 |
 | F-12 | S-12 | `ohlc_XBTUSD_1440.json` (`6144e5f8…`) | None | The last bar (2026-10-27) is dropped; 57 bars kept |
 | F-13 | S-13 | `BTCUSDT-1d-2024-12.csv` | Remove column 12 from every row | The file is quarantined |
 | F-14 | S-14 | A recorded retrieval with `http_status` 403. The BLS header capture `bls_cpi.nr0.htm.hdr` serves as the example | Simulated: the failure is injected at the retrieval layer, not by editing a file | 1 `GapInterval` with `SOURCE_UNAVAILABLE`, and no retry by another route |
 | F-15 | S-15 | Defined when capture is authorised | — | — |
-| F-16 | S-16 | `BTCUSDT-1d-2024-12.csv` | Set one row's `available_at` to after the replay decision time | The row is not visible at that decision time |
-| F-17 | S-17 | A context observation | Hold its value unchanged past its expected update | Flagged `stale` |
+| F-16 | S-16 | `BTCUSDT-1d-2024-12.zip` (`82ec9021…`); `Last-Modified` 2025-01-08 00:50:27 UTC | None. Replay at the decision time 2025-01-07 00:00 UTC | All 31 rows are invisible, since their `available_at` is after the decision time |
+| F-17 | S-17 | `cftc_deacmesf.htm` (`0078b0e7…`), positions as of 2026-10-20 | Constructed: replay the same report as the latest COT observation at a decision time more than one weekly cycle after its `available_at` | Flagged `stale`. The staleness limit is set by task 5 |
 
 **VAL gaps (DEC-042).**
-- **Q-1:** covered by F-02b, F-03 and F-06.
+- **Q-1:** covered by F-02b, F-03, F-06 and F-06b.
 - **Q-7:** covered by `source_id` and `feed_id` on every record (§3).
 - **Q-3 and Q-4 (coverage):** in the capture validation plan (P02 task 5).
 
