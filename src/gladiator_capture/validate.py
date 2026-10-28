@@ -1,9 +1,9 @@
 """Run the capture validation plan (windows W-A to W-I, fixtures F-01 to F-18) on held files.
 
-Usage: python3 -I -m gladiator_capture.validate --sample-root <dir> --out <dir outside the repo>
+Usage: python3 -I run_validation.py --sample-root <dir> --out <new dir outside the repo and sample root>
 
-No network access (DEC-058). Held files are treated as untrusted data: they are read,
-hashed and parsed, and nothing inside them is executed.
+No network access (DEC-058). Held files are untrusted data: they are read, hashed and
+parsed, and nothing inside them is executed or imported.
 """
 
 from __future__ import annotations
@@ -11,24 +11,29 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import shutil
 import zipfile
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 
 from . import analysis as A
+from . import fetch as F
 from . import records as R
-from .rawstore import RawStore
+from .rawstore import RawStore, sha256_bytes, sha256_file
 
 DAY_NS = 86_400 * R.NS["s"]
-KRAKEN_GENERATED_NS = int(datetime(2026, 10, 1, tzinfo=timezone.utc).timestamp()) * R.NS["s"]
-VOLUME_REL_TOL = Decimal("1e-9")  # F-4h comparison (P01 sample tolerance)
+VOLUME_REL_TOL = Decimal("1e-9")  # Proposed F-4h comparison (results §4); the current §4.1 rule is reported too
 SYMBOLS = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT", "ADAUSDT", "DOGEUSDT", "LTCUSDT", "LINKUSDT", "DOTUSDT"]
+MARKER = ".gladiator_validation_output"
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def mtime_ns(p: Path) -> int:
     return p.stat().st_mtime_ns
+
+
+def ts_date(ns: int) -> str:
+    return datetime.fromtimestamp(ns / 1e9, timezone.utc).date().isoformat()
 
 
 def published_checksum(zip_path: Path):
@@ -44,44 +49,93 @@ def header_last_modified(evidence: Path, name: str):
     return None
 
 
-def zip_single_member(store: RawStore, obj):
-    members = store.members(obj)
-    assert len(members) == 1, obj.request
-    return members[0]
+def prepare_out(out: Path, sample: Path) -> None:
+    """Never delete anything the runner did not create."""
+    out = out.resolve()
+    sample = sample.resolve()
+    held = [d for d in sample.glob("dl-sample-*") if d.is_dir()]
+    for forbidden in held + [REPO_ROOT]:
+        if out == forbidden or forbidden in out.parents or out in forbidden.parents:
+            raise SystemExit(f"--out must not overlap {forbidden}")
+    if out == sample or out in sample.parents:
+        raise SystemExit("--out must not contain the sample root")
+    if out.exists() and any(out.iterdir()):
+        if not (out / MARKER).exists():
+            raise SystemExit(f"--out {out} is not empty and was not created by this runner")
+        for p in sorted(out.rglob("*"), reverse=True):
+            p.unlink() if p.is_file() or p.is_symlink() else p.rmdir()
+    out.mkdir(parents=True, exist_ok=True)
+    (out / MARKER).write_text("created by gladiator_capture.validate\n")
+
+
+class FakeTransport:
+    """Scripted responses for the recovery fixtures; there is no network transport (DEC-058)."""
+
+    def __init__(self, script):
+        self.script = list(script)
+        self.calls = 0
+
+    def get(self, request):
+        self.calls += 1
+        item = self.script.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
 
 
 class Run:
     def __init__(self, sample: Path, out: Path):
         self.sample = sample
         self.out = out
-        if out.exists():
-            shutil.rmtree(out)
-        out.mkdir(parents=True)
+        prepare_out(out, sample)
         self.store = RawStore(out / "store")
-        self.ingested_at = 0  # fixed for determinism of the normalized output
-        self.report = {"windows": {}, "fixtures": {}}
+        self.all_records = []
+        self.report = {"windows": {}, "fixtures": {}, "criteria": {}}
+        self.changelog = (sample / "dl-sample-binance" / "readme" / "u" / "2022-08-08_kline_updates.csv").read_text()
 
-    # -- helpers ---------------------------------------------------------------
-    def ingest_binance_zip(self, path: Path, request: str, kind="klines", symbol=None, interval="1d", lm=None):
-        lm = lm if lm is not None else header_last_modified(self.sample / "dl-sample-binance" / "evidence", path.name)
+    def now(self) -> int:
+        return self.store.clock()
+
+    def keep(self, recs):
+        self.all_records += recs
+        return recs
+
+    # -- ingestion helpers -----------------------------------------------------
+    def ingest_binance_zip(self, path: Path, request: str, kind="klines", symbol=None, interval="1d"):
+        lm = header_last_modified(self.sample / "dl-sample-binance" / "evidence", path.name)
         obj = self.store.ingest_file(path, source_id="SR-04", source_approval_id="SA-01", request=request,
                                      published_checksum=published_checksum(path), server_last_modified=lm,
                                      retrieved_at_ns=mtime_ns(path))
         if obj.quarantined:
             return obj, R.ParseResult([], True, obj.reason)
-        member = zip_single_member(self.store, obj)
+        with zipfile.ZipFile(self.store.object_path(obj.raw_id)) as zf:
+            names = [n for n in zf.namelist() if not n.startswith("__MACOSX/")]
+        member = self.store.member(obj, names[0])
         data = self.store.read(member.raw_id)
-        name = member.member_path
         if kind == "klines":
-            res = R.parse_binance_klines(data, name=name, symbol=symbol, interval=interval, raw=obj,
-                                         ingested_at=self.ingested_at)
+            listed = f"/{symbol}/{interval}/{path.name}," in self.changelog
+            res = R.parse_binance_klines(data, name=member.member_path, symbol=symbol, interval=interval, raw=member,
+                                         ingested_at=self.now(), rewrite_listed=listed)
         else:
-            res = R.parse_binance_trades(data, name=name, symbol=symbol, raw=obj, ingested_at=self.ingested_at)
+            res = R.parse_binance_trades(data, name=member.member_path, symbol=symbol, raw=member, ingested_at=self.now())
+        self.keep(res.records)
         return obj, res
 
-    def kraken_member(self, zip_obj, member_name):
-        with zipfile.ZipFile(self.store.object_path(zip_obj.raw_id)) as zf:
-            return zf.read(member_name)
+    def kraken_container(self, name):
+        p = self.sample / "dl-sample-kraken" / name
+        obj = self.store.ingest_file(p, source_id="SR-05", source_approval_id="SA-02",
+                                     request=f"kraken:ohlcvt/{name}", retrieved_at_ns=mtime_ns(p))
+        with zipfile.ZipFile(self.store.object_path(obj.raw_id)) as zf:
+            names = zf.namelist()
+            manifest = json.loads(zf.read("MANIFEST.json"))
+        generated = datetime.fromisoformat(manifest["generated"]).replace(tzinfo=timezone.utc)
+        return obj, names, manifest, int(generated.timestamp()) * R.NS["s"]
+
+    def kraken_pair(self, pair, interval=1440, keep=True):
+        member = self.store.member(self.full, f"{pair}_{interval}.csv")
+        res = R.parse_kraken_csv(self.store.read(member.raw_id), pair=pair, interval_min=interval, raw=member,
+                                 generated_ns=self.full_generated, ingested_at=self.now())
+        return self.keep(res.records) if keep else res.records
 
     # -- windows ---------------------------------------------------------------
     def w_a(self):
@@ -100,29 +154,22 @@ class Run:
         gaps = []
         for s in SYMBOLS:
             gaps += A.bar_gaps([r for r in recs if r.native_symbol == s], DAY_NS)
-        rep = A.coverage_report("W-A", recs, gaps, raw_count=20)
+        rep = A.coverage_report("W-A", recs, gaps, raw_files=20)
         rep.update(checksums_verified=verified, last_modified_held=lm_held, files_quarantined=quarantined_files,
                    units={k: sorted(v) for k, v in units.items()},
-                   basis={b_: sum(r.available_at_basis == b_ for r in recs) for b_ in ("archive_published", "retrieved")},
-                   late_flags=sum("late" in r.quality_flags for r in recs),
-                   records_missing_four_times=sum(not all([r.source_event_time, r.received_at is not None,
-                                                           r.ingested_at is not None, r.available_at])
-                                                  for r in recs),
-                   records_missing_venue_feed=sum(not (r.venue and r.source_id and r.feed_id) for r in recs),
-                   hash_run1=A.output_hash(recs))
-        self.wa_records = recs
+                   basis={x: sum(r.available_at_basis == x for r in recs) for x in ("archive_published", "retrieved")},
+                   late_flags=sum("late" in r.quality_flags for r in recs), content_hash=A.output_hash(recs))
         self.report["windows"]["W-A"] = rep
 
     def w_b(self):
         rev = self.sample / "dl-sample-binance" / "readme" / "rev"
-        changelog = (self.sample / "dl-sample-binance" / "readme" / "u" / "2022-08-08_kline_updates.csv").read_text()
         out = {}
         for name, kind in (("1INCHUSDT-1d-2022-03-08.zip", "daily"), ("1INCHUSDT-1d-2022-03.zip", "monthly")):
             obj, res = self.ingest_binance_zip(rev / name, f"binance:spot/{kind}/klines/1INCHUSDT/1d/{name}",
                                                symbol="1INCHUSDT")
-            in_changelog = f"/1INCHUSDT/1d/{name}," in changelog
             out[kind] = {"records": len(res.records), "checksum": obj.checksum_status,
-                         "last_modified": obj.server_last_modified, "rewrite_flag": in_changelog}
+                         "last_modified": obj.server_last_modified,
+                         "records_with_rewrite_flag": sum("last_modified_after_period" in r.quality_flags for r in res.records)}
             if kind == "daily":
                 daily = res.records
             else:
@@ -136,76 +183,84 @@ class Run:
         for m in ("2022-04", "2022-05", "2022-06", "2022-09"):
             p = luna / f"LUNAUSDT-1d-{m}.zip"
             recs += self.ingest_binance_zip(p, f"binance:spot/monthly/klines/LUNAUSDT/1d/{p.name}", symbol="LUNAUSDT")[1].records
+        p = luna / "LUNCUSDT-1d-2022-09.zip"
+        lunc = self.ingest_binance_zip(p, f"binance:spot/monthly/klines/LUNCUSDT/1d/{p.name}", symbol="LUNCUSDT")[1].records
         epochs = A.propose_epochs(recs)
         self.report["windows"]["W-C"] = {
-            "records": len(recs),
-            "epochs": [{"start": datetime.fromtimestamp(e.start_ns / 1e9, timezone.utc).date().isoformat(),
-                        **e.evidence, "review_status": e.review_status} for e in epochs]}
+            "luna_records": len(recs), "lunc_records": len(lunc), "lunc_first": ts_date(lunc[0].event_time_ns()),
+            "epochs": [{"start": ts_date(e.start_ns), **e.evidence, "review_status": e.review_status} for e in epochs]}
 
     def w_d(self):
         p = self.sample / "dl-sample-binance" / "ETHUSDT-trades-2025-01-15.zip"
         obj, res = self.ingest_binance_zip(p, f"binance:spot/daily/trades/ETHUSDT/{p.name}", kind="trades", symbol="ETHUSDT")
-        self.wd_obj = obj
-        self.report["windows"]["W-D"] = {"records": len(res.records), "checksum": obj.checksum_status,
-                                         "data_gaps": len(A.trade_gaps(res.records)),
-                                         "unit": res.records[0].source_time_unit if res.records else None}
-
-    def kraken_full(self):
-        p = self.sample / "dl-sample-kraken" / "Kraken_OHLCVT_Full.zip"
-        self.full = self.store.ingest_file(p, source_id="SR-05", source_approval_id="SA-02",
-                                           request="kraken:ohlcvt/Kraken_OHLCVT_Full.zip", retrieved_at_ns=mtime_ns(p))
-        return self.full
-
-    def kraken_pair(self, pair):
-        data = self.kraken_member(self.full, f"{pair}_1440.csv")
-        return R.parse_kraken_csv(data, pair=pair, interval_min=1440, raw=self.full,
-                                  generated_ns=KRAKEN_GENERATED_NS, ingested_at=self.ingested_at).records
+        self.report["windows"]["W-D"] = {
+            "records": len(res.records), "checksum": obj.checksum_status, "data_gaps": len(A.trade_gaps(res.records)),
+            "quarantined": sum(r.quality_state == "quarantined" for r in res.records),
+            "late_flags": sum("late" in r.quality_flags for r in res.records),
+            "basis": sorted({r.available_at_basis for r in res.records}),
+            "unit": res.records[0].source_time_unit if res.records else None}
 
     def w_e(self):
-        self.kraken_full()
-        out = {}
-        self.we = {}
+        self.full, names, manifest, self.full_generated = self.kraken_container("Kraken_OHLCVT_Full.zip")
+        out, self.we = {}, {}
+        decision = int(datetime(2026, 9, 30, tzinfo=timezone.utc).timestamp()) * R.NS["s"]
         for pair in ("XBTUSD", "ETHUSD"):
             recs = self.kraken_pair(pair)
             gaps = A.bar_gaps(recs, DAY_NS)
             self.we[pair] = (recs, gaps)
-            out[pair] = A.coverage_report(pair, recs, gaps, raw_count=1)
-            out[pair]["first"] = datetime.fromtimestamp(recs[0].event_time_ns() / 1e9, timezone.utc).date().isoformat()
-            out[pair]["last"] = datetime.fromtimestamp(recs[-1].event_time_ns() / 1e9, timezone.utc).date().isoformat()
-            out[pair]["available_at"] = datetime.fromtimestamp(recs[0].available_at / 1e9, timezone.utc).isoformat()
-        with zipfile.ZipFile(self.store.object_path(self.full.raw_id)) as zf:
-            names = zf.namelist()
-            manifest = json.loads(zf.read("MANIFEST.json"))
+            rep = A.coverage_report(pair, recs, gaps, raw_files=1)
+            rep.update(first=ts_date(recs[0].event_time_ns()), last=ts_date(recs[-1].event_time_ns()),
+                       available_at=datetime.fromtimestamp(recs[0].available_at / 1e9, timezone.utc).isoformat(),
+                       entry_blocked_on_2026_09_30_365d=A.entry_blocked(recs, gaps, decision, 365))
+            out[pair] = rep
         csvs = [n for n in names if re.fullmatch(r"[^/]+_\d+\.csv", n)]
-        out["manifest"] = {"manifest_pairs": manifest["pairs"], "manifest_files": manifest["files"],
-                           "zip_pairs": len({n.rsplit("_", 1)[0] for n in csvs}), "zip_pair_interval_csvs": len(csvs),
-                           "mismatch_logged": manifest["files"] != len(csvs)}
-        # CV-07: 365-day look-backs after 2015-12-31
-        step = DAY_NS
+        out["manifest"] = {"manifest_generated": manifest["generated"], "manifest_pairs": manifest["pairs"],
+                           "manifest_files": manifest["files"], "zip_pairs": len({n.rsplit("_", 1)[0] for n in csvs}),
+                           "zip_pair_interval_csvs": len(csvs), "mismatch_logged": manifest["files"] != len(csvs)}
+        # CV-07: every 365-day look-back (daily step) from 2016-01-01 to the archive end
         worst = {}
+        first = int(datetime(2016, 1, 1, tzinfo=timezone.utc).timestamp()) * R.NS["s"]
+        last = int(datetime(2025, 10, 1, tzinfo=timezone.utc).timestamp()) * R.NS["s"]
         for pair, (recs, gaps) in self.we.items():
-            starts = range(int(datetime(2016, 1, 1, tzinfo=timezone.utc).timestamp()) * R.NS["s"],
-                           int(datetime(2025, 10, 1, tzinfo=timezone.utc).timestamp()) * R.NS["s"], 30 * step)
-            worst[pair] = str(min(A.coverage(recs, gaps, s, s + 365 * step, step) for s in starts).quantize(Decimal("0.0001")))
-        out["cv07_min_coverage_365d_after_2016"] = worst
+            pset = {r.event_time_ns() for r in A.valid(recs)}
+            count = sum(1 for t in range(first, first + 365 * DAY_NS, DAY_NS) if t in pset)
+            best, s = None, first
+            while s <= last:
+                cov = Decimal(count) / 365
+                best = cov if best is None or cov < best else best
+                count += (s + 365 * DAY_NS in pset) - (s in pset)
+                s += DAY_NS
+            worst[pair] = str(best.quantize(Decimal("0.0001")))
+        out["cv07_min_coverage_any_365d_from_2016"] = worst
+        # TH-1/TH-2 re-derivation across every daily file in the full archive
+        long_gaps = breaks = 0
+        examples = []
+        daily = sorted(x for x in csvs if x.endswith("_1440.csv"))
+        for n in daily:
+            recs = self.kraken_pair(n[: -len("_1440.csv")], keep=False)
+            rs = sorted(A.valid(recs), key=lambda r: r.event_time_ns())
+            long_gaps += sum(1 for a, b in zip(rs, rs[1:]) if (b.event_time_ns() - a.event_time_ns()) // DAY_NS - 1 > 7)
+            eps = A.propose_epochs(recs)
+            breaks += len(eps)
+            examples += [{"pair": n[:-9], "start": ts_date(e.start_ns), **e.evidence} for e in eps]
+        out["th1_th2_rederivation"] = {"pairs_scanned": len(daily), "daily_gaps_over_7d": long_gaps,
+                                       "proposed_epoch_breaks": breaks, "breaks": examples}
         self.report["windows"]["W-E"] = out
 
     def w_f(self):
+        pairs_now = json.loads((self.sample / "dl-sample-kraken" / "rest" / "assetpairs.json").read_text())["result"]
+        listed = {v.get("altname") for v in pairs_now.values()}
         out = {}
         for pair in ("ANTETH", "AGLDUSD", "AIRUSD", "ANKRGBP"):
             recs = self.kraken_pair(pair)
-            out[pair] = {"records": len(recs),
-                         "last_bar": datetime.fromtimestamp(recs[-1].event_time_ns() / 1e9, timezone.utc).date().isoformat(),
-                         "delisting_upper_bound": True}
+            last = ts_date(recs[-1].event_time_ns())
+            out[pair] = {"records": len(recs), "last_bar": last, "listed_in_assetpairs": pair in listed,
+                         "delisting_date": f"<= {last} (upper bound)" if pair not in listed else "not delisted"}
         self.report["windows"]["W-F"] = out
 
     def w_g(self):
-        p = self.sample / "dl-sample-kraken" / "Kraken_OHLCVT_2026Q3.zip"
-        obj = self.store.ingest_file(p, source_id="SR-05", source_approval_id="SA-02",
-                                     request="kraken:ohlcvt/Kraken_OHLCVT_2026Q3.zip", retrieved_at_ns=mtime_ns(p))
-        with zipfile.ZipFile(self.store.object_path(obj.raw_id)) as zf:
-            csvs = [n for n in zf.namelist() if re.fullmatch(r"[^/]+_\d+\.csv", n)]
-            manifest = json.loads(zf.read("MANIFEST.json"))
+        obj, names, manifest, _ = self.kraken_container("Kraken_OHLCVT_2026Q3.zip")
+        csvs = [n for n in names if re.fullmatch(r"[^/]+_\d+\.csv", n)]
         self.report["windows"]["W-G"] = {"checksum_status": obj.checksum_status, "pairs": len({n.rsplit('_', 1)[0] for n in csvs}),
                                          "csvs": len(csvs), "manifest_pairs": manifest["pairs"], "manifest_files": manifest["files"]}
 
@@ -216,26 +271,27 @@ class Run:
             obj = self.store.ingest_file(p, source_id="SR-05", source_approval_id="SA-02",
                                          request=f"kraken:rest/OHLC?pair={pair}&interval=1440", retrieved_at_ns=mtime_ns(p))
             res = R.parse_kraken_rest_ohlc(self.store.read(obj.raw_id), request_pair=pair, interval_min=1440, raw=obj,
-                                           ingested_at=self.ingested_at)
+                                           ingested_at=self.now())
+            self.keep(res.records)
             arch = {r.source_event_time: r for r in self.we[pair][0]}
-            compared = mism = 0
-            diffs = []
+            compared, current_rule, proposed_rule = 0, [], []
             for r in res.records:
                 a = arch.get(r.source_event_time)
                 if a is None:
                     continue
                 compared += 1
-                ok = all(Decimal(a.fields[k]) == Decimal(r.fields[k]) for k in ("open", "high", "low", "close", "trade_count"))
+                same = all(Decimal(a.fields[k]) == Decimal(r.fields[k]) for k in ("open", "high", "low", "close", "trade_count"))
                 va, vr = Decimal(a.fields["volume"]), Decimal(r.fields["volume"])
-                ok = ok and abs(va - vr) <= VOLUME_REL_TOL * max(abs(va), abs(vr))
-                if not ok:
-                    mism += 1
-                    diffs.append({"date": datetime.fromtimestamp(r.source_event_time, timezone.utc).date().isoformat(),
-                                  **{k: [a.fields[k], str(r.fields[k])] for k in ("trade_count", "volume")}})
-            out[pair] = {"completed_bars": len(res.records), "note": res.reason,
+                detail = {"date": ts_date(r.event_time_ns()), "trade_count": [a.fields["trade_count"], r.fields["trade_count"]],
+                          "volume": [a.fields["volume"], r.fields["volume"]]}
+                if not (same and va.quantize(Decimal("1e-8")) == vr):  # current event contract §4.1 rule
+                    current_rule.append(detail)
+                if not (same and abs(va - vr) <= VOLUME_REL_TOL * max(abs(va), abs(vr))):  # Proposed rule
+                    proposed_rule.append(detail)
+            out[pair] = {"completed_bars": len(res.records), "dropped_incomplete": res.dropped_incomplete,
                          "late_flags": sum("late" in r.quality_flags for r in res.records),
-                         "response_key": res.records[0].fields["native_response_key"],
-                         "compared_with_archive": compared, "mismatches": mism, "mismatch_detail": diffs}
+                         "response_key": res.records[0].fields["native_response_key"], "compared_with_archive": compared,
+                         "mismatches_current_rule": current_rule, "mismatches_proposed_rule": proposed_rule}
         self.report["windows"]["W-H"] = out
 
     def w_i(self):
@@ -258,46 +314,63 @@ class Run:
         work = self.out / "fixtures"
         work.mkdir()
         base_zip = b / "BTCUSDT-1d-2024-12.zip"
-        base_csv = zipfile.ZipFile(base_zip).read("BTCUSDT-1d-2024-12.csv").decode().rstrip("\n")
-        rows = base_csv.splitlines()
+        rows = zipfile.ZipFile(base_zip).read("BTCUSDT-1d-2024-12.csv").decode().rstrip("\n").splitlines()
         lm = header_last_modified(b / "evidence", base_zip.name)
-        raw = type("Raw", (), {"raw_id": "fixture", "retrieved_at_ns": mtime_ns(base_zip), "server_last_modified": lm})()
+        raw = type("Raw", (), {"raw_id": "fixture", "retrieved_at_ns": mtime_ns(base_zip), "server_last_modified": lm,
+                               "supersedes_raw_id": None, "member_path": None})()
 
         def parse(text, name="BTCUSDT-1d-2024-12.csv"):
             return R.parse_binance_klines(text.encode(), name=name, symbol="BTCUSDT", interval="1d", raw=raw,
-                                          ingested_at=self.ingested_at)
+                                          ingested_at=self.now())
 
         def counts(res):
             q = sum(r.quality_state == "quarantined" for r in res.records)
-            return {"file_quarantined": res.file_quarantined, "quarantined": q, "valid": len(res.records) - q}
+            return {"file_quarantined": res.file_quarantined, "file_reason": res.reason, "quarantined": q,
+                    "valid": len(res.records) - q, "reasons": sorted({r.reason for r in res.records if r.reason})}
 
-        # F-01: flip one byte
+        def text_of(lines):
+            t = "\n".join(lines) + "\n"
+            return t, sha256_bytes(t.encode())
+
+        base_hash = sha256_file(base_zip)
         f01 = work / base_zip.name
         data = bytearray(base_zip.read_bytes())
         data[100] ^= 0xFF
         f01.write_bytes(bytes(data))
         o = self.store.ingest_file(f01, source_id="SR-04", source_approval_id="SA-01", request="fixture:F-01",
                                    published_checksum=published_checksum(base_zip))
-        fx["F-01"] = {"checksum_status": o.checksum_status, "quarantined": o.quarantined, "expected": "mismatch, quarantined"}
-        # F-02a: ingest the same object twice
-        a = self.store.ingest_file(base_zip, source_id="SR-04", source_approval_id="SA-01", request="fixture:F-02a")
+        fx["F-01"] = {"input": base_hash, "edited_input": sha256_file(f01), "checksum_status": o.checksum_status,
+                      "quarantined": o.quarantined, "pass": o.quarantined and o.checksum_status == "mismatch"}
+        n_before = len(self.store.journal_entries())
+        a1 = self.store.ingest_file(base_zip, source_id="SR-04", source_approval_id="SA-01", request="fixture:F-02a")
         a2 = self.store.ingest_file(base_zip, source_id="SR-04", source_approval_id="SA-01", request="fixture:F-02a")
-        fx["F-02a"] = {"same_raw_id": a.raw_id == a2.raw_id, "records": len(parse(base_csv + "\n").records), "expected": 31}
-        fx["F-02b"] = {**counts(parse("\n".join(rows + [rows[4]]) + "\n")), "expected": "2 quarantined, 30 valid"}
+        outcomes = [e.outcome for e in self.store.journal_entries()[n_before:]]
+        fx["F-02a"] = {"input": base_hash, "same_raw_object": a1 is a2, "journal": outcomes,
+                       "pass": a1 is a2 and outcomes == ["stored", "duplicate"]}
+        t, h = text_of(rows + [rows[4]])
+        c = counts(parse(t))
+        fx["F-02b"] = {"input": h, **c, "pass": c["quarantined"] == 2 and c["valid"] == 30 and c["reasons"] == ["duplicate_timestamp"]}
         alt = rows[4].split(",")
         alt[4] = str(Decimal(alt[4]) + 1)
-        fx["F-03"] = {**counts(parse("\n".join(rows + [",".join(alt)]) + "\n")), "expected": "2 quarantined, 30 valid"}
+        t, h = text_of(rows + [",".join(alt)])
+        c = counts(parse(t))
+        fx["F-03"] = {"input": h, **c, "pass": c["quarantined"] == 2 and c["valid"] == 30 and c["reasons"] == ["duplicate_conflicting"]}
         recs, gaps = self.we["XBTUSD"]
-        fx["F-04"] = {"gaps": len(gaps), "classes": sorted({g.gap_class for g in gaps}),
-                      "first": datetime.fromtimestamp(gaps[0].interval_start / 1e9, timezone.utc).date().isoformat(),
-                      "last": datetime.fromtimestamp(gaps[-1].interval_start / 1e9, timezone.utc).date().isoformat(),
-                      "expected": "12 status_unknown, 2013-10-11 to 2014-12-25"}
+        fx["F-04"] = {"input": self.full.raw_id + "#XBTUSD_1440.csv", "gaps": len(gaps),
+                      "classes": sorted({g.gap_class for g in gaps}), "first": ts_date(gaps[0].interval_start),
+                      "last": ts_date(gaps[-1].interval_start),
+                      "pass": len(gaps) == 12 and {g.gap_class for g in gaps} == {"status_unknown"}}
         tz = zipfile.ZipFile(b / "ETHUSDT-trades-2025-01-15.zip")
-        tdata = tz.read(tz.namelist()[0]).decode().splitlines()
+        tdata = tz.read(tz.namelist()[0]).decode().rstrip("\n").splitlines()
         del tdata[999]
-        tres = R.parse_binance_trades(("\n".join(tdata) + "\n").encode(), name="ETHUSDT-trades-2025-01-15.csv",
-                                      symbol="ETHUSDT", raw=raw, ingested_at=self.ingested_at)
-        fx["F-05"] = {"data_gaps": len(A.trade_gaps(tres.records)), "valid": len(tres.records), "expected": "1 data_gap, 2,689,487 valid"}
+        t, h = text_of(tdata)
+        traw = type("Raw", (), {"raw_id": "fixture", "retrieved_at_ns": raw.retrieved_at_ns, "server_last_modified": None,
+                                "supersedes_raw_id": None, "member_path": None})()
+        tres = R.parse_binance_trades(t.encode(), name="ETHUSDT-trades-2025-01-15.csv", symbol="ETHUSDT", raw=traw,
+                                      ingested_at=self.now())
+        tg = A.trade_gaps(tres.records)
+        fx["F-05"] = {"input": h, "data_gaps": len(tg), "valid": len(A.valid(tres.records)),
+                      "pass": len(tg) == 1 and len(A.valid(tres.records)) == 2_689_487}
         e = list(rows)
         f0 = e[0].split(",")
         f0[2] = str(Decimal(f0[3]) - 1)
@@ -305,81 +378,145 @@ class Run:
         f1 = e[1].split(",")
         f1[4] = "NaN"
         e[1] = ",".join(f1)
-        fx["F-06"] = {**counts(parse("\n".join(e) + "\n")), "expected": "2 quarantined, 29 valid"}
-        fx["F-06b"] = {"reason": R.check_naive_time("2026-10-14T08:30:00"), "expected": "timezone_naive"}
-        jan = zipfile.ZipFile(b / "BTCUSDT-1d-2025-01.zip").read("BTCUSDT-1d-2025-01.csv").decode().splitlines()
+        t, h = text_of(e)
+        c = counts(parse(t))
+        fx["F-06"] = {"input": h, **c, "pass": c["quarantined"] == 2 and c["valid"] == 29}
+        reason = R.check_naive_time("2026-10-14T08:30:00")
+        fx["F-06b"] = {"input": "2026-10-14T08:30:00", "reason": reason, "pass": reason == "timezone_naive"}
+        jan = zipfile.ZipFile(b / "BTCUSDT-1d-2025-01.zip").read("BTCUSDT-1d-2025-01.csv").decode().rstrip("\n").splitlines()
         j0 = jan[0].split(",")
         j0[0] = str(int(j0[0]) // 1000)
         jan[0] = ",".join(j0)
-        fx["F-07"] = {**counts(parse("\n".join(jan) + "\n", name="BTCUSDT-1d-2025-01.csv")), "expected": "file quarantined"}
+        t, h = text_of(jan)
+        c = counts(parse(t, name="BTCUSDT-1d-2025-01.csv"))
+        fx["F-07"] = {"input": h, **c, "pass": c["file_quarantined"] and c["file_reason"] == "unit_contradicts_era"}
         sw = list(rows)
         sw[2], sw[3] = sw[3], sw[2]
-        swapped = parse("\n".join(sw) + "\n").records
-        orig = parse(base_csv + "\n").records
-        fx["F-08"] = {"valid": len(swapped),
-                      "replay_order_same": [r.source_event_time for r in A.replay_order(swapped)] ==
-                                           [r.source_event_time for r in A.replay_order(orig)],
-                      "expected": "31 valid, order unchanged"}
-        # F-09: constructed old version, then the real new one
+        t, h = text_of(sw)
+        swapped = parse(t).records
+        orig = parse(text_of(rows)[0]).records
+        same = [r.source_event_time for r in A.replay_order(swapped)] == [r.source_event_time for r in A.replay_order(orig)]
+        fx["F-08"] = {"input": h, "valid": len(swapped), "replay_order_same": same, "pass": same and len(swapped) == 31}
         rev = b / "readme" / "rev" / "1INCHUSDT-1d-2022-03-08.zip"
         new_csv = zipfile.ZipFile(rev).read("1INCHUSDT-1d-2022-03-08.csv").decode()
         old_fields = new_csv.split(",")
         old_fields[4] = str(Decimal(old_fields[4]) + Decimal("0.001"))
-        old_path = work / "1INCHUSDT-1d-2022-03-08.old.csv"
+        old_path, new_path = work / "1INCHUSDT-1d-2022-03-08.old.csv", work / "1INCHUSDT-1d-2022-03-08.new.csv"
         old_path.write_text(",".join(old_fields))
-        new_path = work / "1INCHUSDT-1d-2022-03-08.new.csv"
         new_path.write_text(new_csv)
-        t_old = mtime_ns(rev) - 10 * DAY_NS
+        lm9 = "Mon, 08 Aug 2022 21:47:53 GMT"
+        t_old = R.http_date_to_ns(lm9) + DAY_NS
+        t_new = mtime_ns(rev)
         o1 = self.store.ingest_file(old_path, source_id="SR-04", source_approval_id="SA-01", request="fixture:F-09",
-                                    retrieved_at_ns=t_old)
+                                    retrieved_at_ns=t_old, server_last_modified=lm9)
         o2 = self.store.ingest_file(new_path, source_id="SR-04", source_approval_id="SA-01", request="fixture:F-09",
-                                    retrieved_at_ns=mtime_ns(rev))
+                                    retrieved_at_ns=t_new, server_last_modified=lm9)
         mk = lambda o, text: R.parse_binance_klines(text.encode(), name="1INCHUSDT-1d-2022-03-08.csv", symbol="1INCHUSDT",
-                                                    interval="1d", raw=o, ingested_at=self.ingested_at).records
+                                                    interval="1d", raw=o, ingested_at=self.now()).records
         v1, v2 = mk(o1, old_path.read_text()), mk(o2, new_csv)
         merged = A.apply_revision(v1, v2)
-        fx["F-09"] = {"versions": sorted({r.version for r in merged}), "supersedes_set": o2.supersedes_raw_id == o1.raw_id,
-                      "seen_before_revision": [r.version for r in A.as_of(merged, o2.retrieved_at_ns - 1)],
-                      "seen_after_revision": [r.version for r in A.as_of(merged, o2.retrieved_at_ns)],
-                      "expected": "2 versions; version 1 before, version 2 after"}
-        fx["F-10"] = {"epochs": self.report["windows"]["W-C"]["epochs"], "expected": "1 proposed break on 2022-05-31"}
-        fx["F-11"] = {"last_bar": self.report["windows"]["W-F"]["ANKRGBP"]["last_bar"], "expected": "2022-12-31, upper bound"}
-        fx["F-12"] = {"XBTUSD_completed": self.report["windows"]["W-H"]["XBTUSD"]["completed_bars"],
-                      "note": self.report["windows"]["W-H"]["XBTUSD"]["note"], "expected": "57 kept, 1 dropped"}
-        fx["F-13"] = {**counts(parse("\n".join(",".join(r.split(",")[:11]) for r in rows) + "\n")), "expected": "file quarantined"}
-        gi = A.GapInterval("SR-99", "bls:cpi", "official:CPI:1", 0, 0, "data_gap", "http_status=403", 0)
-        hdr = (self.sample / "dl-sample-context" / "bls_cpi.nr0.htm.hdr").read_text().splitlines()[0]
-        fx["F-14"] = {"recorded_status": hdr.strip(), "gap_state": gi.availability_state, "retried_other_route": False,
-                      "expected": "SOURCE_UNAVAILABLE, no retry"}
+        before = [r.version for r in A.as_of(merged, t_new - 1)]
+        after = [r.version for r in A.as_of(merged, t_new)]
+        fx["F-09"] = {"inputs": [o1.raw_id, o2.raw_id], "v1_basis": v1[0].available_at_basis,
+                      "v2_basis": v2[0].available_at_basis, "v2_available_at_is_retrieval": v2[0].available_at == t_new,
+                      "supersedes_raw": o2.supersedes_raw_id == o1.raw_id,
+                      "supersedes_record": v2[0].supersedes_record_id == v1[0].record_id,
+                      "seen_before_revision": before, "seen_after_revision": after,
+                      "pass": before == [1] and after == [2] and v2[0].available_at_basis == "retrieved"}
+        w = self.report["windows"]
+        fx["F-10"] = {"epochs": w["W-C"]["epochs"],
+                      "pass": len(w["W-C"]["epochs"]) == 1 and w["W-C"]["epochs"][0]["start"] == "2022-05-31"}
+        f11 = w["W-F"]["ANKRGBP"]
+        fx["F-11"] = {**f11, "pass": f11["last_bar"] == "2022-12-31" and not f11["listed_in_assetpairs"]}
+        rest = json.loads((self.sample / "dl-sample-kraken" / "rest" / "ohlc_XBTUSD_1440.json").read_text())["result"]["XXBTZUSD"]
+        dropped_date = ts_date(rest[-1][0] * R.NS["s"])
+        f12 = w["W-H"]["XBTUSD"]
+        fx["F-12"] = {"completed": f12["completed_bars"], "dropped": f12["dropped_incomplete"], "dropped_bar": dropped_date,
+                      "pass": f12["completed_bars"] == 57 and f12["dropped_incomplete"] == 1 and dropped_date == "2026-10-27"}
+        t, h = text_of([",".join(r.split(",")[:11]) for r in rows])
+        c = counts(parse(t))
+        fx["F-13"] = {"input": h, **c, "pass": c["file_quarantined"] and c["file_reason"] == "schema_column_count"}
+        fx["F-14"] = self.recovery_fixture("fixture:F-14", [F.Response(403, b"Access Denied")],
+                                           expect_ok=False, expect_calls=1, expect_reason="http_403")
         decision = int(datetime(2025, 1, 7, tzinfo=timezone.utc).timestamp()) * R.NS["s"]
-        fx["F-16"] = {"visible_at_2025-01-07": len(A.as_of(orig, decision)),
-                      "visible_after_last_modified": len(A.as_of(orig, orig[0].available_at)), "expected": "0, then 31"}
-        cot_lm = R.http_date_to_ns("Fri, 23 Oct 2026 19:27:36 GMT")
-        fx["F-17"] = {"stale_at_plus_15d": (cot_lm + 15 * DAY_NS) - cot_lm > 14 * DAY_NS,
-                      "stale_at_plus_7d": (cot_lm + 7 * DAY_NS) - cot_lm > 14 * DAY_NS, "expected": "True, False"}
-        xrecs, xgaps = self.we["XBTUSD"]
+        vis_before, vis_after = len(A.as_of(orig, decision)), len(A.as_of(orig, orig[0].available_at))
+        fx["F-16"] = {"input": base_hash, "visible_at_2025-01-07": vis_before, "visible_from_last_modified": vis_after,
+                      "pass": vis_before == 0 and vis_after == 31}
+        hdr = (self.sample / "dl-sample-context" / "cftc_deacmesf.htm.hdr").read_text()
+        cot_avail = R.http_date_to_ns(re.search(r"^last-modified:\s*(.+?)\s*$", hdr, re.I | re.M).group(1))
+        s15 = A.is_stale("cftc:cot", cot_avail, cot_avail + 15 * DAY_NS)
+        s7 = A.is_stale("cftc:cot", cot_avail, cot_avail + 7 * DAY_NS)
+        fx["F-17"] = {"input": "cftc_deacmesf.htm Last-Modified", "stale_after_15d": s15, "stale_after_7d": s7,
+                      "pass": s15 and not s7}
+        xrecs, _ = self.we["XBTUSD"]
         end = int(datetime(2026, 10, 1, tzinfo=timezone.utc).timestamp()) * R.NS["s"]
         start = end - 365 * DAY_NS
         drop = {start + i * DAY_NS for i in range(19)}
         thinned = [r for r in xrecs if r.event_time_ns() not in drop]
         restored = [r for r in xrecs if r.event_time_ns() not in drop or r.event_time_ns() == start]
-        fx["F-18"] = {"qualifies_346": A.qualifies(thinned, [], start, end, DAY_NS),
-                      "qualifies_347": A.qualifies(restored, [], start, end, DAY_NS), "expected": "False, True"}
+        q346, q347 = A.qualifies(thinned, [], start, end, DAY_NS), A.qualifies(restored, [], start, end, DAY_NS)
+        fx["F-18"] = {"input": self.full.raw_id + "#XBTUSD_1440.csv", "qualifies_346": q346, "qualifies_347": q347,
+                      "pass": (not q346) and q347}
 
-    def determinism(self):
-        recs2 = []
-        b = self.sample / "dl-sample-binance"
-        for s in SYMBOLS:
-            for m in ("2024-12", "2025-01"):
-                p = b / f"{s}-1d-{m}.zip"
-                recs2 += self.ingest_binance_zip(p, f"binance:spot/monthly/klines/{s}/1d/{p.name}", symbol=s)[1].records
-        self.report["windows"]["W-A"]["hash_run2"] = A.output_hash(recs2)
-        self.report["windows"]["W-A"]["deterministic"] = (self.report["windows"]["W-A"]["hash_run1"] ==
-                                                          self.report["windows"]["W-A"]["hash_run2"])
+    def recovery_fixture(self, request, script, *, expect_ok, expect_calls, expect_reason=None, checksum=None):
+        transport = FakeTransport(script)
+        slept = []
+        res = F.fetch(request, transport, self.store, source_id="SR-99", source_approval_id="fixture",
+                      published_checksum=checksum, sleep=slept.append)
+        reason = res.gap.evidence if res.gap else None
+        ok = ((res.raw is not None) == expect_ok and transport.calls == expect_calls
+              and (expect_reason is None or reason == expect_reason))
+        return {"calls": transport.calls, "slept_s": slept, "stored": res.raw is not None, "gap_reason": reason,
+                "gap_state": res.gap.availability_state if res.gap else None, "pass": ok}
+
+    def recovery(self):
+        body = b"payload"
+        cl = {"Content-Length": str(len(body))}
+        rc = {
+            "RC-01_5xx_then_ok": self.recovery_fixture("fixture:RC-01a", [F.Response(503), F.Response(200, body, cl)],
+                                                       expect_ok=True, expect_calls=2),
+            "RC-01_all_fail": self.recovery_fixture("fixture:RC-01b", [TimeoutError(), F.Response(500), ConnectionError(),
+                                                                       F.Response(502)],
+                                                    expect_ok=False, expect_calls=4, expect_reason="http_502"),
+            "RC-02_403": self.report["fixtures"]["F-14"],
+            "RC-02_429_retry_after": self.recovery_fixture("fixture:RC-02b", [F.Response(429, b"", {"Retry-After": "60"}),
+                                                                              F.Response(200, body, cl)],
+                                                           expect_ok=True, expect_calls=2),
+            "RC-02_429_no_header": self.recovery_fixture("fixture:RC-02c", [F.Response(429)], expect_ok=False,
+                                                         expect_calls=1, expect_reason="http_429"),
+            "RC-03_truncated_then_ok": self.recovery_fixture("fixture:RC-03", [F.Response(200, body[:3], cl),
+                                                                               F.Response(200, body, cl)],
+                                                             expect_ok=True, expect_calls=2),
+            "RC-04_checksum_repeated": self.recovery_fixture("fixture:RC-04", [F.Response(200, body, cl)] * 4,
+                                                             expect_ok=False, expect_calls=4,
+                                                             expect_reason="checksum_mismatch", checksum="00" * 32),
+            "not_exercised": ["RC-05 crash completion marker", "RC-06 disk full", "RC-07/RC-08 clock offset"],
+        }
+        self.report["recovery"] = rc
+
+    def criteria(self):
+        recs = self.all_records
+        objs = self.store.objects
+        untraceable = sum(1 for r in recs if r.raw_id not in objs or r.rights_id is None or (
+            objs[r.raw_id].container_raw_id is not None and objs[r.raw_id].container_raw_id not in objs))
+        missing_times = sum(1 for r in recs if None in (r.source_event_time, r.received_at, r.ingested_at, r.available_at)
+                            or not r.available_at_basis or r.source_time_unit not in R.NS)
+        missing_feed = sum(1 for r in recs if not (r.venue and r.source_id and r.feed_id))
+        fixtures = self.report["fixtures"]
+        recovery = {k: v for k, v in self.report["recovery"].items() if isinstance(v, dict)}
+        self.report["criteria"] = {
+            "records_checked": len(recs), "CV-01_untraceable": untraceable, "CV-02_missing_times_or_basis": missing_times,
+            "CV-08_missing_venue_feed": missing_feed, "fixtures_run": len(fixtures),
+            "fixtures_passed": sorted(k for k, v in fixtures.items() if v.get("pass")),
+            "fixtures_failed": sorted(k for k, v in fixtures.items() if not v.get("pass")),
+            "fixtures_not_run": ["F-15 (live)"],
+            "recovery_passed": sorted(k for k, v in recovery.items() if v.get("pass")),
+            "recovery_failed": sorted(k for k, v in recovery.items() if not v.get("pass")),
+        }
 
     def run(self):
         for step in (self.w_a, self.w_b, self.w_c, self.w_d, self.w_e, self.w_f, self.w_g, self.w_h, self.w_i,
-                     self.fixtures, self.determinism):
+                     self.fixtures, self.recovery, self.criteria):
             step()
         return self.report
 
@@ -390,9 +527,8 @@ def main():
     ap.add_argument("--out", required=True, type=Path)
     args = ap.parse_args()
     report = Run(args.sample_root, args.out).run()
-    text = json.dumps(report, indent=1, sort_keys=True, default=str)
-    (args.out / "report.json").write_text(text)
-    print(text)
+    (args.out / "report.json").write_text(json.dumps(report, indent=1, sort_keys=True, default=str))
+    print(json.dumps({"criteria": report["criteria"]}, indent=1))
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ import json
 import shutil
 import time
 import zipfile
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Optional
 
@@ -53,7 +53,7 @@ class RawObject:
 class JournalEntry:
     at_ns: int
     request: str
-    outcome: str  # stored | duplicate | quarantined | failed
+    outcome: str  # stored | duplicate | quarantined | failed | started | completed
     raw_id: Optional[str] = None
     http_status: Optional[int] = None
     byte_length: Optional[int] = None
@@ -61,7 +61,11 @@ class JournalEntry:
 
 
 class RawStore:
-    """Content-addressed, append-only store rooted outside the repository."""
+    """Content-addressed, append-only store rooted outside the repository.
+
+    `objects` holds the first record seen for each raw_id; `object_for_request` holds the
+    current record for each request, so the same bytes under two requests keep separate
+    retrieval records."""
 
     def __init__(self, root: Path, clock=time.time_ns):
         self.root = Path(root)
@@ -69,7 +73,7 @@ class RawStore:
         (self.root / "objects").mkdir(parents=True, exist_ok=True)
         self._index_path = self.root / "index.jsonl"
         self._journal_path = self.root / "journal.jsonl"
-        self.objects: dict[str, RawObject] = {}  # first-seen object per raw_id
+        self.objects: dict[str, RawObject] = {}
         self.latest_by_request: dict[str, str] = {}
         self.object_for_request: dict[str, RawObject] = {}
         if self._index_path.exists():
@@ -87,6 +91,11 @@ class RawStore:
         with open(self._journal_path, "a") as fh:
             fh.write(json.dumps(asdict(entry), sort_keys=True) + "\n")
 
+    def journal_entries(self) -> list:
+        if not self._journal_path.exists():
+            return []
+        return [JournalEntry(**json.loads(x)) for x in self._journal_path.read_text().splitlines()]
+
     def _index(self, obj: RawObject) -> None:
         with open(self._index_path, "a") as fh:
             fh.write(json.dumps(asdict(obj), sort_keys=True) + "\n")
@@ -101,39 +110,31 @@ class RawStore:
         published_checksum: Optional[str] = None,
         server_last_modified: Optional[str] = None,
         retrieved_at_ns: Optional[int] = None,
+        http_status: Optional[int] = None,
     ) -> RawObject:
-        """Store a held file. Idempotent for identical bytes (S-02a); a
-        different hash at the same request is a new version (S-09)."""
+        """Store a held or retrieved file. Identical bytes at the same request are idempotent
+        (S-02a); different bytes at the same request are a new version (S-09). A published
+        checksum is always verified, including on a repeat (S-01)."""
         now = self.clock()
         raw_id = sha256_file(path)
         size = Path(path).stat().st_size
         prev = self.latest_by_request.get(request)
-        if prev == raw_id:
-            self.journal(JournalEntry(now, request, "duplicate", raw_id, None, size))
+        checksum_ok = published_checksum is None or published_checksum.lower() == raw_id
+        if prev == raw_id and checksum_ok:
+            self.journal(JournalEntry(now, request, "duplicate", raw_id, http_status, size))
             return self.object_for_request[request]
-        status = "none_published"
-        quarantined = False
-        reason = None
-        if published_checksum is not None:
-            if published_checksum.lower() == raw_id:
-                status = "verified"
-            else:
-                status = "mismatch"
-                quarantined = True
-                reason = "checksum_mismatch"
+        if published_checksum is None:
+            status = "none_published"
+        else:
+            status = "verified" if checksum_ok else "mismatch"
+        quarantined = not checksum_ok
         obj = RawObject(
-            raw_id=raw_id,
-            source_id=source_id,
-            source_approval_id=source_approval_id,
-            request=request,
-            retrieved_at_ns=retrieved_at_ns if retrieved_at_ns is not None else now,
-            byte_length=size,
-            server_last_modified=server_last_modified,
-            published_checksum=published_checksum,
-            checksum_status=status,
-            supersedes_raw_id=prev if prev and prev != raw_id else None,
-            quarantined=quarantined,
-            reason=reason,
+            raw_id=raw_id, source_id=source_id, source_approval_id=source_approval_id, request=request,
+            retrieved_at_ns=retrieved_at_ns if retrieved_at_ns is not None else now, byte_length=size,
+            http_status=http_status, server_last_modified=server_last_modified,
+            published_checksum=published_checksum, checksum_status=status,
+            supersedes_raw_id=prev if prev and prev != raw_id and not quarantined else None,
+            quarantined=quarantined, reason="checksum_mismatch" if quarantined else None,
         )
         dest = self.object_path(raw_id)
         if not dest.exists():
@@ -142,7 +143,7 @@ class RawStore:
             shutil.copyfile(path, tmp)
             if sha256_file(tmp) != raw_id:
                 tmp.unlink()
-                self.journal(JournalEntry(now, request, "failed", None, None, size, "copy_hash_mismatch"))
+                self.journal(JournalEntry(now, request, "failed", None, http_status, size, "copy_hash_mismatch"))
                 raise IOError("copy hash mismatch")
             tmp.rename(dest)
         self.objects.setdefault(raw_id, obj)
@@ -150,38 +151,37 @@ class RawStore:
         if not quarantined:
             self.latest_by_request[request] = raw_id
             self.object_for_request[request] = obj
-        self.journal(JournalEntry(now, request, "quarantined" if quarantined else "stored", raw_id, None, size, reason))
+        self.journal(JournalEntry(now, request, "quarantined" if quarantined else "stored", raw_id, http_status, size,
+                                  obj.reason))
         return obj
 
-    def members(self, container: RawObject) -> list[RawObject]:
-        """Register each ZIP member as its own raw object (§2 rule 4)."""
-        out = []
+    def _member_obj(self, container: RawObject, name: str, data: bytes) -> RawObject:
+        rid = sha256_bytes(data)
+        dest = self.object_path(rid)
+        if not dest.exists():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(data)
+        obj = RawObject(
+            raw_id=rid, source_id=container.source_id, source_approval_id=container.source_approval_id,
+            request=container.request + "#" + name, retrieved_at_ns=container.retrieved_at_ns, byte_length=len(data),
+            server_last_modified=container.server_last_modified, checksum_status=container.checksum_status,
+            container_raw_id=container.raw_id, member_path=name, supersedes_raw_id=container.supersedes_raw_id,
+        )
+        if rid not in self.objects:
+            self.objects[rid] = obj
+            self._index(obj)
+        return obj
+
+    def member(self, container: RawObject, name: str) -> RawObject:
+        """Register one ZIP member as its own raw object (§2 rule 4) without extracting the rest.
+        The member inherits the container's retrieval record, including any supersession."""
         with zipfile.ZipFile(self.object_path(container.raw_id)) as zf:
-            for info in zf.infolist():
-                if info.is_dir() or info.filename.startswith("__MACOSX/"):
-                    continue
-                data = zf.read(info)
-                rid = sha256_bytes(data)
-                dest = self.object_path(rid)
-                if not dest.exists():
-                    dest.parent.mkdir(parents=True, exist_ok=True)
-                    dest.write_bytes(data)
-                obj = RawObject(
-                    raw_id=rid,
-                    source_id=container.source_id,
-                    source_approval_id=container.source_approval_id,
-                    request=container.request + "#" + info.filename,
-                    retrieved_at_ns=container.retrieved_at_ns,
-                    byte_length=len(data),
-                    server_last_modified=container.server_last_modified,
-                    container_raw_id=container.raw_id,
-                    member_path=info.filename,
-                )
-                if rid not in self.objects:
-                    self.objects[rid] = obj
-                    self._index(obj)
-                out.append(obj)
-        return out
+            return self._member_obj(container, name, zf.read(name))
+
+    def members(self, container: RawObject) -> list[RawObject]:
+        with zipfile.ZipFile(self.object_path(container.raw_id)) as zf:
+            return [self._member_obj(container, i.filename, zf.read(i)) for i in zf.infolist()
+                    if not i.is_dir() and not i.filename.startswith("__MACOSX/")]
 
     def read(self, raw_id: str) -> bytes:
         return self.object_path(raw_id).read_bytes()

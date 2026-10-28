@@ -10,6 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from gladiator_capture import analysis as A  # noqa: E402
+from gladiator_capture import fetch as Fe  # noqa: E402
 from gladiator_capture import records as R  # noqa: E402
 from gladiator_capture.rawstore import RawStore, sha256_file  # noqa: E402
 
@@ -30,10 +31,12 @@ def month_klines(start_s, days, unit="ms"):
 
 
 class FakeRaw:
-    def __init__(self, raw_id="r1", retrieved_at_ns=2_000_000_000 * R.NS["s"], last_modified=None):
+    def __init__(self, raw_id="r1", retrieved_at_ns=2_000_000_000 * R.NS["s"], last_modified=None, supersedes=None):
         self.raw_id = raw_id
         self.retrieved_at_ns = retrieved_at_ns
         self.server_last_modified = last_modified
+        self.supersedes_raw_id = supersedes
+        self.member_path = None
 
 
 DEC_2024 = 1733011200  # 2024-12-01T00:00:00Z
@@ -227,6 +230,117 @@ class AnalysisTests(unittest.TestCase):
     def test_out_of_order_rows(self):  # S-08: reordered rows replay in event order
         order = [r.source_event_time for r in A.replay_order(self.bars([2, 0, 1]))]
         self.assertEqual(order, sorted(order))
+
+
+class ReviewFixTests(unittest.TestCase):
+    def test_revision_with_last_modified_takes_retrieval_time(self):  # H1, DEC-053
+        lm = "Wed, 08 Jan 2025 00:50:27 GMT"
+        text = month_klines(DEC_2024, 2).encode()
+        v1 = R.parse_binance_klines(text, name="X-1d-2024-12.csv", symbol="X", interval="1d",
+                                    raw=FakeRaw(last_modified=lm), ingested_at=1).records
+        later = 2_100_000_000 * R.NS["s"]
+        v2 = R.parse_binance_klines(text.replace(b",10.5,", b",10.6,"), name="X-1d-2024-12.csv", symbol="X",
+                                    interval="1d", raw=FakeRaw("r2", later, lm, supersedes="r1"), ingested_at=1).records
+        self.assertEqual((v2[0].available_at, v2[0].available_at_basis), (later, "retrieved"))
+        self.assertIn("last_modified_after_period", v2[0].quality_flags)
+        merged = A.apply_revision(v1, v2)
+        self.assertEqual({r.version for r in A.as_of(merged, R.http_date_to_ns(lm))}, {1})
+        self.assertEqual(v2[0].supersedes_record_id, v1[0].record_id)
+
+    def test_bar_key_stable_when_rows_shift(self):  # M2
+        old = R.parse_binance_klines(month_klines(DEC_2024 + DAY_S, 3).encode(), name="X-1d-2024-12.csv", symbol="X",
+                                     interval="1d", raw=FakeRaw(), ingested_at=1).records
+        new = R.parse_binance_klines(month_klines(DEC_2024, 4).encode(), name="X-1d-2024-12.csv", symbol="X",
+                                     interval="1d", raw=FakeRaw("r2", supersedes="r1"), ingested_at=1).records
+        merged = A.apply_revision(old, new)
+        self.assertEqual(len(A.as_of(merged, 10**30)), 4)
+
+    def test_zero_volume_decimal(self):  # L2
+        self.assertTrue(R.is_zero("0E-8") and R.is_zero("0.000"))
+        text = (kline(DEC_2024 * 1000, v="0.00") + "\n").encode()
+        r = R.parse_binance_klines(text, name="X-1d-2024-12.csv", symbol="X", interval="1d", raw=FakeRaw(),
+                                   ingested_at=1).records[0]
+        self.assertIn("zero_volume", r.quality_flags)
+
+    def test_trades_q1_and_duplicates(self):  # M5
+        t = JAN_2025 * 1_000_000
+        rows = [f"1,NaN,1,1,{t},True,True", f"2,1,1,1,{t + 1},True,True", f"2,1,1,1,{t + 2},True,True",
+                f"x,1,1,1,{t + 3},True,True"]
+        res = R.parse_binance_trades(("\n".join(rows) + "\n").encode(), name="E-trades-2025-01-15.csv", symbol="E",
+                                     raw=FakeRaw(), ingested_at=1)
+        self.assertEqual([r.reason for r in res.records],
+                         ["nonfinite_or_invalid_number", "duplicate_conflicting", "duplicate_conflicting", "invalid_trade_id"])
+
+    def test_checksum_checked_on_repeat(self):  # L3
+        with tempfile.TemporaryDirectory() as d:
+            store = RawStore(Path(d) / "s")
+            f = Path(d) / "a"
+            f.write_text("x")
+            store.ingest_file(f, source_id="S", source_approval_id="A", request="u")
+            again = store.ingest_file(f, source_id="S", source_approval_id="A", request="u", published_checksum="00" * 32)
+            self.assertTrue(again.quarantined)
+
+    def test_stale_and_entry_blocked(self):  # S-17, CV-06
+        self.assertTrue(A.is_stale("cftc:cot", 0, 15 * 86_400 * R.NS["s"]))
+        self.assertFalse(A.is_stale("cftc:cot", 0, 7 * 86_400 * R.NS["s"]))
+        step = DAY_S * R.NS["s"]
+        recs = AnalysisTests().bars(list(range(30)))
+        start = DEC_2024 * R.NS["s"]
+        gaps = [A.GapInterval("s", "f", "i", start + 29 * step, start + 30 * step, "status_unknown", "x", 0)]
+        self.assertEqual(A.entry_blocked(recs, gaps, start + 29 * step, 20), "status_unknown_on_decision_day")
+        self.assertEqual(A.entry_blocked(recs, [], start + 29 * step, 40), "coverage_below_q4")
+        self.assertIsNone(A.entry_blocked(recs, [], start + 29 * step, 20))
+
+    def test_qualifies_listing_partway(self):  # Q-4 listing clause
+        step = DAY_S * R.NS["s"]
+        start = DEC_2024 * R.NS["s"]
+        recs = AnalysisTests().bars(list(range(10, 30)))
+        self.assertFalse(A.qualifies(recs, [], start, start + 30 * step, step))
+        self.assertTrue(A.qualifies(recs, [], start, start + 30 * step, step, listed_ns=start + 10 * step))
+        self.assertFalse(A.qualifies(recs, [], start, start + 30 * step, step, listed_ns=start + 10 * step,
+                                     min_training_intervals=25))
+
+
+class FetchTests(unittest.TestCase):
+    class T:
+        def __init__(self, script):
+            self.script, self.calls = list(script), 0
+
+        def get(self, request):
+            self.calls += 1
+            x = self.script.pop(0)
+            if isinstance(x, Exception):
+                raise x
+            return x
+
+    def run_fetch(self, script, checksum=None):
+        with tempfile.TemporaryDirectory() as d:
+            store = RawStore(Path(d) / "s")
+            tr = self.T(script)
+            slept = []
+            res = Fe.fetch("u", tr, store, source_id="S", source_approval_id="A", published_checksum=checksum,
+                           sleep=slept.append)
+            return res, tr.calls, slept
+
+    def test_403_no_retry(self):  # RC-02, DEC-050
+        res, calls, slept = self.run_fetch([Fe.Response(403)])
+        self.assertEqual((res.raw, calls, res.gap.evidence, res.gap.availability_state),
+                         (None, 1, "http_403", "SOURCE_UNAVAILABLE"))
+
+    def test_retries_then_gives_up(self):  # RC-01
+        res, calls, slept = self.run_fetch([Fe.Response(500)] * 4)
+        self.assertEqual((calls, slept), (4, [30, 120, 600]))
+        self.assertIsNone(res.raw)
+
+    def test_429_and_truncation(self):  # RC-02 429, RC-03
+        body = b"abc"
+        ok = Fe.Response(200, body, {"Content-Length": "3"})
+        res, calls, slept = self.run_fetch([Fe.Response(429, b"", {"Retry-After": "5"}), ok])
+        self.assertEqual((res.raw is not None, slept), (True, [5]))
+        res, calls, _ = self.run_fetch([Fe.Response(429, b"", {"Retry-After": "9999"})])
+        self.assertEqual((res.raw, calls), (None, 1))
+        res, calls, _ = self.run_fetch([Fe.Response(200, b"a", {"Content-Length": "3"}), ok])
+        self.assertEqual((res.raw is not None, calls), (True, 2))
 
 
 if __name__ == "__main__":
