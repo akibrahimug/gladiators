@@ -2,7 +2,7 @@
 
 [Task](../../tasks/TASK-P02-006.md) · [Capture and recovery](capture-and-recovery.md) · [Network capture](network-capture.md)
 
-**Status: results, 2026-10-28**, at code `{HEAD}`. Offline only: no network calls (DEC-065). Not a G02 decision.
+**Status: results, 2026-10-28**, at code `537e8d3`. Offline only: no network calls (DEC-065). Not a G02 decision.
 
 ## 1. What was added
 
