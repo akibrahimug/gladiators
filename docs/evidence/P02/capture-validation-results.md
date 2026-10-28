@@ -30,7 +30,7 @@
 | CV-08 | **Pass, all records.** 0 records lack `venue`, `source_id` or `feed_id` | report `criteria` |
 | CV-09 | **Pass.** Two separate processes gave byte-identical reports. The W-A content hash is `d29b8f86…8599` | report hashes |
 | CV-10 | **Pass.** F-16: 0 records visible on 2025-01-07, 31 from `Last-Modified`. F-09, where both versions carry the same `Last-Modified`: version 2 takes basis `retrieved` and `available_at` = its retrieval time, so it is invisible before then (DEC-053) | report |
-| CV-11 | **Partial.** Exercised through `fetch()` with a scripted transport:<br>- RC-01: 5xx then success; all four attempts failing;<br>- RC-02: 403 with no retry; 429 with `Retry-After`; 429 without it;<br>- RC-03: truncation;<br>- RC-04: repeated checksum mismatch, giving `SOURCE_UNAVAILABLE`;<br>- RC-12, through F-09.<br>The retry delays are asserted ([30, 120, 600]; Retry-After 60). RC-05 is shown only as idempotent re-ingest (F-02a); a crash marker is not implemented. RC-06 has a handler (journal `failed`, remove `.part`, `SOURCE_UNAVAILABLE`), but it is not injected. **Not exercised:** RC-05's crash marker, RC-06 injection, RC-07 and RC-08 (clock offset) | report `recovery` |
+| CV-11 | **Partial at this task; completed in TASK-P02-006.** Exercised here, through `fetch()` with a scripted transport: RC-01 to RC-04 and RC-12. RC-05 to RC-08 were added in [TASK-P02-006](recovery-results.md) (CV-11: Pass) | report `recovery` |
 | CV-12 | **Not run.** Live capture (W-J) needs a capture implementation. It is authorised by DEC-057 | — |
 
 ## 2. Window results
@@ -49,7 +49,7 @@
 
 ## 3. What G02 still needs
 
-1. **CV-11:** a crash completion marker (RC-05), and disk-full and clock-offset injection (RC-06 to RC-08).
+1. **CV-11:** a crash completion marker (RC-05), and disk-full and clock-offset injection (RC-06 to RC-08). *Done in TASK-P02-006.*
    - **Known limitation for the re-pull task:** ZIP members inherit their container's supersession. A changed container therefore marks every member as revised, including unchanged ones. This is conservative, with no lookahead, but it over-flags against TH-4. Before re-pulling archives, compare each member's `raw_id` with the previous container's member at the same path.
 2. **CV-12 and F-15:** live capture of W-J (DEC-057).
 3. **The DEC-057 retrievals**, run through a real transport for `fetch()`: the 30-day REST pull with `AssetPairs`, the HEAD requests, and the 2026Q4 archive.
