@@ -458,14 +458,15 @@ class Run:
         fx["F-18"] = {"input": self.full.raw_id + "#XBTUSD_1440.csv", "qualifies_346": q346, "qualifies_347": q347,
                       "pass": (not q346) and q347}
 
-    def recovery_fixture(self, request, script, *, expect_ok, expect_calls, expect_reason=None, checksum=None):
+    def recovery_fixture(self, request, script, *, expect_ok, expect_calls, expect_reason=None, checksum=None,
+                         expect_slept=()):
         transport = FakeTransport(script)
         slept = []
         res = F.fetch(request, transport, self.store, source_id="SR-99", source_approval_id="fixture",
                       published_checksum=checksum, sleep=slept.append)
         reason = res.gap.evidence if res.gap else None
         ok = ((res.raw is not None) == expect_ok and transport.calls == expect_calls
-              and (expect_reason is None or reason == expect_reason))
+              and (expect_reason is None or reason == expect_reason) and slept == list(expect_slept))
         return {"calls": transport.calls, "slept_s": slept, "stored": res.raw is not None, "gap_reason": reason,
                 "gap_state": res.gap.availability_state if res.gap else None, "pass": ok}
 
@@ -474,22 +475,24 @@ class Run:
         cl = {"Content-Length": str(len(body))}
         rc = {
             "RC-01_5xx_then_ok": self.recovery_fixture("fixture:RC-01a", [F.Response(503), F.Response(200, body, cl)],
-                                                       expect_ok=True, expect_calls=2),
+                                                       expect_ok=True, expect_calls=2, expect_slept=(30,)),
             "RC-01_all_fail": self.recovery_fixture("fixture:RC-01b", [TimeoutError(), F.Response(500), ConnectionError(),
                                                                        F.Response(502)],
-                                                    expect_ok=False, expect_calls=4, expect_reason="http_502"),
+                                                    expect_ok=False, expect_calls=4, expect_reason="http_502",
+                                                    expect_slept=(30, 120, 600)),
             "RC-02_403": self.report["fixtures"]["F-14"],
             "RC-02_429_retry_after": self.recovery_fixture("fixture:RC-02b", [F.Response(429, b"", {"Retry-After": "60"}),
                                                                               F.Response(200, body, cl)],
-                                                           expect_ok=True, expect_calls=2),
+                                                           expect_ok=True, expect_calls=2, expect_slept=(60,)),
             "RC-02_429_no_header": self.recovery_fixture("fixture:RC-02c", [F.Response(429)], expect_ok=False,
                                                          expect_calls=1, expect_reason="http_429"),
             "RC-03_truncated_then_ok": self.recovery_fixture("fixture:RC-03", [F.Response(200, body[:3], cl),
                                                                                F.Response(200, body, cl)],
-                                                             expect_ok=True, expect_calls=2),
+                                                             expect_ok=True, expect_calls=2, expect_slept=(30,)),
             "RC-04_checksum_repeated": self.recovery_fixture("fixture:RC-04", [F.Response(200, body, cl)] * 4,
                                                              expect_ok=False, expect_calls=4,
-                                                             expect_reason="checksum_mismatch", checksum="00" * 32),
+                                                             expect_reason="checksum_mismatch", checksum="00" * 32,
+                                                             expect_slept=(30, 120, 600)),
             "not_exercised": ["RC-05 crash completion marker", "RC-06 disk full", "RC-07/RC-08 clock offset"],
         }
         self.report["recovery"] = rc

@@ -332,6 +332,14 @@ class FetchTests(unittest.TestCase):
         self.assertEqual((calls, slept), (4, [30, 120, 600]))
         self.assertIsNone(res.raw)
 
+    def test_429_retry_does_not_consume_retries(self):  # L-d
+        res, calls, slept = self.run_fetch([Fe.Response(429, b"", {"Retry-After": "5"})] + [Fe.Response(500)] * 4)
+        self.assertEqual((calls, slept), (5, [5, 30, 120, 600]))
+
+    def test_default_sleep_is_real(self):  # N1
+        import inspect
+        self.assertIs(inspect.signature(Fe.fetch).parameters["sleep"].default, __import__("time").sleep)
+
     def test_429_and_truncation(self):  # RC-02 429, RC-03
         body = b"abc"
         ok = Fe.Response(200, body, {"Content-Length": "3"})

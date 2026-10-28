@@ -22,15 +22,15 @@
 | --- | --- | --- |
 | CV-01 | **Pass, measured.** 0 of 2,703,561 records are untraceable. Each record's `raw_id` is a registered raw object, either the file itself or its ZIP member (§2 rule 4), with the container linked. Each record also carries `rights_id` | report `criteria` |
 | CV-02 | **Pass, all records.** 0 of 2,703,561 are missing a time, the basis or a valid unit | report `criteria` |
-| CV-03 | **19 of 19 runnable fixtures pass** (F-01 to F-18, with F-06b). F-15 needs live capture and was not run. F-14 runs through `fetch()` with a scripted transport. F-17 runs `is_stale()` on the COT header time | report `fixtures` |
+| CV-03 | **19 of 19 runnable fixtures pass** (F-01 to F-18, with F-06b). F-15 needs live capture and was not run. F-14 runs through `fetch()` with a scripted transport. F-06b and F-17 are **predicate-level**: they test `check_naive_time()` and `is_stale()`, not a context record carrying the result, because the context parser is P04 (DEC-055) | report `fixtures` |
 | CV-04 | **Pass.** F-02b, F-03, F-06 and F-06b give the expected reasons. W-A: 620 rows, 0 quarantined. W-D: 2,689,488 trades, 0 quarantined | report |
 | CV-05 | **Pass.** W-E: XBTUSD 12 and ETHUSD 6 missing intervals, all `status_unknown`. W-A: 0 | report W-E, F-04 |
 | CV-06 | **Pass.** The reports give raw rows / accepted / quarantined / duplicates / missing: W-A 620 / 620 / 0 / 0 / 0; XBTUSD 4,731 / 4,731 / 0 / 0 / 12; ETHUSD 4,067 / 4,067 / 0 / 0 / 6. Fail-closed is implemented as `entry_blocked()`: below Q-4, or `status_unknown` on the decision day. It is tested on synthetic data. Neither W-E pair is blocked at 2026-09-30 | report; tests |
-| CV-07 | **Pass.** F-18: 346/365 disqualifies, 347/365 qualifies. The minimum over **every** 365-day look-back, at a daily step, from 2016 to 2025-10: XBTUSD 1.0000, ETHUSD 0.9973. The listing-partway and minimum-length clauses are implemented in `qualifies()` and unit-tested. Delisting ends a series by construction | report W-E; tests |
+| CV-07 | **Pass.** F-18: 346/365 disqualifies, 347/365 qualifies. The minimum over **every** 365-day look-back, at a daily step, from 2016 to 2025-10: XBTUSD 1.0000, ETHUSD 0.9973. The listing-partway and minimum-length clauses are implemented in `qualifies()` and unit-tested. A delisting ends a series because the archive has no later bars (W-F); no separate delisting test exists | report W-E; tests |
 | CV-08 | **Pass, all records.** 0 records lack `venue`, `source_id` or `feed_id` | report `criteria` |
 | CV-09 | **Pass.** Two separate processes gave byte-identical reports. The W-A content hash is `d29b8f86…8599` | report hashes |
 | CV-10 | **Pass.** F-16: 0 records visible on 2025-01-07, 31 from `Last-Modified`. F-09, where both versions carry the same `Last-Modified`: version 2 takes basis `retrieved` and `available_at` = its retrieval time, so it is invisible before then (DEC-053) | report |
-| CV-11 | **Partial.** Exercised through `fetch()` with a scripted transport:<br>- RC-01: 5xx then success; all four attempts failing;<br>- RC-02: 403 with no retry; 429 with `Retry-After`; 429 without it;<br>- RC-03: truncation;<br>- RC-04: repeated checksum mismatch, giving `SOURCE_UNAVAILABLE`;<br>- RC-12, through F-09.<br>RC-05 is shown only as idempotent re-ingest (F-02a); a crash marker is not implemented. **Not exercised:** RC-05's crash marker, RC-06 (disk full), RC-07 and RC-08 (clock offset) | report `recovery` |
+| CV-11 | **Partial.** Exercised through `fetch()` with a scripted transport:<br>- RC-01: 5xx then success; all four attempts failing;<br>- RC-02: 403 with no retry; 429 with `Retry-After`; 429 without it;<br>- RC-03: truncation;<br>- RC-04: repeated checksum mismatch, giving `SOURCE_UNAVAILABLE`;<br>- RC-12, through F-09.<br>The retry delays are asserted ([30, 120, 600]; Retry-After 60). RC-05 is shown only as idempotent re-ingest (F-02a); a crash marker is not implemented. RC-06 has a handler (journal `failed`, remove `.part`, `SOURCE_UNAVAILABLE`), but it is not injected. **Not exercised:** RC-05's crash marker, RC-06 injection, RC-07 and RC-08 (clock offset) | report `recovery` |
 | CV-12 | **Not run.** Live capture (W-J) needs a capture implementation. It is authorised by DEC-057 | — |
 
 ## 2. Window results
@@ -50,6 +50,7 @@
 ## 3. What G02 still needs
 
 1. **CV-11:** a crash completion marker (RC-05), and disk-full and clock-offset injection (RC-06 to RC-08).
+   - **Known limitation for the re-pull task:** ZIP members inherit their container's supersession. A changed container therefore marks every member as revised, including unchanged ones. This is conservative, with no lookahead, but it over-flags against TH-4. Before re-pulling archives, compare each member's `raw_id` with the previous container's member at the same path.
 2. **CV-12 and F-15:** live capture of W-J (DEC-057).
 3. **The DEC-057 retrievals**, run through a real transport for `fetch()`: the 30-day REST pull with `AssetPairs`, the HEAD requests, and the 2026Q4 archive.
 4. **The user's review** of the contract and plan (P02 task 6), and a dated G02 approval.
