@@ -70,7 +70,7 @@ G01 passed on 2026-10-27 (DEC-047). Candidates become packets once they are expa
 
 | Candidate ID | Bounded outcome | Type / dependency |
 | --- | --- | --- |
-| TASK-P02-001 | Source-specific raw/normalized event contract and integrity fixtures | Documentation; G01 |
+| [TASK-P02-001](TASK-P02-001.md) | Source-specific raw/normalized event contract and integrity fixtures | Documentation; G01. **In progress** |
 | TASK-P02-002 | Capture/raw-journal implementation for one selected source | Implementation; accepted TASK-P02-001 contract and explicit assignment |
 | TASK-P02-003 | Capture provenance and integrity/recovery validation evidence | Validation; TASK-P02-002; VAL-002/004 capture stage |
 

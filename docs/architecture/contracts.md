@@ -2,7 +2,7 @@
 
 [Architecture map](README.md) · [Components](../traceability/components.md) · [Acceptance scenarios](../validation/acceptance-scenarios.md)
 
-**Status:** proposed questions and minimum information to resolve; no executable schema or API is implemented. P00 must reconcile these against original v1.0 contracts.
+**Status:** proposed questions and minimum information to resolve; no executable schema or API is implemented. P00 reconciled the sources (G00 passed 2026-10-24). *2026-10-28:* the event envelope and raw reference row is drafted in the [P02 event contract](../evidence/P02/event-contract.md) (DEC-052 to DEC-055), which also defines the context `ObservationEnvelope` for capture; context semantics stay at P04.
 
 | Contract | Producer → consumer | Information to specify | Failure semantics to settle | Phase / gate |
 | --- | --- | --- | --- | --- |

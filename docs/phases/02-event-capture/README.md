@@ -44,6 +44,8 @@ Pass only when all selected event types have versioned contracts and provenance 
 
 **Failure and rework:** quarantine or mark incomplete inputs, revise the capture design, and repeat affected validation. Return to G01 when the source cannot satisfy the approved contract; notify downstream phases of contract changes.
 
-**Exact next step:** G01 passed on 2026-10-27; expand TASK-P02-001, the raw and normalized event contract for the approved source baseline.
+**Progress 2026-10-28:** [TASK-P02-001](../../tasks/TASK-P02-001.md) drafted the [event contract](../../evidence/P02/event-contract.md), covering tasks 1 to 4. It applies the user's decisions DEC-052 to DEC-055 and proposes resolutions for the reviewer. It adds F-4j, F-5e and CPI timing to the P02 inputs.
+
+**Exact next step:** P02 task 5, the capture validation plan: thresholds, representative windows and recovery scenarios, approved before any measurement. This includes a route to close F-4h for Kraken history.
 
 **Implementation boundary:** connectors, storage, and replay code are future work. This setup does not start data capture or implement trading.
