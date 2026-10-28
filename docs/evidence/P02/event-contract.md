@@ -352,10 +352,9 @@ C12: F-4j, F-5e and CPI timing came out of TASK-P01-013 and P01-014, after DEC-0
 
 **A consequence to note (not a proposal).**
 - T-2a's default, the archive publication time, makes Kraken archive history unusable at its own dates, because the Q3 and full archives were both generated on 2026-10-01.
-- Binance is unaffected: its daily files publish 2 to 3 hours after each day ends.
 - T-2a allows bar-close timing only "if the venue documents availability at bar close" and the archive matches what was served at the time. That is F-4h, which is still Unresolved.
 - Kraken history is what DEC-037 uses for the paper-simulation models, so F-4h decides whether Kraken backtests are possible.
-- **Binance has a similar, smaller effect.** In the retained listings, every monthly file for months before the archive's launch was written on 2021-06-22. Under T-2a those bars are available only from 2021-06-22, so Binance research history before mid-2021 cannot be used at its own dates either. Later files publish within days.
+- **Binance has a similar, smaller effect.** In the retained listings, every monthly file for months before the archive's launch was written on 2021-06-22. Under T-2a those bars are available only from 2021-06-22, so Binance research history before mid-2021 cannot be used at its own dates either. Most later files publish within days, though the listings show some late ones (for example LUNCUSDT 2024-07, 281 days after its month).
 - The capture validation plan (P02 task 5) should propose how to close F-4h, for example by comparing forward REST bars received at bar close with the next archive release.
 
 ## Decisions asked, 2026-10-28
