@@ -92,8 +92,8 @@ class CaptureTests(unittest.TestCase):
 
         fake = FakeWS(frames)
         with tempfile.TemporaryDirectory() as d:
-            cap = L.Capture(Path(d), ["BTC/USD"], {"BTC/USD": (1, 8)}, duration_s=0.5, connect=lambda url: fake,
-                            clock=clock, sleep=lambda s: None, ntp=lambda: 1.5)
+            cap = L.Capture(Path(d), ["BTC/USD"], {"BTC/USD": (1, 8)}, duration_s=5, connect=lambda url: fake,
+                            clock=clock, sleep=lambda s: None, ntp=lambda: 1.5, monotonic=clock)
             summary = cap.run()
             lines = [l for f in sorted(Path(d).glob("frames-*.jsonl")) for l in f.read_text().splitlines()]
             self.cap = cap
@@ -187,6 +187,26 @@ class MoreCaptureTests(CaptureTests):
         frames = self.frames()
         summary, _, _ = self.run_capture([frames[0], st("maintenance"), st("maintenance"), st("online")] + frames[1:])
         self.assertGreater(summary["maintenance_s"], 0)
+
+    def test_maintenance_invalid_time_excluded(self):  # R-4 / RC-11
+        st = lambda s: json.dumps({"channel": "status", "type": "update", "data": [{"system": s}]})
+        frames = self.frames()
+        summary, _, _ = self.run_capture([st("maintenance")] + frames[:1] + [st("online")] + frames[1:])
+        self.assertGreater(summary["invalid_in_maintenance_s"]["BTC/USD"], 0)
+        self.assertGreater(summary["maintenance_s"], 0)
+
+    def test_redirect_terminal_in_fetch(self):
+        from gladiator_capture import fetch as Fe
+        with tempfile.TemporaryDirectory() as d:
+            store = RawStore(Path(d) / "s")
+            calls = []
+
+            class Tr:
+                def get(self, u):
+                    calls.append(u)
+                    return Response(302, b"", {"Location": "http://x"})
+            r = Fe.fetch("u", Tr(), store, source_id="S", source_approval_id="A", sleep=lambda s: None)
+            self.assertEqual((len(calls), r.gap.evidence), (1, "http_302"))
 
     def test_backoff_resets_only_after_valid_book(self):
         sleeps = []

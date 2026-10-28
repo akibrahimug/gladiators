@@ -129,7 +129,8 @@ class Capture:
                    "resync_capped": 0, "disconnects": 0, "parse_errors": 0, "subscribe_errors": 0,
                    "latency_raw_ms": {}, "ntp_offsets_ms": [], "recovery_disconnect_s": [],
                    "recovery_checksum_s": [], "initial_sync_s": {}, "maintenance_ns": 0,
-                   "invalid_book_ns": {s: 0 for s in symbols}, "status": []}
+                   "invalid_book_ns": {s: 0 for s in symbols}, "invalid_in_maintenance_ns": {s: 0 for s in symbols},
+                   "status": []}
 
     # -- journal ---------------------------------------------------------------
     def event(self, kind: str, **kw) -> None:
@@ -138,13 +139,18 @@ class Capture:
     def _close_segment(self) -> None:
         if self.segment is None:
             return
-        self.segment.close()
-        path = Path(self.segment.name)
-        obj = self.store.ingest_file(path, source_id="SR-02", source_approval_id="SA-03",
-                                     request=f"wss://ws.kraken.com/v2#segment:{path.name}",
-                                     retrieved_at_ns=self.clock())
-        self.segments.append({"file": path.name, "raw_id": obj.raw_id, "bytes": obj.byte_length})
-        self.segment = None
+        seg, self.segment = self.segment, None
+        seg.close()
+        path = Path(seg.name)
+        try:
+            obj = self.store.ingest_file(path, source_id="SR-02", source_approval_id="SA-03",
+                                         request=f"wss://ws.kraken.com/v2#segment:{path.name}",
+                                         retrieved_at_ns=self.clock())
+            self.segments.append({"file": path.name, "raw_id": obj.raw_id, "bytes": obj.byte_length})
+        except OSError as e:  # the segment stays on disk; record and continue
+            self.segments.append({"file": path.name, "raw_id": None, "bytes": path.stat().st_size,
+                                  "ingest_error": f"{type(e).__name__}: {e}"[:200]})
+            self.event("segment_ingest_error", file=path.name, error=str(e)[:200])
 
     def journal(self, recv_ns: int, text: str) -> None:
         if self.segment is None or recv_ns - self.segment_start >= SEGMENT_NS:
@@ -193,11 +199,19 @@ class Capture:
             system = data[0].get("system")
             self.st["status"].append(system)
             self.event("venue_status", data=data)
-            if system != "online" and self.maint_since is None:
+            if system == "maintenance" and self.maint_since is None:  # cancel_only/post_only are not maintenance
                 self.maint_since = recv_ns
-            elif system == "online" and self.maint_since is not None:
-                self.st["maintenance_ns"] += recv_ns - self.maint_since
-                self.maint_since = None
+            elif system != "maintenance" and self.maint_since is not None:
+                self._end_maintenance(recv_ns)
+
+    def _end_maintenance(self, now: int) -> None:
+        """Close a maintenance interval; invalid-book time inside it is excluded from R-4 (RC-11)."""
+        self.st["maintenance_ns"] += now - self.maint_since
+        for s, b in self.books.items():
+            if not b.valid and b.invalid_since_ns is not None:
+                self.st["invalid_in_maintenance_ns"][s] += now - max(b.invalid_since_ns, self.maint_since)
+        self.st.setdefault("maintenance_intervals", []).append((self.maint_since, now))
+        self.maint_since = None
 
     def _book(self, ws, kind: str, d: dict, recv_ns: int) -> None:
         sym = d["symbol"]
@@ -221,6 +235,8 @@ class Capture:
                 if b.invalid_since_ns is not None:
                     dur = recv_ns - b.invalid_since_ns
                     self.st["invalid_book_ns"][sym] += dur
+                    if self.maint_since is not None:
+                        self.st["invalid_in_maintenance_ns"][sym] += recv_ns - max(b.invalid_since_ns, self.maint_since)
                     if not b.synced_once:
                         self.st["initial_sync_s"][sym] = dur / 1e9
                     elif b.invalid_reason == "disconnect":
@@ -272,6 +288,8 @@ class Capture:
                     self.st["frames"] += 1
                     try:
                         self.handle(ws, text, recv_ns)
+                    except (WebSocketClosed, OSError):
+                        raise  # a broken socket during a resync is a disconnect, not a parse error
                     except Exception as e:  # the frame is journalled; record and continue
                         self.st["parse_errors"] += 1
                         self.event("parse_error", error=type(e).__name__, detail=str(e)[:200])
@@ -296,8 +314,11 @@ class Capture:
         for s, b in self.books.items():
             if not b.valid and b.invalid_since_ns is not None:
                 self.st["invalid_book_ns"][s] += end - b.invalid_since_ns
+                if self.maint_since is not None:
+                    self.st["invalid_in_maintenance_ns"][s] += end - max(b.invalid_since_ns, self.maint_since)
+                b.invalid_since_ns = None  # counted
         if self.maint_since is not None:
-            self.st["maintenance_ns"] += end - self.maint_since
+            self._end_maintenance(end)
         self._close_segment()
         self.events.close()
         return self.summary(start, end)
@@ -324,7 +345,8 @@ class Capture:
             init = st["initial_sync_s"].get(s, 0) * 1e9
             r4[s] = {"valid_share": 1 - st["invalid_book_ns"][s] / wall,
                      "valid_share_excl_initial_sync_and_maintenance":
-                         1 - max(0, st["invalid_book_ns"][s] - init) / max(1, wall - init - maint)}
+                         1 - max(0, st["invalid_book_ns"][s] - init - st["invalid_in_maintenance_ns"][s])
+                         / max(1, wall - init - maint)}
         size = sum(x["bytes"] for x in self.segments)
         return {
             "duration_s": wall / 1e9, "frames": st["frames"], "trades": st["trades"], "book_updates": st["book_updates"],
@@ -335,7 +357,8 @@ class Capture:
                                                   "mean SNTP offset. ingest - receive is not measured: frames are "
                                                   "journalled before parsing, and normalization runs offline",
             "initial_sync_s": st["initial_sync_s"], "recovery_disconnect_s_R3": dist(st["recovery_disconnect_s"]),
-            "recovery_checksum_s": dist(st["recovery_checksum_s"]), "maintenance_s": maint / 1e9, "R4": r4,
+            "recovery_checksum_s": dist(st["recovery_checksum_s"]), "maintenance_s": maint / 1e9,
+            "invalid_in_maintenance_s": {s: v / 1e9 for s, v in st["invalid_in_maintenance_ns"].items()}, "R4": r4,
             "ntp_offset_ms_T5": {"samples": len(offs), "failed": len(st["ntp_offsets_ms"]) - len(offs),
                                  "mean": mean_off, "max_abs": max((abs(o) for o in offs), default=None),
                                  "over_100ms": any(abs(o) > 100 for o in offs)},
