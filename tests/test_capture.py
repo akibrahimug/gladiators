@@ -84,6 +84,7 @@ class RawStoreTests(unittest.TestCase):
 
     def test_index_reload(self):
         a = self.store.ingest_file(self.f, source_id="SR-04", source_approval_id="SA-01", request="u")
+        self.store.close()
         again = RawStore(self.root / "store")
         self.assertIn(a.raw_id, again.objects)
 

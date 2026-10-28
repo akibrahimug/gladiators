@@ -6,8 +6,10 @@ It performs no network access (DEC-058).
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
+import os
 import shutil
 import time
 import zipfile
@@ -60,6 +62,10 @@ class JournalEntry:
     detail: Optional[str] = None
 
 
+class CopyHashMismatch(OSError):
+    """The stored copy's hash differs from the source's."""
+
+
 class RawStore:
     """Content-addressed, append-only store rooted outside the repository.
 
@@ -67,38 +73,90 @@ class RawStore:
     current record for each request, so the same bytes under two requests keep separate
     retrieval records."""
 
-    def __init__(self, root: Path, clock=time.time_ns):
+    def __init__(self, root: Path, clock=time.time_ns, auto_recover: bool = True):
+        """Opens the store as its single writer: an exclusive lock on `.writer.lock` is held until
+        close(). On opening, recover() runs (RC-05), which is safe because no other writer can be
+        mid-ingest."""
         self.root = Path(root)
         self.clock = clock
         (self.root / "objects").mkdir(parents=True, exist_ok=True)
+        self._lock_fd = os.open(self.root / ".writer.lock", os.O_RDWR | os.O_CREAT, 0o644)
+        try:
+            fcntl.flock(self._lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            os.close(self._lock_fd)
+            self._lock_fd = None
+            raise RuntimeError(f"raw store {self.root} is held by another writer")
         self._index_path = self.root / "index.jsonl"
         self._journal_path = self.root / "journal.jsonl"
         self.objects: dict[str, RawObject] = {}
         self.latest_by_request: dict[str, str] = {}
         self.object_for_request: dict[str, RawObject] = {}
-        if self._index_path.exists():
-            for line in self._index_path.read_text().splitlines():
-                obj = RawObject(**json.loads(line))
-                self.objects.setdefault(obj.raw_id, obj)
-                if obj.member_path is None and not obj.quarantined:
-                    self.latest_by_request[obj.request] = obj.raw_id
-                    self.object_for_request[obj.request] = obj
+        self.indexed: set = set()
+        self.truncated_lines: list = []
+        for d in self._read_lines(self._index_path):
+            obj = RawObject(**d)
+            self.objects.setdefault(obj.raw_id, obj)
+            self.indexed.add((obj.request, obj.raw_id))
+            if obj.member_path is None and not obj.quarantined:
+                self.latest_by_request[obj.request] = obj.raw_id
+                self.object_for_request[obj.request] = obj
+        self.last_recovery = self.recover() if auto_recover else None
+
+    def close(self) -> None:
+        if getattr(self, "_lock_fd", None) is not None:
+            fcntl.flock(self._lock_fd, fcntl.LOCK_UN)
+            os.close(self._lock_fd)
+            self._lock_fd = None
+
+    def __del__(self):
+        try:
+            self.close()
+        except Exception:
+            pass
+
+    def _read_lines(self, path: Path) -> list:
+        """Parsed JSON lines. A truncated final line (a write cut off by a full disk) is skipped
+        and recorded rather than failing the store."""
+        if not path.exists():
+            return []
+        lines = path.read_bytes().split(b"\n")
+        out = []
+        for i, line in enumerate(lines):
+            if not line.strip():
+                continue
+            try:
+                out.append(json.loads(line))
+            except ValueError:
+                if i >= len(lines) - 2:
+                    self.truncated_lines.append(path.name)
+                    continue
+                raise
+        return out
+
+    @staticmethod
+    def _append(path: Path, record: dict) -> None:
+        """One complete line per write; a short write is an error (RC-06)."""
+        data = (json.dumps(record, sort_keys=True) + "\n").encode()
+        fd = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o644)
+        try:
+            if os.write(fd, data) != len(data):
+                raise OSError("short write")
+        finally:
+            os.close(fd)
 
     def object_path(self, raw_id: str) -> Path:
         return self.root / "objects" / raw_id[:2] / raw_id
 
     def journal(self, entry: JournalEntry) -> None:
-        with open(self._journal_path, "a") as fh:
-            fh.write(json.dumps(asdict(entry), sort_keys=True) + "\n")
+        self._append(self._journal_path, asdict(entry))
 
     def journal_entries(self) -> list:
-        if not self._journal_path.exists():
-            return []
-        return [JournalEntry(**json.loads(x)) for x in self._journal_path.read_text().splitlines()]
+        return [JournalEntry(**d) for d in self._read_lines(self._journal_path)]
 
     def _index(self, obj: RawObject) -> None:
-        with open(self._index_path, "a") as fh:
-            fh.write(json.dumps(asdict(obj), sort_keys=True) + "\n")
+        self._append(self._index_path, asdict(obj))
+        self.indexed.add((obj.request, obj.raw_id))
 
     def ingest_file(
         self,
@@ -143,16 +201,14 @@ class RawStore:
             tmp = dest.with_suffix(".part")
             try:
                 self._copy(path, tmp)
-            except OSError as exc:  # RC-06: write failure; nothing partial is kept
+                if sha256_file(tmp) != raw_id:
+                    raise CopyHashMismatch(raw_id)
+                tmp.rename(dest)
+            except OSError as exc:  # RC-06: write failure or bad copy; nothing partial is kept
                 tmp.unlink(missing_ok=True)
-                self.journal(JournalEntry(self.clock(), request, "failed", raw_id, http_status, size,
-                                          f"write_failed:{type(exc).__name__}"))
+                reason = "copy_hash_mismatch" if isinstance(exc, CopyHashMismatch) else f"write_failed:{type(exc).__name__}"
+                self.journal(JournalEntry(self.clock(), request, "failed", raw_id, http_status, size, reason))
                 raise
-            if sha256_file(tmp) != raw_id:
-                tmp.unlink()
-                self.journal(JournalEntry(now, request, "failed", None, http_status, size, "copy_hash_mismatch"))
-                raise IOError("copy hash mismatch")
-            tmp.rename(dest)
         self.objects.setdefault(raw_id, obj)
         self._index(obj)
         if not quarantined:
@@ -168,7 +224,7 @@ class RawStore:
         """RC-05: after a crash, find ingests journalled as `started` with no completion entry,
         remove their partial files, and journal each as `recovered_incomplete`. Completed objects
         are untouched; re-running the same ingest is idempotent (S-02a)."""
-        done_outcomes = {"stored", "quarantined", "duplicate", "failed", "recovered_incomplete"}
+        done_outcomes = {"stored", "quarantined", "duplicate", "failed", "recovered_incomplete", "recovered_complete"}
         open_: dict = {}
         for e in self.journal_entries():
             key = (e.request, e.raw_id)
@@ -180,10 +236,17 @@ class RawStore:
         for p in self.root.glob("objects/*/*.part"):
             p.unlink()
             removed.append(p.name)
+        incomplete, complete = [], []
         for (request, raw_id), e in open_.items():
-            self.journal(JournalEntry(self.clock(), request, "recovered_incomplete", raw_id, e.http_status,
-                                      e.byte_length, "no completion marker"))
-        return {"incomplete": [{"request": k[0], "raw_id": k[1]} for k in open_], "partials_removed": removed}
+            if (request, raw_id) in self.indexed and self.object_path(raw_id).exists():
+                complete.append({"request": request, "raw_id": raw_id})  # crashed after indexing
+                outcome, detail = "recovered_complete", "indexed before the crash"
+            else:
+                incomplete.append({"request": request, "raw_id": raw_id})
+                outcome, detail = "recovered_incomplete", "no completion marker"
+            self.journal(JournalEntry(self.clock(), request, outcome, raw_id, e.http_status, e.byte_length, detail))
+        return {"incomplete": incomplete, "completed_before_crash": complete, "partials_removed": removed,
+                "truncated_lines": list(self.truncated_lines)}
 
     def _member_obj(self, container: RawObject, name: str, data: bytes) -> RawObject:
         rid = sha256_bytes(data)

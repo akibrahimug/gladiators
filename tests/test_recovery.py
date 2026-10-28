@@ -39,8 +39,9 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaises(Crash):
             store.ingest_file(self.f, source_id="S", source_approval_id="A", request="u")
         RawStore._copy = staticmethod(__import__("shutil").copyfile)
-        restarted = RawStore(self.root / "s")  # a new process
-        rec = restarted.recover()
+        store.close()  # the crashed process's lock is released
+        restarted = RawStore(self.root / "s")  # a new process; recover() runs on opening
+        rec = restarted.last_recovery
         self.assertEqual(len(rec["incomplete"]), 1)
         self.assertEqual(len(rec["partials_removed"]), 1)
         obj = restarted.ingest_file(self.f, source_id="S", source_approval_id="A", request="u")
@@ -83,7 +84,7 @@ class ClockTests(unittest.TestCase):
 
     def test_rc07_rc08_flags(self):
         t = 1_793_181_600_000_000_000
-        cases = [(None, None, ["clock_offset_unknown"]), (50.0, None, []), (150.0, 150.0, []),
+        cases = [(None, None, ["clock_offset_unknown", "clock_abstain_intraday"]), (50.0, None, []), (150.0, 150.0, []),
                  (1500.0, 1500.0, ["clock_abstain_intraday"]),
                  (-70000.0, 70000.0, ["clock_abstain_intraday", "clock_abstain_daily"])]
         for off, unc, flags in cases:
