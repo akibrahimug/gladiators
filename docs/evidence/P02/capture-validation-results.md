@@ -3,14 +3,14 @@
 [Task](../../tasks/TASK-P02-002.md) · [Validation plan](capture-validation-plan.md) · [Event contract](event-contract.md) · [Capture and recovery](capture-and-recovery.md)
 
 **Status: results, 2026-10-28.**
-- **Revision and scope:** run at code revision `0811834` under DEC-058, on held files only, against the thresholds approved in DEC-056. There was no network access and no live capture.
+- **Revision and scope:** run at code revision `db23a3c` under DEC-058, on held files only, against the thresholds approved in DEC-056. There was no network access and no live capture.
 - **Not a G02 decision:** G02 still needs the items in §3 and the user's dated approval.
 - **Inputs:** the P01 sample files, identified in the scratchpad manifest (SHA-256 `2492dc56…261aa9`).
 
 **How it was run:**
-- **Unit tests:** `python3 -I -B -m unittest discover -s tests`, 31 tests, OK. They use synthetic data only.
+- **Unit tests:** `python3 -I -B -m unittest discover -s tests`, 33 tests, OK. They use synthetic data only.
 - **Validation:** `python3 -I -B run_validation.py --sample-root <scratchpad> --out <scratchpad>/p202-run2`, from `/`. The launcher inserts `src`, so `-I` isolation holds, and the held files are only read.
-- **Report:** `report.json`, SHA-256 `c920d603d77a126356f0733b06b49029e8d478f9cbf21cfef463c0e89a4f316f`, kept outside the repository. A second, separate-process run (`p202-run3`) gave a **byte-identical** report.
+- **Report:** `report.json`, SHA-256 `c920d603d77a126356f0733b06b49029e8d478f9cbf21cfef463c0e89a4f316f`, kept outside the repository. Separate-process runs at `0811834` (`p202-run3`; the reviewer's `rv202-run2`) and at `db23a3c` gave **byte-identical** reports.
 
 **Clocks:**
 - Held files have no retrieval journal from P01, so each file's modification time stands in for `retrieved_at`. If those files are copied or touched, the S-12 drops, the TH-6 flags and the report hash will change.

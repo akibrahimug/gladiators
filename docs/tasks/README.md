@@ -72,7 +72,7 @@ G01 passed on 2026-10-27 (DEC-047). Candidates become packets once they are expa
 | --- | --- | --- |
 | [TASK-P02-001](TASK-P02-001.md) | Source-specific raw/normalized event contract and integrity fixtures | Documentation; G01. **Verified**; Open [#27](https://github.com/akibrahimug/gladiators/pull/27) |
 | [TASK-P02-004](TASK-P02-004.md) | Capture validation plan, and capture and recovery design (P02 task 5) | Documentation; TASK-P02-001. **Verified**; Open [#28](https://github.com/akibrahimug/gladiators/pull/28) |
-| [TASK-P02-002](TASK-P02-002.md) | Capture/raw-journal implementation, run on held files (DEC-058) | Implementation; TASK-P02-004; assigned by DEC-058. **In progress** |
+| [TASK-P02-002](TASK-P02-002.md) | Capture/raw-journal implementation, run on held files (DEC-058) | Implementation; TASK-P02-004; assigned by DEC-058. **Verified** |
 | TASK-P02-003 | Capture provenance and integrity/recovery validation evidence | Validation; TASK-P02-002; VAL-002/004 capture stage |
 
 ## P03
