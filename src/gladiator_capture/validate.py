@@ -493,9 +493,67 @@ class Run:
                                                              expect_ok=False, expect_calls=4,
                                                              expect_reason="checksum_mismatch", checksum="00" * 32,
                                                              expect_slept=(30, 120, 600)),
-            "not_exercised": ["RC-05 crash completion marker", "RC-06 disk full", "RC-07/RC-08 clock offset"],
         }
+        rc.update(self.recovery_rc05_to_rc08())
         self.report["recovery"] = rc
+
+    def recovery_rc05_to_rc08(self):
+        """RC-05 crash marker, RC-06 disk full, RC-07/RC-08 clock offset (DEC-065)."""
+        import errno
+        import shutil
+        from . import live_records as LR
+
+        class Crash(BaseException):
+            pass
+
+        out = {}
+        src = self.out / "fixtures" / "rc-src.bin"
+        src.write_bytes(b"rc" * 500)
+
+        def half_then_crash(a, b):
+            Path(b).write_bytes(Path(a).read_bytes()[:100])
+            raise Crash()
+
+        store = RawStore(self.out / "rc05-store")
+        RawStore._copy = staticmethod(half_then_crash)
+        try:
+            store.ingest_file(src, source_id="SR-99", source_approval_id="fixture", request="fixture:RC-05")
+        except Crash:
+            pass
+        finally:
+            RawStore._copy = staticmethod(shutil.copyfile)
+        restarted = RawStore(self.out / "rc05-store")
+        rec = restarted.recover()
+        obj = restarted.ingest_file(src, source_id="SR-99", source_approval_id="fixture", request="fixture:RC-05")
+        outcomes = [e.outcome for e in restarted.journal_entries()]
+        out["RC-05_crash_marker"] = {"incomplete_found": len(rec["incomplete"]), "partials_removed": len(rec["partials_removed"]),
+                                     "journal": outcomes, "pass": len(rec["incomplete"]) == 1 and len(rec["partials_removed"]) == 1
+                                     and outcomes == ["started", "recovered_incomplete", "started", "stored"]
+                                     and restarted.object_path(obj.raw_id).exists()}
+
+        def enospc(a, b):
+            Path(b).write_bytes(b"partial")
+            raise OSError(errno.ENOSPC, "No space left on device")
+
+        store6 = RawStore(self.out / "rc06-store")
+        RawStore._copy = staticmethod(enospc)
+        try:
+            body = b"payload"
+            res = F.fetch("fixture:RC-06", FakeTransport([F.Response(200, body, {"Content-Length": str(len(body))})]), store6,
+                          source_id="SR-99", source_approval_id="fixture", sleep=lambda s: None)
+        finally:
+            RawStore._copy = staticmethod(shutil.copyfile)
+        parts = list((self.out / "rc06-store").glob("objects/*/*.part"))
+        out["RC-06_disk_full"] = {"gap_reason": res.gap.evidence if res.gap else None, "partials_left": len(parts),
+                                  "pass": res.raw is None and res.gap is not None and res.gap.evidence.startswith("write_failed")
+                                  and not parts}
+        cases = {"50ms": 50.0, "150ms": 150.0, "1500ms": 1500.0, "70000ms": 70000.0}
+        flags = {k: LR.clock_flags(v) for k, v in cases.items()}
+        out["RC-07_RC-08_clock"] = {k: {"uncertainty_ms": u, "flags": f} for k, (u, f) in flags.items()}
+        out["RC-07_RC-08_clock"]["pass"] = (flags["50ms"] == (None, []) and flags["150ms"] == (150.0, [])
+                                            and flags["1500ms"][1] == ["clock_abstain_intraday"]
+                                            and flags["70000ms"][1] == ["clock_abstain_intraday", "clock_abstain_daily"])
+        return out
 
     def criteria(self):
         recs = self.all_records
