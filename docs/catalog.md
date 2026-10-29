@@ -29,6 +29,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/evidence/P00/v1.0-reconciliation.md](<evidence/P00/v1.0-reconciliation.md>) |
 | [docs/evidence/P01/acceptance-objectives.md](<evidence/P01/acceptance-objectives.md>) |
 | [docs/evidence/P01/binance-general-terms.md](<evidence/P01/binance-general-terms.md>) |
+| [docs/evidence/P01/codex-review-log.md](<evidence/P01/codex-review-log.md>) |
 | [docs/evidence/P01/data-access-decision.md](<evidence/P01/data-access-decision.md>) |
 | [docs/evidence/P01/g01-gate-record.md](<evidence/P01/g01-gate-record.md>) |
 | [docs/evidence/P01/observability-map.md](<evidence/P01/observability-map.md>) |
@@ -500,6 +501,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P01-008.md](<tasks/TASK-P01-008.md>) |
 | [docs/tasks/TASK-P01-009.md](<tasks/TASK-P01-009.md>) |
 | [docs/tasks/TASK-P01-010.md](<tasks/TASK-P01-010.md>) |
+| [docs/tasks/TASK-P01-011.md](<tasks/TASK-P01-011.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
 | [docs/traceability/components.md](<traceability/components.md>) |
 | [docs/traceability/requirements-matrix.md](<traceability/requirements-matrix.md>) |

@@ -56,6 +56,26 @@ From this the coordinator infers that BT-1 is the likely successor for UK users,
 
 SR-04 stays **Conditional**. By precedence, this file supersedes the reassessment's S-1 and S-2 lines for SR-04, which still cite F-5b. On S-1, no concrete UK eligibility restriction was found. On S-2, retention is not restricted by the dataset terms but is ambiguous under the general terms. Both lines now point to F-5b′.
 
+## Correction, 2026-10-27: the dataset terms' own incorporation and priority clauses (F-5b″)
+
+An independent review relayed on 2026-10-27 (the PR #19 finding, inherited by #20 to #22; [review log](codex-review-log.md)) found that this file and the [reassessment](source-reassessment.md) missed three clauses of the Vision Dataset Terms. Those clauses decide the F-5b′ questions. The coordinator re-read the terms on 2026-10-27 ([`TERMS_AND_CONDITIONS.md`](https://github.com/binance/binance-public-data/blob/master/TERMS_AND_CONDITIONS.md), v1.0, "Last Updated: August 26, 2026"; SHA-256 `99c4921d…14ee0`, identical at `master` and at the reviewer's commit `d3357a5`).
+
+| Clause | Text (verbatim) | Effect on F-5b′ |
+| --- | --- | --- |
+| §1.2 | "These Vision Dataset Terms are supplemental to, form part of and are subject to the [Binance Terms of Use](https://www.binance.com/en/about-legal/terms)" | **The general terms apply expressly.** The question is no longer *whether* they apply, so F-5b′ item 1 (whether the archive is a Binance Service) is **no longer decisive**. BT-1 §2.1 and the BT-2 copy bans are still framed around the Binance Services, but §1.5 settles any conflict, and the UK is not on BT-3. The reassessment's statement that §12 imports only the dispute clauses was accurate about §12 but **incomplete**: §1.2 separately incorporates the whole Terms of Use |
+| §1.3 | "The `ADGM` Binance Entity providing the Datasets is NEST EXCHANGE LIMITED" | **The provider is the BT-1 party.** BT-1 (effective 5 January 2026) is the Terms of Use of the ADGM Binance Entities, the first being Nest Exchange Limited. This supports reading BT-1 as the Terms of Use that §1.2 means, which mostly answers F-5b′ item 3. It still rests on inference, because the linked page was not rendered |
+| §1.4 | "If you access or use (or attempt to access or use) the Datasets, you will be deemed to have agreed to these Vision Dataset Terms and the Terms of Use" | Using the archive is assent to both documents. BT-1's eligibility rule therefore applies to the user, and the UK is not on BT-3 |
+| §1.5 | "In the event of any conflict or inconsistency between these Vision Dataset Terms and the Binance Terms of Use, these Vision Dataset Terms shall prevail with respect to the services contemplated hereunder, unless expressly stated otherwise" | **Resolves F-5b′ item 2.** Where the general terms' copy and store clauses (BT-2 §I; BT-4 §26) conflict with the dataset licence, the dataset terms prevail. **The two qualifiers:**<br>- *"with respect to the services contemplated hereunder"*: the services are access to and use of the Datasets (§1.1, §2.1), so this covers keeping downloaded files.<br>- *"unless expressly stated otherwise"*: the coordinator found no contrary statement. BT-1 itself brings in "Any other agreement that expresses to form part of the Terms of Use" (§1.3.4), which §1.2 does. BT-1 ranks Product Terms above "these Terms", and the Core Policies, including BT-2, lowest (§1.4). It also says Product Terms "shall prevail to the extent of the conflict" (§4.1). §3.3 adds that nothing in the dataset terms limits CC BY-NC-SA 4.0 rights "in respect of Datasets already downloaded" |
+| §7.1, §7.2 | Users must "strictly abide by all posted rate limits, automated script guidelines, and download protocols"; no scripts "designed to circumvent rate restrictions or impair platform hosting operations" | Operating conditions specific to the archive, alongside DEC-044 |
+
+**Result.** F-5b′ narrows to **F-5b″, Unresolved (narrowed)**: confirm that the Terms of Use linked in §1.2 (`binance.com/en/about-legal/terms`, not rendered) is BT-1, and whether any UK Local Terms supplement it (BT-1). Under BT-1 as read:
+- **Eligibility:** no UK restriction.
+- **Retention and copying:** governed by the dataset terms (§1.5) and the CC licence (§3.3). **They do not restrict them for DEC-030 use**, subject to the §4 use limits and §4.5 attribution on any redistribution.
+- **Automated access:** permitted within §7 and the BT-2 load and robot-exclusion conditions (DEC-044).
+- **Other terms:** BT-1 and BT-2 terms that do not conflict continue to apply: "where a Product Term is silent on a matter covered by these Terms, these Terms shall apply" (BT-1 §1.4(i)). Examples are the Restricted Person limb, the non-conflicting BT-2 bans, the BT-1 §27 licence limits, and dataset terms §11 (liability and indemnity).
+
+SR-04 stays **Conditional**: no `source_approval` record has been confirmed, and F-5b″ is open. The coordinator's reading is not legal advice.
+
 ## F-7b: Binance venue status
 
 | Need | Finding | Outcome |
@@ -82,3 +102,4 @@ F-5c (delisted symbols) is unchanged. The delist-schedule endpoint needs a key a
 | Data-access decision: venue status | F-7b: no Binance source | F-7b narrowed: forward platform-wide only, no history | This file |
 | Data-access decision: Binance retention row; dependencies; status line | F-5b | F-5b′: ambiguous under the general terms | This file |
 | P01 phase README: progress note | — | TASK-P01-008 sentence added | This file |
+| F-5b′ (correction, 2026-10-27) | Unresolved (three items) | **F-5b″, Unresolved (narrowed):** items 1 and 2 resolved by dataset terms §1.2, §1.4 and §1.5; item 3 narrowed by §1.3. Retention is not restricted for DEC-030 use | Dataset terms re-read 2026-10-27, after the PR #19 review |

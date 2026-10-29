@@ -10,6 +10,8 @@
 >
 > **Reassessment, 2026-10-25:** [source-reassessment.md](source-reassessment.md) (TASK-P01-007, DEC-033) moves SR-04 Binance Vision from Unresolved to Conditional (its dataset terms permit DEC-030 personal, non-production research; broader terms open, F-5b) and finds Kraken ambiguous but not restricted. Where it changes a status recorded here, it takes precedence.
 >
+> **Correction, 2026-10-27:** dataset terms §1.2 to §1.5 narrow F-5b′ to F-5b″; Binance retention is not restricted for DEC-030 use ([correction](binance-general-terms.md#correction-2026-10-27-the-dataset-terms-own-incorporation-and-priority-clauses-f-5b)).
+>
 > **Binance general terms, 2026-10-25:** [binance-general-terms.md](binance-general-terms.md) (TASK-P01-008) narrows F-5b to F-5b′, Unresolved (no UK restriction found; retention ambiguous under the general terms; whether the archive is a Binance Service, and the governing version, unconfirmed) and narrows F-7b, Unresolved (forward platform-wide status only, rights unassessed; no history). SR-04 stays Conditional. Where it changes a status recorded here, it takes precedence.
 
 This map covers P01 task 3. Each required observation gets a **class**: accessible, conditional, unavailable or unresolved. The registry's status vocabulary maps onto these classes as shown in its [method table](source-registry.md#method). "Accessible" means documented and free with no open eligibility or terms item; it does not mean access has been demonstrated.
@@ -79,15 +81,18 @@ These are field-level classes for the four file 27 contracts (27:50–56). They 
 | Contract | Field group | Category | Class | Note |
 | --- | --- | --- | --- | --- |
 | `NativeMarketEvent` | `source_id`, `venue`, `instrument`, `native_symbol`, `message_type`, `price`, `size`, `quote_currency` | Observed | Conditional (F-4) | Present in the documented messages |
+| `NativeMarketEvent` | `size_unit` | Observed (venue-declared) | Conditional (F-4) | Record the unit the venue documents for each message type (for example base-asset quantity, or contracts). Never infer it from magnitudes. Units are not yet verified per venue; the P02 event contract fixes them (added 2026-10-27, PR #13 review) |
 | `NativeMarketEvent` | `native_sequence` | Observed | Conditional | Coinbase per-product sequence; Kraken `trade_id` per book (trades). Kraken book updates have a checksum but no documented sequence; Binance has `U`/`u` (unresolved) |
 | `NativeMarketEvent` | `exchange_event_ns` | Observed | Conditional (Kraken RFC3339 µs); **unverified** for Coinbase (F-4) | Record native precision; do not pad |
 | `NativeMarketEvent` | `local_receive_ns`, `ingest_ns`, `raw_payload_hash` | Derived (system-generated at capture) | Accessible | Generated at capture (P02) |
 | `NativeMarketEvent` | `side_semantics` | Observed, venue-defined | Conditional | Kraken: taker side; Binance: buyer-is-maker. Store as stated by the venue, never normalised silently |
 | `NativeMarketEvent` | `rights_id`, `source_version` | Derived (system-generated from `source_approval`) | **Unresolved** until F-4 | A record cannot carry a rights ID before its terms are approved (L-025) |
+| `BookState` | `venue`, `instrument` | Derived (inherited from the source `NativeMarketEvent` and its subscription) | Accessible once capture exists | Carried from the events that build the book, whose `venue` and `instrument` are observed (row above) (added 2026-10-27, PR #13 review) |
 | `BookState` | `snapshot_update_id`, `latest_applied_update_id`, `best_bid`, `best_ask`, `depth_by_level` | Derived | Conditional | From each venue's documented snapshot-and-update procedure |
 | `BookState` | `observed_age_ms`, `gap_count`, `resync_count`, `book_health`, `sequence_integrity`, `timestamp_uncertainty_ms` | Derived | Accessible once capture exists | System-computed; clock uncertainty needs the P01 objectives (TASK-P01-003) |
 | `FlowFeature` | All fields | Derived or inferred | Conditional on the inputs above | Signals 1–6 are per venue. Signal 7 is unavailable on £0 except through issuer holdings. Signal 8 depends on F-3. Signal 9 is inferred (F-3) |
 | `OnChainEvent` | `chain_id`, `block_height`, `tx_hash`, `log_index`, `block_time`, `token_contract`, `amount`, addresses | Observed | Unresolved (F-3) | Public chain data, source not yet checked |
+| `OnChainEvent` | `observed_at` | Derived (system-generated knowledge time at retrieval) | Unresolved (F-3) | **Separate from `block_time`.** `block_time` is when the chain recorded the event; `observed_at` is when GLADIATOR learned of it, and it sets `available_at` (T-2). Depends on an on-chain source: RPC is out of scope (DEC-043), and Coin Metrics is forward-only (DEC-041). Closure: a source with documented retrieval semantics (added 2026-10-27, PR #13 review) |
 | `OnChainEvent` | `finality_status`, `reorg_status` | Derived | Unresolved (F-3) | Chain-specific rules |
 | `OnChainEvent` | `entity_label`, `label_source`, `attribution_confidence` | Inferred | Unresolved (F-3) | Third-party labels need licence review |
 
