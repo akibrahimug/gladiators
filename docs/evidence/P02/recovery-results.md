@@ -20,7 +20,7 @@
 - **Book sequence:** `native_sequence` is null for the book. The key `native_seq` = `recv_ns` × 100 + index, which is stable however the frames are segmented.
 - **Timestamps:** RFC 3339 is parsed for any fraction length, so it works on Python 3.9.
 
-**Proposed, for the user:** a live record that arrives before the first SNTP sample is flagged `clock_offset_unknown` and `clock_abstain_intraday`. This is conservative, but it is the coordinator's rule.
+**Confirmed (DEC-067, 2026-10-29):** a live record that arrives before the first SNTP sample is flagged `clock_offset_unknown` and `clock_abstain_intraday`. The coordinator proposed this rule; the user accepted it.
 
 **Tests:** `/usr/bin/python3 -I -B -m unittest discover -s tests` gives 68 OK on Python 3.9 and 3.12. The tests cover lock refusal, cut-off-line repair, read-only opening, `recovered_complete`, copy-hash-mismatch labelling, rename failure and `fetch` temp-file failure.
 
@@ -70,3 +70,26 @@ Unchosen options:
 - DEC-064: "You start it later"; "Skip the 7-day window".
 - DEC-065: "Not now".
 - DEC-066: "Keep 60 s, allow 5 s slack"; "Keep as is".
+
+## Decisions asked 2026-10-29
+
+The user's answers, given with the interactive question tool. Each question and the chosen option are quoted verbatim.
+
+| Decision | Question (verbatim) | Chosen option: label — description (verbatim) |
+| --- | --- | --- |
+| DEC-068 | "Nothing has changed in the last minute, and the 30-day REST job still isn't installed. Should I install the launchd agent myself? It would run daily at 00:15 local time from ~/gladiator-capture into ~/gladiator-data/rest-daily, and stop by itself after 30 days." | "Yes, install it (Recommended)" — "Starts the 30-day pull today. G02 needs it, and each day's wait pushes G02 back by a day." |
+| DEC-067 | "Live records that arrive before the first clock reading are currently flagged as unknown and kept out of intraday decisions. Do you accept this rule?" | "Accept the rule (Recommended)" — "It's the cautious choice: with no clock reading, the time error is unknown. It affects only the first few seconds of each run." |
+| Merges | "PRs #21 to #31 are all still open. Should I merge them into master in order, using merge commits? This only records the work. It doesn't pass any gate." | "Yes, merge #21–#31 in order (Recommended)" — "Each PR builds on the one before. Merging in order lands them cleanly, and I'll resolve any conflicts along the way." |
+
+Unchosen options:
+- DEC-068: "I'll install it myself"; "Don't run it yet".
+- DEC-067: "Treat them as uncertain".
+- Merges: "I'll merge them myself".
+
+PRs #21 to #31 were merged on 2026-10-29. No gate passed.
+
+**30-day job install (DEC-068).**
+- Installed: `~/Library/LaunchAgents/com.gladiator.rest-daily.plist`, generated from `ops/launchd/com.gladiator.rest-daily.plist` with `CODE_PATH=~/gladiator-capture` (`REVISION` `5b69e7f`) and `DATA_PATH=~/gladiator-data`. `plutil -lint` OK.
+- First run: bootstrapped, then kick-started; it ran at 2026-10-29 10:16:32 UTC (`ran_at_utc`), not 00:15. XBTUSD, ETHUSD and AssetPairs each returned on the first attempt, with no gap and no API error. `started_utc.txt` is `2026-10-29`.
+- Schedule: later runs are daily at 00:15 local time. The Mac is on GMT (UTC+0) for the whole window. The job stops pulling once 30 days have passed since 2026-10-29, so the last pull is on 2026-11-27.
+- The running 7-day capture was not touched.

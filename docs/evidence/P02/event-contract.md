@@ -37,7 +37,7 @@ These were identified by `gladiator-spec-reader` on 2026-10-28.
 | C8 | Dead-letter, quarantine and reject are all used | v4 08:30; v10 08:12, 08:18; Q-1 | Quarantine is the single invalid disposition (§5) | Proposed |
 | C9 | The Q-2 classes are not mapped to R-1's `NO_EVENT`/`SOURCE_UNAVAILABLE` | Q-2; R-1; DEC-040; v10 09:29 | A `GapInterval` record that keeps all three classes (§4.5) | Proposed |
 | C10 | Identity terms differ (`instrument` vs `native_symbol`; `event_id` vs `observation_id`), and symbols are reused | 27:50; 24:98; F-5e | `instrument_id` epochs and `record_key` (§3.2) | Proposed |
-| C11 | The W-1 delisting rule needs a date that Kraken does not give | W-1; F-4j | The last bar is an upper bound; the date stays open (§7) | Open |
+| C11 | The W-1 delisting rule needs a date that Kraken does not give | W-1; F-4j | The last bar is a lower bound on the delisting date, and there is no upper bound; after it the pair is `status_unknown` (corrected 2026-10-29, TASK-P02-008); the date stays open (§7) | Open |
 | C12 | F-4j, F-5e and CPI timing are missing from DEC-045's P02 list | DEC-045; sample results | Adopted as P02 inputs (§7) | Proposed |
 | C13 | `rights_id` (27) vs `rights_profile_id` (24); the map says "Unresolved until F-4" | 27:50; 24:111 | `rights_id` = the frozen `source_approval` ID | Proposed |
 | C14 | Where context capture belongs | contracts.md; P02 README | Envelope in P02, meaning in P04 | DEC-055 |
@@ -125,7 +125,7 @@ A file whose digit count contradicts its era is quarantined as a schema mismatch
 
 | Source | `available_at` | Basis | Authority |
 | --- | --- | --- | --- |
-| Binance daily or monthly file | The file's `Last-Modified`; if that is not recorded, `retrieved_at`. A later re-retrieval with different bytes gives the new version `retrieved_at` | `archive_published`, else `retrieved` | T-2a; DEC-053. **Consequence:** files backfilled on 2021-06-22 (every pre-launch month in the retained listings) make those older bars available only from 2021-06-22. See [§8](#8-for-the-g02-reviewer) |
+| Binance daily or monthly file | The file's `Last-Modified` + 6 h, flagged `available_at_estimated` (DEC-069: `Last-Modified` is only the earliest possible publication time); if `Last-Modified` is not recorded, `retrieved_at`. A later re-retrieval with different bytes gives the new version `retrieved_at` | `archive_published`, else `retrieved` | T-2a; DEC-053; DEC-069. **Consequence:** files backfilled on 2021-06-22 (every pre-launch month in the retained listings) make those older bars available only from 2021-06-22. See [§8](#8-for-the-g02-reviewer) |
 | Kraken quarterly or full archive | The MANIFEST `generated` date (2026-10-01 for both Q3 and the full archive); `retrieved_at` if it is absent. **Consequence:** historical Kraken bars become available only from 2026-10-01 ([§8](#8-for-the-g02-reviewer)) | `archive_published` | T-2a; F-4i |
 | Kraken REST `OHLC` | `received_at`, for completed bars only; the current incomplete bar is dropped (Proposed; C16) | `live_receive` | "completed bars only" (v10 10:18) |
 | Any revised record | Our `retrieved_at` for the revised object | `retrieved` | DEC-053 |
@@ -278,7 +278,7 @@ These are specified so the contract is complete. **No capture is authorised.**
 | S-08 | Out-of-order rows in a file | `source_event_time` not monotone | Replayed in DEC-054's order, with the raw row index kept. No feature uses a bar before its `available_at` (v10 08:18) |
 | S-09 | Revision found on re-download | A new `raw_id` at the same `request` | A new `version` with `available_at` = `retrieved_at` (DEC-053). The earlier version is kept. A replay at an earlier decision time sees the old version (27:89, experiment 9) |
 | S-10 | Symbol reuse | §3.2 epoch rule | A proposed `InstrumentEpoch`, held for review |
-| S-11 | Delisting | Last bar and listing status | The series ends. The last bar is an **upper bound** on the delisting date (F-4j). "A delisting ends the pair's series" (Q-4) |
+| S-11 | Delisting | Last bar and listing status | Archived bars stop. The last bar is a **lower bound** on the delisting date, with no upper bound (F-4j; corrected 2026-10-29, TASK-P02-008). Until a delisting date is known, the pair is `status_unknown` after its last bar, not ended. "A delisting ends the pair's series" (Q-4) applies from the dated delisting |
 | S-12 | Incomplete current bar (REST) | `bar_start` + interval > `received_at` | Dropped (§3.1) |
 | S-13 | Unknown schema or column count | Column count, or a MANIFEST mismatch | Quarantined (v10 08:18). Manifest count differences are logged; the full archive has 1,759 pairs against the MANIFEST's 1,760 |
 | S-14 | Source unavailable (HTTP error, 403, timeout) | Retrieval failure | A `GapInterval` with `SOURCE_UNAVAILABLE`. A 403 is not retried by other means (DEC-050, DEC-051) |
@@ -335,7 +335,7 @@ These are specified so the contract is complete. **No capture is authorised.**
 | F-4g (delisted pairs) | Included; the end of each series follows S-11 |
 | F-4h (archive vs REST) | The comparison rule is in §4.1. Availability at bar close stays **Unresolved**, so REST bars use `live_receive` (see §8) |
 | F-4i (bar-start stamps) | §3.1, §4.1 |
-| F-4j (delisting dates) | **Open.** The last bar gives an upper bound. Proposed: a forward `AssetPairs` snapshot with each retrieval, to date future delistings (capture validation plan) |
+| F-4j (delisting dates) | **Open.** The last bar gives only a lower bound (corrected 2026-10-29). Proposed: a forward `AssetPairs` snapshot with each retrieval, to date future delistings (capture validation plan) |
 | F-5c (Binance delisted symbols) | Included |
 | F-5e (symbol reuse) | §3.2 (Proposed) |
 | CPI release timing, current and historical | **Open** (DEC-050, DEC-051) |
@@ -354,7 +354,7 @@ C12: F-4j, F-5e and CPI timing came out of TASK-P01-013 and P01-014, after DEC-0
 - T-2a's default, the archive publication time, makes Kraken archive history unusable at its own dates, because the Q3 and full archives were both generated on 2026-10-01.
 - T-2a allows bar-close timing only "if the venue documents availability at bar close" and the archive matches what was served at the time. That is F-4h, which is still Unresolved.
 - Kraken history is what DEC-037 uses for the paper-simulation models, so F-4h decides whether Kraken backtests are possible.
-- **Binance has a similar, smaller effect.** In the retained listings, every monthly file for months before the archive's launch was written on 2021-06-22. Under T-2a those bars are available only from 2021-06-22, so Binance research history before mid-2021 cannot be used at its own dates either. Most later files publish within days, though the listings show some late ones (for example LUNCUSDT 2024-07, 281 days after its month).
+- **Binance has a similar, smaller effect.** In the retained listings, every monthly file for months before the archive's launch was written on 2021-06-22. Under T-2a those bars are available only from 2021-06-22 (plus DEC-069's 6 h), so Binance research history before mid-2021 cannot be used at its own dates either. Most later files publish within days, though the listings show some late ones (for example LUNCUSDT 2024-07, 281 days after its month).
 - The capture validation plan (P02 task 5) should propose how to close F-4h, for example by comparing forward REST bars received at bar close with the next archive release.
 
 ## Decisions asked, 2026-10-28

@@ -57,12 +57,12 @@ G00 passed on 2026-10-24. Candidates become packets once they are expanded again
 | [TASK-P01-006](TASK-P01-006.md) | Source follow-ups, round 2: close F-1, Kraken venue status, F-4d/f/h/i, context S-7 | Research/documentation; TASK-P01-005. **Verified**; Merged [#18](https://github.com/akibrahimug/gladiators/pull/18) |
 | [TASK-P01-007](TASK-P01-007.md) | Reassess Kraken from published terms; evaluate Binance Vision (DEC-033) | Research/documentation; TASK-P01-006. **Verified**; Merged [#19](https://github.com/akibrahimug/gladiators/pull/19) |
 | [TASK-P01-008](TASK-P01-008.md) | Binance general terms and venue status (F-5b, F-7b) | Research/documentation; TASK-P01-007. **Verified**; Merged [#20](https://github.com/akibrahimug/gladiators/pull/20) |
-| [TASK-P01-009](TASK-P01-009.md) | G01 gate record draft and decision requests GR-01 to GR-12 | Documentation; TASK-P01-001 to -008. **Verified**; Open [#21](https://github.com/akibrahimug/gladiators/pull/21) |
-| [TASK-P01-010](TASK-P01-010.md) | Record G01 reviewer answers (DEC-034 to DEC-046); draft `source_approval` records | Documentation; TASK-P01-009. **Verified**; Open [#22](https://github.com/akibrahimug/gladiators/pull/22) |
-| [TASK-P01-011](TASK-P01-011.md) | Address the independent Codex PR reviews (PRs #12 to #22) | Documentation; TASK-P01-010. **Verified**; Open [#23](https://github.com/akibrahimug/gladiators/pull/23) |
-| [TASK-P01-012](TASK-P01-012.md) | Record the G01 pass (DEC-047) | Documentation; TASK-P01-011. **Verified**; Open [#24](https://github.com/akibrahimug/gladiators/pull/24) |
-| [TASK-P01-013](TASK-P01-013.md) | Run the sample plan, steps 0, 1 and 3 | Research/validation; TASK-P01-012. **Verified**; Open [#25](https://github.com/akibrahimug/gladiators/pull/25) |
-| [TASK-P01-014](TASK-P01-014.md) | Apply the reviewer's answers on the sample results (DEC-048 to DEC-050) | Documentation; TASK-P01-013. **Verified**; Open [#26](https://github.com/akibrahimug/gladiators/pull/26) |
+| [TASK-P01-009](TASK-P01-009.md) | G01 gate record draft and decision requests GR-01 to GR-12 | Documentation; TASK-P01-001 to -008. **Verified**; Merged [#21](https://github.com/akibrahimug/gladiators/pull/21) |
+| [TASK-P01-010](TASK-P01-010.md) | Record G01 reviewer answers (DEC-034 to DEC-046); draft `source_approval` records | Documentation; TASK-P01-009. **Verified**; Merged [#22](https://github.com/akibrahimug/gladiators/pull/22) |
+| [TASK-P01-011](TASK-P01-011.md) | Address the independent Codex PR reviews (PRs #12 to #22) | Documentation; TASK-P01-010. **Verified**; Merged [#23](https://github.com/akibrahimug/gladiators/pull/23) |
+| [TASK-P01-012](TASK-P01-012.md) | Record the G01 pass (DEC-047) | Documentation; TASK-P01-011. **Verified**; Merged [#24](https://github.com/akibrahimug/gladiators/pull/24) |
+| [TASK-P01-013](TASK-P01-013.md) | Run the sample plan, steps 0, 1 and 3 | Research/validation; TASK-P01-012. **Verified**; Merged [#25](https://github.com/akibrahimug/gladiators/pull/25) |
+| [TASK-P01-014](TASK-P01-014.md) | Apply the reviewer's answers on the sample results (DEC-048 to DEC-050) | Documentation; TASK-P01-013. **Verified**; Merged [#26](https://github.com/akibrahimug/gladiators/pull/26) |
 
 ## P02
 
@@ -70,11 +70,13 @@ G01 passed on 2026-10-27 (DEC-047). Candidates become packets once they are expa
 
 | Candidate ID | Bounded outcome | Type / dependency |
 | --- | --- | --- |
-| [TASK-P02-001](TASK-P02-001.md) | Source-specific raw/normalized event contract and integrity fixtures | Documentation; G01. **Verified**; Open [#27](https://github.com/akibrahimug/gladiators/pull/27) |
-| [TASK-P02-004](TASK-P02-004.md) | Capture validation plan, and capture and recovery design (P02 task 5) | Documentation; TASK-P02-001. **Verified**; Open [#28](https://github.com/akibrahimug/gladiators/pull/28) |
-| [TASK-P02-002](TASK-P02-002.md) | Capture/raw-journal implementation, run on held files (DEC-058) | Implementation; TASK-P02-004; assigned by DEC-058. **Verified**; Open [#29](https://github.com/akibrahimug/gladiators/pull/29) |
-| [TASK-P02-005](TASK-P02-005.md) | Network side: HTTPS transport, Kraken live capture, DEC-057 retrievals | Implementation/validation; TASK-P02-002; DEC-062. **Verified**; Open [#30](https://github.com/akibrahimug/gladiators/pull/30) |
-| [TASK-P02-006](TASK-P02-006.md) | Recovery scenarios RC-05 to RC-08 | Implementation/validation; TASK-P02-005; DEC-065. **Verified**; Open [#31](https://github.com/akibrahimug/gladiators/pull/31) |
+| [TASK-P02-001](TASK-P02-001.md) | Source-specific raw/normalized event contract and integrity fixtures | Documentation; G01. **Verified**; Merged [#27](https://github.com/akibrahimug/gladiators/pull/27) |
+| [TASK-P02-004](TASK-P02-004.md) | Capture validation plan, and capture and recovery design (P02 task 5) | Documentation; TASK-P02-001. **Verified**; Merged [#28](https://github.com/akibrahimug/gladiators/pull/28) |
+| [TASK-P02-002](TASK-P02-002.md) | Capture/raw-journal implementation, run on held files (DEC-058) | Implementation; TASK-P02-004; assigned by DEC-058. **Verified**; Merged [#29](https://github.com/akibrahimug/gladiators/pull/29) |
+| [TASK-P02-005](TASK-P02-005.md) | Network side: HTTPS transport, Kraken live capture, DEC-057 retrievals | Implementation/validation; TASK-P02-002; DEC-062. **Verified**; Merged [#30](https://github.com/akibrahimug/gladiators/pull/30) |
+| [TASK-P02-006](TASK-P02-006.md) | Recovery scenarios RC-05 to RC-08 | Implementation/validation; TASK-P02-005; DEC-065. **Verified**; Merged [#31](https://github.com/akibrahimug/gladiators/pull/31) |
+| [TASK-P02-007](TASK-P02-007.md) | Record the 30-day job install, the clock rule and the PR merges | Documentation; TASK-P02-006; DEC-067, DEC-068. **Verified**; Open [#32](https://github.com/akibrahimug/gladiators/pull/32) |
+| [TASK-P02-008](TASK-P02-008.md) | Fix the Codex review findings on PRs #25 and #29 to #31 (DEC-069) | Implementation/documentation; TASK-P02-007. **Verified**; Open [#33](https://github.com/akibrahimug/gladiators/pull/33) |
 | TASK-P02-003 | Capture provenance and integrity/recovery validation evidence | Validation; TASK-P02-002; VAL-002/004 capture stage |
 
 ## P03

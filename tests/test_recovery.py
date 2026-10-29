@@ -2,6 +2,7 @@
 
 import errno
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -11,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from gladiator_capture import fetch as Fe  # noqa: E402
 from gladiator_capture import live_records as LR  # noqa: E402
+from gladiator_capture import rawstore as R  # noqa: E402
 from gladiator_capture.rawstore import RawStore  # noqa: E402
 
 
@@ -212,6 +214,115 @@ class StoreFailureTests(unittest.TestCase):
         self.assertEqual((res.raw, res.gap.availability_state), (None, "SOURCE_UNAVAILABLE"))
         self.assertTrue(res.gap.evidence.startswith("write_failed"))
         s.close()
+
+
+class ShortAppendTests(unittest.TestCase):
+    """RC-06: a short journal/index append is rolled back, so later appends and a reopen still work
+    (Codex review of PR #31)."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.real_write, self.real_ftruncate = os.write, os.ftruncate
+
+    def tearDown(self):
+        R.os.write, R.os.ftruncate = self.real_write, self.real_ftruncate
+        self.tmp.cleanup()
+
+    def short_first_index_write(self):
+        real, done = self.real_write, []
+
+        def w(fd, data):
+            if not done and b'"member_path"' in data:  # the first RawObject index line
+                done.append(1)
+                return real(fd, data[: len(data) // 2])
+            return real(fd, data)
+        R.os.write = w
+
+    @staticmethod
+    def transport(body):
+        return type("T", (), {"get": lambda self, u: Fe.Response(200, body, {"Content-Length": str(len(body))})})()
+
+    def test_short_index_write_then_more_fetches_then_reopen(self):
+        store = RawStore(self.root / "s")
+        self.short_first_index_write()
+        res = Fe.fetch("u1", self.transport(b"one"), store, source_id="S", source_approval_id="A", sleep=lambda s: None)
+        self.assertIsNone(res.raw)
+        self.assertTrue(res.gap.evidence.startswith("write_failed"))
+        R.os.write = self.real_write
+        for u, body in (("u2", b"two"), ("u3", b"three")):
+            self.assertIsNotNone(Fe.fetch(u, self.transport(body), store, source_id="S", source_approval_id="A",
+                                          sleep=lambda s: None).raw)
+        rolled_back = [r["file"] for r in store.repaired]
+        store.close()
+        reopened = RawStore(self.root / "s")  # previously raised JSONDecodeError on the merged line
+        self.assertEqual(rolled_back, ["index.jsonl"])
+        self.assertEqual(sorted(reopened.object_for_request), ["u2", "u3"])
+        self.assertEqual(reopened.repaired, [])
+        self.assertTrue((self.root / "s" / "index.jsonl").read_bytes().endswith(b"\n"))
+
+    def test_journal_write_raising_is_rolled_back(self):
+        store = RawStore(self.root / "s")
+        real, done = self.real_write, []
+
+        def w(fd, data):
+            if not done and b'"started"' in data:
+                done.append(1)
+                real(fd, data[:7])
+                raise OSError(errno.ENOSPC, "No space left on device")
+            return real(fd, data)
+        R.os.write = w
+        f = self.root / "a.bin"
+        f.write_bytes(b"x")
+        with self.assertRaises(OSError):
+            store.ingest_file(f, source_id="S", source_approval_id="A", request="u")
+        self.assertEqual([r["file"] for r in store.repaired], ["journal.jsonl"])
+        R.os.write = self.real_write
+        store.ingest_file(f, source_id="S", source_approval_id="A", request="u")
+        store.close()
+        self.assertEqual([e.outcome for e in RawStore(self.root / "s").journal_entries()], ["started", "stored"])
+
+    def test_member_index_retried_after_rollback(self):
+        import zipfile
+        z = self.root / "c.zip"
+        with zipfile.ZipFile(z, "w") as zf:
+            zf.writestr("m.csv", "1,2\n")
+        store = RawStore(self.root / "s")
+        container = store.ingest_file(z, source_id="S", source_approval_id="A", request="u")
+        real, done = self.real_write, []
+
+        def w(fd, data):
+            if not done and b'"member_path": "m.csv"' in data:
+                done.append(1)
+                return real(fd, data[:5])
+            return real(fd, data)
+        R.os.write = w
+        with self.assertRaises(OSError):
+            store.member(container, "m.csv")
+        R.os.write = self.real_write
+        obj = store.member(container, "m.csv")
+        store.close()
+        self.assertIn(obj.raw_id, RawStore(self.root / "s").objects)  # indexed on the retry
+
+    def test_failed_rollback_makes_store_unusable_until_reopen(self):
+        store = RawStore(self.root / "s")
+        self.short_first_index_write()
+
+        def no_truncate(fd, size):
+            raise OSError(errno.EIO, "I/O error")
+        R.os.ftruncate = no_truncate
+        f = self.root / "a.bin"
+        f.write_bytes(b"x")
+        with self.assertRaises(OSError):
+            store.ingest_file(f, source_id="S", source_approval_id="A", request="u")
+        self.assertEqual(store.unusable, "rollback_failed:index.jsonl")
+        R.os.write, R.os.ftruncate = self.real_write, self.real_ftruncate
+        with self.assertRaises(OSError):
+            store.ingest_file(f, source_id="S", source_approval_id="A", request="u")  # refused, not merged
+        store.close()
+        reopened = RawStore(self.root / "s")
+        self.assertEqual(reopened.repaired[0]["file"], "index.jsonl")  # the fragment is cut and kept
+        self.assertIsNotNone(reopened.ingest_file(f, source_id="S", source_approval_id="A", request="u"))
 
 
 if __name__ == "__main__":
