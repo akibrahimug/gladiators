@@ -75,7 +75,7 @@ G01 passed on 2026-10-27 (DEC-047). Candidates become packets once they are expa
 | [TASK-P02-002](TASK-P02-002.md) | Capture/raw-journal implementation, run on held files (DEC-058) | Implementation; TASK-P02-004; assigned by DEC-058. **Verified**; Merged [#29](https://github.com/akibrahimug/gladiators/pull/29) |
 | [TASK-P02-005](TASK-P02-005.md) | Network side: HTTPS transport, Kraken live capture, DEC-057 retrievals | Implementation/validation; TASK-P02-002; DEC-062. **Verified**; Merged [#30](https://github.com/akibrahimug/gladiators/pull/30) |
 | [TASK-P02-006](TASK-P02-006.md) | Recovery scenarios RC-05 to RC-08 | Implementation/validation; TASK-P02-005; DEC-065. **Verified**; Merged [#31](https://github.com/akibrahimug/gladiators/pull/31) |
-| [TASK-P02-007](TASK-P02-007.md) | Record the 30-day job install, the clock rule and the PR merges | Documentation; TASK-P02-006; DEC-067, DEC-068. **Verified**; Not requested |
+| [TASK-P02-007](TASK-P02-007.md) | Record the 30-day job install, the clock rule and the PR merges | Documentation; TASK-P02-006; DEC-067, DEC-068. **Verified**; Open [#32](https://github.com/akibrahimug/gladiators/pull/32) |
 | TASK-P02-003 | Capture provenance and integrity/recovery validation evidence | Validation; TASK-P02-002; VAL-002/004 capture stage |
 
 ## P03
