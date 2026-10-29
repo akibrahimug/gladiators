@@ -27,7 +27,7 @@ None of these is a W-1 selection.
 | Robot exclusion | `data.binance.vision/robots.txt`: HTTP 404, an S3 `NoSuchKey` error. `assets.kraken.com/robots.txt`: HTTP 404, an HTML page. No exclusion is published on either host |
 | REST | Three keyless Kraken calls (`OHLC` twice, `AssetPairs` once), each made on explicit invocation |
 | Checksums | Every published checksum was verified (below) |
-| BLS (for the reviewer) | `curl` received **HTTP 403** from both BLS pages (header captures kept). The coordinator then read them through the Claude Code fetch tool, which returns a model summary, not the raw page. No robots file was consulted and no CAPTCHA was involved. Whether a second read after a 403 complies with DEC-044 is **for the reviewer to decide**. The CPI result below is therefore marked **indirect** |
+| BLS (answered 2026-10-27: not compliant, DEC-050) | `curl` received **HTTP 403** from both BLS pages (header captures kept). The coordinator then read them through the Claude Code fetch tool, which returns a model summary, not the raw page. No robots file was consulted and no CAPTCHA was involved. Whether a second read after a 403 complies with DEC-044 was for the reviewer to decide. **Answered: it did not comply (DEC-050)**; the CPI result below is dropped |
 | Not done | No account, key or vendor contact |
 
 ## Step 0 — Binance Vision (SR-04, SA-01)
@@ -84,9 +84,9 @@ The plan asks for one FOMC, one CPI and one COT release, comparing the observed 
 
 | Source | Release checked | Observed | Against the schedule | Outcome |
 | --- | --- | --- | --- | --- |
-| FOMC statement (SA-04) | The 2026-09-16 and 2026-07-29 statements (`monetary20260916a.htm`, `ff5c4ee5…`) | Each page states "For release at 2:00 p.m. EDT". `Last-Modified` is 2026-09-16 18:00:17 UTC, which is 14:00:17 EDT. The 2019-07-31 and 2022-11-02 statements carry the same line; their `Last-Modified` dates are from 2026-02, after later edits | **New:** each statement page states its own release time, including historical statements. SA-04's "Statement release time is not documented" was true only of the calendar page | Reviewer item 5. The forward-only rule stays in force until the reviewer decides |
+| FOMC statement (SA-04) | The 2026-09-16 and 2026-07-29 statements (`monetary20260916a.htm`, `ff5c4ee5…`) | Each page states "For release at 2:00 p.m. EDT". `Last-Modified` is 2026-09-16 18:00:17 UTC, which is 14:00:17 EDT. The 2019-07-31 and 2022-11-02 statements carry the same line; their `Last-Modified` dates are from 2026-02, after later edits | **New:** each statement page states its own release time, including historical statements. SA-04's "Statement release time is not documented" was true only of the calendar page | Reviewer item 5. **Answered 2026-10-27: stated times are used for historical statements (DEC-049)** |
 | FOMC minutes (SA-04) | Minutes of the 2026-07-29 meeting (`fomcminutes20260729.htm`, `42a83b49…`) | States "for release at 2:00 p.m.". `Last-Modified` is 2026-08-19 18:01:21 UTC, three weeks after the meeting | Consistent with "three weeks after" | Consistent on one release. The historical dates are a P02 dependency |
-| CPI (SA-05), **indirect** | September 2026 CPI | Through the fetch tool, after a 403 response: "embargoed until … 8:30 a.m. (ET) Wednesday, October 14, 2026" | The current schedule begins at the October 2026 reference month, so September's scheduled row is no longer shown | Indirect and consistent with 08:30. The historical dates are a P02 dependency |
+| CPI (SA-05), **indirect; dropped (DEC-050)** | September 2026 CPI | Through the fetch tool, after a 403 response: "embargoed until … 8:30 a.m. (ET) Wednesday, October 14, 2026" | The current schedule begins at the October 2026 reference month, so September's scheduled row is no longer shown | **Dropped (DEC-050).** CPI timing, current and historical, is a P02 dependency |
 | CFTC COT (SA-06) | The report for positions as of 2026-10-20 (`deacmesf.htm`, `0078b0e7…`) | `Last-Modified` is Friday 2026-10-23 19:27:36 UTC, which is 15:27:36 EDT | The scheduled 3:30 p.m. ET is about 2.5 minutes **after** the observed time. Setting `available_at` to 3:30 p.m. therefore introduces no lookahead | Consistent on one release. `Last-Modified` is server metadata, not proof of first visibility. The historical dates are a P02 dependency |
 
 ## Outcomes for the follow-up items
@@ -107,13 +107,27 @@ The "Before" column uses the registry statuses ([round 2](source-followups-2.md)
 
 ## For the G01 reviewer
 
-None of these results is applied to the records. Some change an S- or Q-criterion standing or a record's coverage line, and the records' own rule says such changes need the reviewer's confirmation ([source approvals](source-approvals.md), sample verification).
+**Answered 2026-10-27; applied as DEC-048 to DEC-050** ([answers](#reviewer-answers-2026-10-27); [amendments](source-approvals.md#amendments-2026-10-27)). As first written, these were not applied, because some change an S- or Q-criterion standing or a record's coverage line, and the records' own rule says such changes need the reviewer's confirmation ([source approvals](source-approvals.md), sample verification).
 
-1. **SA-02, S-4b:** close the "timestamp semantics are open" part (F-4i and F-4f are Documented). Integrity is met for the full archive only, because the quarterly increment has no published checksum.
-2. **SA-02 and SA-01, S-5:**
+1. *(DEC-048)* **SA-02, S-4b:** close the "timestamp semantics are open" part (F-4i and F-4f are Documented). Integrity is met for the full archive only, because the quarterly increment has no published checksum.
+2. *(DEC-048)* **SA-02 and SA-01, S-5:**
    - SA-02: replace "delisted pairs are open" with "present; delisting dates not given (F-4j)", and mark S-5 met for XBTUSD and ETHUSD.
    - SA-01: close "delisted symbols are open" (F-5c), and add symbol reuse (F-5e) as a limitation.
-3. **Q-2:** "100 % classified" cannot be achieved for the archived bars of either venue. Proposal: amend Q-2 so that each missing interval is classified as no-trade, data gap or **status-unknown** (DEC-040), with 100 % of intervals in one of the three classes.
-4. **SA-01 coverage (T-2a):** replace "revisions are announced (two listed); each revision is a correction with its own `available_at`" with "revisions replace files in place; daily revisions are listed, monthly rewrites are not; we keep each retrieved version with its checksum and `Last-Modified`".
-5. **SA-04, S-7 (proposal):** historical FOMC statement events would use `available_at` = the release time stated on each statement page, instead of forward-only. The confirmed rule (DEC-047) stays in force unless the reviewer amends it.
-6. **DEC-044 and BLS:** decide whether the BLS read after a 403 complied with DEC-044. If it did not, the CPI result is dropped, and CPI release timing becomes a P02 dependency.
+3. *(DEC-048)* **Q-2:** "100 % classified" cannot be achieved for the archived bars of either venue. Proposal: amend Q-2 so that each missing interval is classified as no-trade, data gap or **status-unknown** (DEC-040), with 100 % of intervals in one of the three classes.
+4. *(DEC-048)* **SA-01 coverage (T-2a):** replace "revisions are announced (two listed); each revision is a correction with its own `available_at`" with "revisions replace files in place; daily revisions are listed, monthly rewrites are not; we keep each retrieved version with its checksum and `Last-Modified`".
+5. *(DEC-049)* **SA-04, S-7 (proposal):** historical FOMC statement events would use `available_at` = the release time stated on each statement page, instead of forward-only. The confirmed rule (DEC-047) stays in force unless the reviewer amends it.
+6. *(DEC-050)* **DEC-044 and BLS:** decide whether the BLS read after a 403 complied with DEC-044. If it did not, the CPI result is dropped, and CPI release timing becomes a P02 dependency.
+
+## Reviewer answers, 2026-10-27
+
+The G01 reviewer (the user, DEC-034) answered three questions. Each question and the chosen option are quoted verbatim.
+
+| Items | Question (verbatim) | Chosen option | Decision |
+| --- | --- | --- | --- |
+| 1 to 4 | "Sample results, items 1–4: these are record updates that only reflect what the files showed. (1) Kraken record SA-02: mark the timestamp question closed; integrity is met only for the full archive, because the quarterly file has no checksum. (2) Delisted history: for Kraken, delisted pairs are present but have no delisting dates (new F-4j); for Binance, delisted symbols keep their files, but one symbol can cover two assets over time (new F-5e, e.g. LUNAUSDT). (3) Missing-bar rule Q-2: allow a third class, 'status-unknown', since the archives can't tell a no-trade day from an outage. (4) Binance record SA-01: revisions replace files in place, monthly rewrites aren't logged, and we keep each version we download. Apply these?" | "Apply all four (Recommended)" — "Each one just records what the sample showed; none loosens a rule beyond what the data allows." | DEC-048 |
+| 5 | "Item 5: every FOMC statement page, including historical ones, states 'For release at 2:00 p.m. EDT'. Should historical statement events use that stated time as available_at, replacing the forward-only rule you confirmed under DEC-047?" | "Use stated times (Recommended)" — "The time is printed on each statement page, so history becomes usable with no lookahead; it amends SA-04 and W-7." | DEC-049 |
+| 6 | "Item 6: BLS returned HTTP 403 to curl, so I read the CPI pages through the fetch tool instead, which gives a model summary of the page. Was that acceptable under the download rules (DEC-044)?" | "Not OK; drop it (Recommended)" — "Treat a 403 as a refusal. Drop the indirect CPI result and make CPI timing a P02 dependency; future reads use the browser or a published file." | DEC-050 |
+
+Unchosen options: "Apply 1, 2 and 4, not Q-2"; "Hold all for P02"; "Keep forward-only"; "OK; keep it as indirect". The applied amendments are in the [source approvals](source-approvals.md#amendments-2026-10-27) and the [register](acceptance-objectives.md).
+
+**Coordinator's note on DEC-050:** the chosen description mentions "the browser". On 2026-10-28 the user settled it (DEC-051). Question: "In your BLS answer, "future reads use the browser or a published file": what did "the browser" mean, given BLS returned HTTP 403 to automated access?" Chosen: "You browse it yourself (Recommended)" — "I never read a 403'd site through any automated tool, including a browser I drive; you paste or download what's needed. Safest reading of a refusal." Until a published file is found or the user supplies the text, CPI timing stays a P02 dependency.
