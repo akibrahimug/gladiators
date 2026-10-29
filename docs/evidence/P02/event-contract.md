@@ -83,7 +83,7 @@ Every retrieved object is preserved before any parsing. Sources:
 2. **Layout.** The layout is "`data/raw/{provider}/{ingest_date}/`" (v10 10:6), keyed by `raw_id`. Two versions never share a path.
 3. **Checksum mismatch.** The object is quarantined, and nothing is parsed from it. How many retries are allowed, and when to declare the source `SOURCE_UNAVAILABLE`, are thresholds for P02 task 5.
 4. **Archives.** Each ZIP member gets its own `raw_id`, linked to its container. Kraken's full-history parts are verified one by one and then joined, and the joined ZIP gets its own `raw_id`.
-5. **Change detection.** On re-retrieval, `raw_id` is compared. A different hash at the same `request` is a revision (S-09). For a Binance file, the `last_modified_after_period` flag is set when either the file appears in the README changelog, or its `Last-Modified` lag after the covered period exceeds a limit set by task 5. That marks a possible rewrite even on the first retrieval; normal publication runs 2 to 3 hours after the period ends.
+5. **Change detection.** On re-retrieval, `raw_id` is compared. A different hash at the same `request` is a revision (S-09). The `last_modified_after_period` flag is set only for evidence of a rewrite: the file is listed in the README changelog, or a re-retrieval found new bytes. A `Last-Modified` lag alone does not set it: in the retained S3 listings, 98 of 271 monthly files have lags over 14 days, 81 of them from a 2021-06-22 bulk backfill (TASK-P02-004).
 
 ## 3. Common envelope and time model
 
@@ -125,8 +125,7 @@ A file whose digit count contradicts its era is quarantined as a schema mismatch
 
 | Source | `available_at` | Basis | Authority |
 | --- | --- | --- | --- |
-| Binance daily file | The file's `Last-Modified`. If a later re-retrieval finds different bytes, the new version takes `retrieved_at` | `archive_published`, then `retrieved` | T-2a; DEC-053. The sample observed 2 to 3 hours after the day ends |
-| Binance monthly file | Same rule as daily files | `archive_published` | T-2a |
+| Binance daily or monthly file | The file's `Last-Modified`; if that is not recorded, `retrieved_at`. A later re-retrieval with different bytes gives the new version `retrieved_at` | `archive_published`, else `retrieved` | T-2a; DEC-053. **Consequence:** files backfilled on 2021-06-22 (every pre-launch month in the retained listings) make those older bars available only from 2021-06-22. See [§8](#8-for-the-g02-reviewer) |
 | Kraken quarterly or full archive | The MANIFEST `generated` date (2026-10-01 for both Q3 and the full archive); `retrieved_at` if it is absent. **Consequence:** historical Kraken bars become available only from 2026-10-01 ([§8](#8-for-the-g02-reviewer)) | `archive_published` | T-2a; F-4i |
 | Kraken REST `OHLC` | `received_at`, for completed bars only; the current incomplete bar is dropped (Proposed; C16) | `live_receive` | "completed bars only" (v10 10:18) |
 | Any revised record | Our `retrieved_at` for the revised object | `retrieved` | DEC-053 |
@@ -309,7 +308,7 @@ These are specified so the contract is complete. **No capture is authorised.**
 | F-14 | S-14 | A recorded retrieval with `http_status` 403. The BLS header capture `bls_cpi.nr0.htm.hdr` serves as the example | Simulated: the failure is injected at the retrieval layer, not by editing a file | 1 `GapInterval` with `SOURCE_UNAVAILABLE`, and no retry by another route |
 | F-15 | S-15 | Defined when capture is authorised | — | — |
 | F-16 | S-16 | `BTCUSDT-1d-2024-12.zip` (`82ec9021…`); `Last-Modified` 2025-01-08 00:50:27 UTC | None. Replay at the decision time 2025-01-07 00:00 UTC | All 31 rows are invisible, since their `available_at` is after the decision time |
-| F-17 | S-17 | `cftc_deacmesf.htm` (`0078b0e7…`), positions as of 2026-10-20 | Constructed: replay the same report as the latest COT observation at a decision time more than one weekly cycle after its `available_at` | Flagged `stale`. The staleness limit is set by task 5 |
+| F-17 | S-17 | `cftc_deacmesf.htm` (`0078b0e7…`), positions as of 2026-10-20 | Constructed: replay the same report as the latest COT observation at a decision time more than 14 days after its `available_at` (TH-5) | Flagged `stale` |
 
 **VAL gaps (DEC-042).**
 - **Q-1:** covered by F-02b, F-03, F-06 and F-06b.
@@ -353,9 +352,9 @@ C12: F-4j, F-5e and CPI timing came out of TASK-P01-013 and P01-014, after DEC-0
 
 **A consequence to note (not a proposal).**
 - T-2a's default, the archive publication time, makes Kraken archive history unusable at its own dates, because the Q3 and full archives were both generated on 2026-10-01.
-- Binance is unaffected: its daily files publish 2 to 3 hours after each day ends.
 - T-2a allows bar-close timing only "if the venue documents availability at bar close" and the archive matches what was served at the time. That is F-4h, which is still Unresolved.
 - Kraken history is what DEC-037 uses for the paper-simulation models, so F-4h decides whether Kraken backtests are possible.
+- **Binance has a similar, smaller effect.** In the retained listings, every monthly file for months before the archive's launch was written on 2021-06-22. Under T-2a those bars are available only from 2021-06-22, so Binance research history before mid-2021 cannot be used at its own dates either. Most later files publish within days, though the listings show some late ones (for example LUNCUSDT 2024-07, 281 days after its month).
 - The capture validation plan (P02 task 5) should propose how to close F-4h, for example by comparing forward REST bars received at bar close with the next archive release.
 
 ## Decisions asked, 2026-10-28
