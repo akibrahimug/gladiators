@@ -261,6 +261,49 @@ class ShortAppendTests(unittest.TestCase):
         self.assertEqual(reopened.repaired, [])
         self.assertTrue((self.root / "s" / "index.jsonl").read_bytes().endswith(b"\n"))
 
+    def test_journal_write_raising_is_rolled_back(self):
+        store = RawStore(self.root / "s")
+        real, done = self.real_write, []
+
+        def w(fd, data):
+            if not done and b'"started"' in data:
+                done.append(1)
+                real(fd, data[:7])
+                raise OSError(errno.ENOSPC, "No space left on device")
+            return real(fd, data)
+        R.os.write = w
+        f = self.root / "a.bin"
+        f.write_bytes(b"x")
+        with self.assertRaises(OSError):
+            store.ingest_file(f, source_id="S", source_approval_id="A", request="u")
+        self.assertEqual([r["file"] for r in store.repaired], ["journal.jsonl"])
+        R.os.write = self.real_write
+        store.ingest_file(f, source_id="S", source_approval_id="A", request="u")
+        store.close()
+        self.assertEqual([e.outcome for e in RawStore(self.root / "s").journal_entries()], ["started", "stored"])
+
+    def test_member_index_retried_after_rollback(self):
+        import zipfile
+        z = self.root / "c.zip"
+        with zipfile.ZipFile(z, "w") as zf:
+            zf.writestr("m.csv", "1,2\n")
+        store = RawStore(self.root / "s")
+        container = store.ingest_file(z, source_id="S", source_approval_id="A", request="u")
+        real, done = self.real_write, []
+
+        def w(fd, data):
+            if not done and b'"member_path": "m.csv"' in data:
+                done.append(1)
+                return real(fd, data[:5])
+            return real(fd, data)
+        R.os.write = w
+        with self.assertRaises(OSError):
+            store.member(container, "m.csv")
+        R.os.write = self.real_write
+        obj = store.member(container, "m.csv")
+        store.close()
+        self.assertIn(obj.raw_id, RawStore(self.root / "s").objects)  # indexed on the retry
+
     def test_failed_rollback_makes_store_unusable_until_reopen(self):
         store = RawStore(self.root / "s")
         self.short_first_index_write()

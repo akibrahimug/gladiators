@@ -181,6 +181,14 @@ class MoreCaptureTests(CaptureTests):
         # the following good update is not accepted on the unverified book
         self.assertEqual((summary["checksum_ok"], summary["checksum_fail"]), (1, 0))
 
+    def test_malformed_snapshot_and_resync_cap(self):  # parse errors share the S-15 resync cap
+        frames = self.frames()
+        bad_snap = json.dumps({"channel": "book", "type": "snapshot", "data": [{"symbol": "BTC/USD", "bids": [], "asks": []}]})
+        summary, fake, _ = self.run_capture([frames[0]] + [bad_snap] * (L.RESYNC_MAX_PER_MIN + 2) + frames)  # synced first
+        self.assertEqual(summary["parse_errors"], L.RESYNC_MAX_PER_MIN + 2)
+        self.assertEqual((summary["resyncs"], summary["resync_capped"]), (L.RESYNC_MAX_PER_MIN, 2))
+        self.assertEqual(summary["recovery_parse_error_s"]["n"], 1)  # recovered on the good snapshot
+
     def test_updates_skipped_until_snapshot(self):
         frames = self.frames()
         summary, _, _ = self.run_capture([frames[1]] + frames)  # update before any snapshot

@@ -291,14 +291,16 @@ class ReviewFixTests(unittest.TestCase):
         step = DAY_S * R.NS["s"]
         recs = AnalysisTests().bars(list(range(30)))
         start = DEC_2024 * R.NS["s"]
-        gaps = [A.GapInterval("s", "f", "i", start + 29 * step, start + 30 * step, "status_unknown", "x", 0)]
-        self.assertEqual(A.entry_blocked(recs, gaps, start + 29 * step, 20), "status_unknown_on_decision_day")
-        self.assertEqual(A.entry_blocked(recs, [], start + 29 * step, 40), "coverage_below_q4")
-        self.assertIsNone(A.entry_blocked(recs, [], start + 29 * step, 20))
-        dg = [A.GapInterval("s", "f", "i", start + 29 * step, start + 30 * step, "data_gap", "quarantined_bar", 0)]
-        self.assertEqual(A.entry_blocked(recs, dg, start + 29 * step, 20), "data_gap_on_decision_day")
-        nt = [A.GapInterval("s", "f", "i", start + 29 * step, start + 30 * step, "no_trade", "x", 0)]
-        self.assertIsNone(A.entry_blocked(recs, nt, start + 29 * step, 20))
+        d = start + 30 * step  # decision at the end of day 29; day 29 is the last completed bar
+
+        def gap(day, cls):
+            return [A.GapInterval("s", "f", "i", start + day * step, start + (day + 1) * step, cls, "x", 0)]
+        self.assertEqual(A.entry_blocked(recs, gap(29, "status_unknown"), d, 20), "status_unknown_in_last_completed_interval")
+        self.assertEqual(A.entry_blocked(recs, gap(29, "data_gap"), d, 20), "data_gap_in_last_completed_interval")
+        self.assertIsNone(A.entry_blocked(recs, gap(29, "no_trade"), d, 20))
+        self.assertIsNone(A.entry_blocked(recs, gap(30, "data_gap"), d, 20))  # the bar still forming at D
+        self.assertEqual(A.entry_blocked(recs, [], d, 40), "coverage_below_q4")
+        self.assertIsNone(A.entry_blocked(recs, [], d, 20))
 
     def test_qualifies_listing_partway(self):  # Q-4 listing clause
         step = DAY_S * R.NS["s"]

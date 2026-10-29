@@ -260,8 +260,8 @@ class RawStore:
                 reason = "copy_hash_mismatch" if isinstance(exc, CopyHashMismatch) else f"write_failed:{type(exc).__name__}"
                 self.journal(JournalEntry(self.clock(), request, "failed", raw_id, http_status, size, reason))
                 raise
+        self._index(obj)  # before registering, so a rolled-back index line is retried, not skipped
         self.objects.setdefault(raw_id, obj)
-        self._index(obj)
         if not quarantined:
             self.latest_by_request[request] = raw_id
             self.object_for_request[request] = obj
@@ -314,8 +314,8 @@ class RawStore:
             container_raw_id=container.raw_id, member_path=name, supersedes_raw_id=container.supersedes_raw_id,
         )
         if rid not in self.objects:
+            self._index(obj)  # before registering (see ingest_file)
             self.objects[rid] = obj
-            self._index(obj)
         return obj
 
     def member(self, container: RawObject, name: str) -> RawObject:
