@@ -2,7 +2,7 @@
 
 [Task](../../tasks/TASK-P01-010.md) · [G01 gate record](g01-gate-record.md) · [Data-access decision](data-access-decision.md) · [Source registry](source-registry.md) · [Acceptance objectives](acceptance-objectives.md#5-source-evaluation-criteria-for-the-p01-task-7-source-baseline)
 
-**Status: confirmed by the G01 reviewer and frozen, 2026-10-27 (DEC-047).** Drafted 2026-10-26; SA-01 revised 2026-10-27 (TASK-P01-011: dataset terms §1.2 to §1.5), before the confirmation.
+**Status: confirmed by the G01 reviewer and frozen, 2026-10-27 (DEC-047).** Drafted 2026-10-26; SA-01 revised 2026-10-27 (TASK-P01-011: dataset terms §1.2 to §1.5), before the confirmation. The sample-verification field was updated later on 2026-10-27 (TASK-P01-013); no record field changed.
 - **Basis:** prepared under DEC-038; approved for planning and sampling (DEC-046). Any later change reopens the record and needs a new date.
 - **Authorisation:** these records authorise no account, key registration, download, capture, spending or trading.
 - **Downloads:** they follow DEC-035 and DEC-044, effective from the G01 pass on 2026-10-27.
@@ -15,7 +15,7 @@ The amended §5 rule (DEC-038, effective from the G01 pass on 2026-10-27) relaxe
 
 **Common to every record:**
 - **Intended use:** DEC-030. This means personal, non-commercial research and paper simulation, with no product, clients or redistribution.
-- **Sample verification:** pending. Each record is approved for planning and sampling (DEC-046, DEC-047), with its open data-semantics items carried to P02 as dependencies (DEC-045). When the sample plan completes, the coordinator updates this field and the record is re-frozen with a new date. That update needs the reviewer's confirmation only if a result changes an accepted limitation or an S-criterion standing.
+- **Sample verification:** steps 0, 1 and 3 ran on 2026-10-27 ([results](sample-results.md)); they cover SA-01, SA-02, SA-04, SA-05 and SA-06. Their proposed standing changes await the reviewer's confirmation and are not yet applied here. SA-03 (step 2) and SA-07 to SA-09 are not sampled. Each record is approved for planning and sampling (DEC-046, DEC-047), with its open data-semantics items carried to P02 as dependencies (DEC-045). When the sample plan completes, the coordinator updates this field and the record is re-frozen with a new date. That update needs the reviewer's confirmation only if a result changes an accepted limitation or an S-criterion standing.
 - **Terms readings:** these are the coordinator's, not legal advice.
 
 ## Crypto market data
