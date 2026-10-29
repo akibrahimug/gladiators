@@ -2,7 +2,7 @@
 
 Claude Code handoff: [P02 task packets and candidates](../../tasks/README.md#p02) · [delegation and PR workflow](../../working-with-claude.md). Dispatch Ready task cards rather than the whole phase checklist.
 
-**Status: PROPOSED; not started.** G01 passed on 2026-10-27 (DEC-047), so P02 may start once its task packets are expanded. Its inputs are the G01 conditions: the [`source_approval` records](../../evidence/P01/source-approvals.md), the P02 dependencies F-4d, F-4f, F-4g, F-4h, F-4i and F-5c (DEC-045), and the three VAL gaps as test obligations (DEC-042).
+**Status: PROPOSED; in progress since 2026-10-28.** G01 passed on 2026-10-27 (DEC-047). Tasks 1 to 4 are drafted in the [event contract](../../evidence/P02/event-contract.md) (TASK-P02-001). The inputs are the G01 conditions: the [`source_approval` records](../../evidence/P01/source-approvals.md) as amended (DEC-048 to DEC-051); the P02 dependencies F-4d, F-4f, F-4g, F-4h, F-4i and F-5c (DEC-045), plus F-4j, F-5e, CPI timing and historical FOMC and COT dates (sample results); and the three VAL gaps as test obligations (DEC-042).
 
 **Dependencies:** accepted G01 and the source contracts from [P01](../01-research-and-data-access/README.md).
 
@@ -44,6 +44,8 @@ Pass only when all selected event types have versioned contracts and provenance 
 
 **Failure and rework:** quarantine or mark incomplete inputs, revise the capture design, and repeat affected validation. Return to G01 when the source cannot satisfy the approved contract; notify downstream phases of contract changes.
 
-**Exact next step:** G01 passed on 2026-10-27; expand TASK-P02-001, the raw and normalized event contract for the approved source baseline.
+**Progress 2026-10-28:** [TASK-P02-001](../../tasks/TASK-P02-001.md) drafted the [event contract](../../evidence/P02/event-contract.md), covering tasks 1 to 4. It applies the user's decisions DEC-052 to DEC-055 and proposes resolutions for the reviewer. It adds F-4j, F-5e and CPI timing to the P02 inputs.
+
+**Exact next step:** P02 task 5, the capture validation plan: thresholds, representative windows and recovery scenarios, approved before any measurement. This includes a route to close F-4h for Kraken history.
 
 **Implementation boundary:** connectors, storage, and replay code are future work. This setup does not start data capture or implement trading.

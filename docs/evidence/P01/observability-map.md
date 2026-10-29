@@ -96,6 +96,8 @@ These are field-level classes for the four file 27 contracts (27:50–56). They 
 | `OnChainEvent` | `finality_status`, `reorg_status` | Derived | Unresolved (F-3) | Chain-specific rules |
 | `OnChainEvent` | `entity_label`, `label_source`, `attribution_confidence` | Inferred | Unresolved (F-3) | Third-party labels need licence review |
 
+*2026-10-28 pointer:* the [P02 event contract](../P02/event-contract.md) fixes these fields for P02. It adds `available_at` and its basis to every record (DEC-052), and proposes `rights_id` = the frozen `source_approval` ID, which supersedes "Unresolved until F-4" above.
+
 ## Never observable
 
 | Observation | Category | Note |
