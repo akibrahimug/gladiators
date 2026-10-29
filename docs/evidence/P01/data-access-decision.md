@@ -4,12 +4,14 @@
 
 **Status: draft proposal for the G01 reviewer, 2026-10-24; revised 2026-10-25 (TASK-P01-007, TASK-P01-008). Decision: pending.**
 
+**G01 reviewer answers, 2026-10-26** ([gate record](g01-gate-record.md#reviewer-answers-2026-10-26)). The baseline proposed below is approved in substance by DEC-036 to DEC-045, and downloads are authorised by DEC-035. Everything takes effect only when G01 passes (DEC-046), after the reviewer confirms the [`source_approval` records](source-approvals.md). Where these decisions differ from text below, they take precedence.
+
 This is the P01 deliverable "an approved data evaluation plan and access decision, including a representative sample plan and source-dependent acceptance criteria" (P01 README). It covers P01 tasks 4 and 7.
 - **What it does:** proposes a source baseline and an evaluation plan for the G01 reviewer.
 - **What it does not do:** it authorises no account, key registration, download, capture, spending or trading.
 - **Why it is pending:** it awaits the G01 review and the open items below. It no longer waits for Kraken: under [DEC-033](../../decisions/README.md) (2026-10-25) no reply is awaited, the draft email stays unsent, and Kraken was reassessed from its published text, with Binance Vision evaluated as the alternative ([reassessment](source-reassessment.md)).
 
-**No `source_approval` record (L-025) exists yet for any source.** Criterion S-1 requires one, so S-1 is incomplete for every row below, even where the rights are documented.
+**No `source_approval` record (L-025) exists yet for any source.** Criterion S-1 requires one, so S-1 is incomplete for every row below, even where the rights are documented. *(Superseded 2026-10-26: draft records SA-01 to SA-09 are in [source-approvals.md](source-approvals.md), awaiting the reviewer's confirmation, DEC-038 and DEC-046.)*
 
 ## Proposed source baseline
 
@@ -152,4 +154,4 @@ Under DEC-033 (2026-10-25) the user keeps this draft unsent, and no decision wai
 | Decision | **Pending** |
 | Dependencies | **Binance Vision:** F-5b′ (whether the archive is a Binance Service; the copy and store clauses in the general terms against the dataset licence; which version governs a UK user); the download operating conditions (no unreasonable load; respect robot exclusion); F-5c; F-5d (W-1 quote currency); F-7b (narrowed: no historical venue status); F-8 (training and paper venues); the derived-model restriction (§2.4, §4.2: no live use without a separate licence)<br>**Kraken:** F-4a (ambiguous, recorded; no reply awaited under DEC-033); F-4d; F-4f; F-4g; F-4h; F-4i<br>**ETF:** F-1 closed negatively, so DEC-029 applies and an ETF daily source stays open; F-2 and F-2a; NYSE calendar terms<br>**Crypto venue:** venue status, on the Kraken terms (F-4a); F-7 historical venue-status coverage for archived bars<br>**Context:** context retention (S-2); S-7 for Coin Metrics; the FRED date-granularity `available_at` rule (proposed, round 2)<br>**All sources:** `source_approval` records<br>**For the G01 reviewer:** the VAL gaps recorded in the register, its proposed values, and the provisional defaults W-5 (daily first) and S-3 (£0 budget)<br>**Recorded gaps:** H-OF4, H-OF6, H-OF7; H-OF8 and H-OF9 (F-3; out of scope per W-7) |
 | Kraken reply | Not awaited (DEC-033, superseding DEC-032's reply condition) |
-| Reviewer | G01 reviewer not yet designated |
+| Reviewer | The user (DEC-034, 2026-10-26) |

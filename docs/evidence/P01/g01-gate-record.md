@@ -2,7 +2,7 @@
 
 [Milestones](../../milestones.md) · [Gate-record template](../gate-record-template.md) · [P01 phase](../../phases/01-research-and-data-access/README.md) · [G00 record](../P00/g00-gate-record.md) · [Data-access decision](data-access-decision.md)
 
-**G01 decision: pending. No reviewer has been designated.**
+**G01 decision: pending the reviewer's confirmation of the `source_approval` records (DEC-046).** The reviewer (the user, DEC-034) answered GR-01 to GR-12 on 2026-10-26; see the [reviewer answers](#reviewer-answers-2026-10-26). G01 is **not passed** until that confirmation is recorded here and in the milestone register.
 - **Who prepared what:** the coordinator prepared the evidence fields, the readiness note and the decision requests on 2026-10-26, under [TASK-P01-009](../../tasks/TASK-P01-009.md).
 - **Decision fields:** these stay "Pending" until the reviewer decides.
 - **The PR:** opening or merging this record's PR passes nothing.
@@ -11,17 +11,17 @@
 | --- | --- |
 | Gate and phase | G01 — P01 Research and data access |
 | Baseline / original source manifest hash | The accepted G00 baseline ([baseline record](../P00/baseline-decision.md); DEC-027). v10 archive SHA-256: `502c61404aac90979a73d712e7ff1e7601ba58ea1927351dbfe1d9ead5b3d810` |
-| Date / owner / reviewer | **Date:** evidence prepared 2026-10-26.<br>**Owner:** unassigned in the [milestone register](../../milestones.md). DEC-008 makes the user the decision owner; GR-01 confirms this.<br>**Reviewer:** Pending (GR-01) |
+| Date / owner / reviewer | **Date:** evidence prepared 2026-10-26; reviewer answers 2026-10-26.<br>**Owner:** the user (DEC-008, confirmed by DEC-034).<br>**Reviewer:** the user (DEC-034) |
 | Requirements and components | As in the [P01 traceability](../../phases/01-research-and-data-access/README.md#traceability):<br>**Requirements:** REQ-001 to REQ-007; Proposed REQ-015 (cost and budget, decided by GR-11) and REQ-020.<br>**Components:** CMP-01, CMP-02, CMP-03, CMP-04, CMP-05 and CMP-13 |
 | Upstream passed gate records and versions | [G00](../P00/g00-gate-record.md), passed 2026-10-24 |
 | Exact acceptance criteria and pre-agreed thresholds | **Criteria:** the [G01 exit gate](../../phases/01-research-and-data-access/README.md#g01--exit-gate) and the milestone-register G01 row.<br>**Thresholds:** the proposed values in the [acceptance-objective register](acceptance-objectives.md#for-the-g01-reviewer), to be approved before any measurement (GR-08) |
 | Evidence files / source versions / dataset hashes | All are on `master` through PRs #13 to #20:<br>- [source registry](source-registry.md) (TASK-P01-001);<br>- its follow-ups: [round 1](source-followups.md) (P01-004), [round 2](source-followups-2.md) (P01-006), the [reassessment](source-reassessment.md) (P01-007) and [Binance general terms](binance-general-terms.md) (P01-008);<br>- the [observability map](observability-map.md) (P01-001);<br>- the [research agenda](research-agenda.md) (P01-002);<br>- the [acceptance-objective register](acceptance-objectives.md) (P01-003);<br>- the [data-access decision and sample plan](data-access-decision.md) (P01-005).<br>No dataset exists yet, so there are no dataset hashes |
 | Method and environment / configuration versions | Primary documentation and terms read on the dates each file states. Quotes were checked by independent `gladiator-reviewer` passes. No account, key, download, capture or vendor contact |
-| Observed outcomes | See the [readiness note](#coordinators-readiness-note). In short:<br>- every required input maps to a proposed source or a recorded gap;<br>- crypto daily bars have two Conditional sources;<br>- ETF daily bars have none (DEC-029 triggered);<br>- no `source_approval` record exists, so S-1 is incomplete for every source;<br>- nothing has been measured |
+| Observed outcomes | See the [readiness note](#coordinators-readiness-note). In short:<br>- every required input maps to a proposed source or a recorded gap;<br>- crypto daily bars have two Conditional sources;<br>- ETF daily bars have none (DEC-029 triggered);<br>- no `source_approval` record existed when this field was written, so S-1 was incomplete for every source. Draft records followed on 2026-10-26 ([source approvals](source-approvals.md); DEC-038);<br>- nothing has been measured |
 | Failed cases, uncertainty and limitations | - **Terms ambiguities:** F-4a (Kraken) and F-5b′ (Binance). Retention (S-2) is open for Kraken and every context source.<br>- **Semantics not yet verified by sample:** F-4d, F-4f, F-4g, F-4h, F-4i and F-5c.<br>- **No historical venue status:** F-7 and F-7b.<br>- **Venues:** training and paper venues differ if Binance is used (F-8).<br>- **Coin Metrics Community:** only "limited assets and 30 days of history"; exchange-flow coverage unverified; S-7 Unresolved.<br>- **NYSE calendar:** terms unread, and the terms page returned 404. Halts and circuit breakers are unchecked.<br>- **Disclaimer:** the coordinator's terms readings are not legal advice |
-| Open issues and disposition | Decision requests GR-01 to GR-12 [below](#decision-requests) |
-| Decision: pending / passed / reopened | **Pending** |
-| Decision rationale and reviewer identity | Pending |
+| Open issues and disposition | Decision requests GR-01 to GR-12 [below](#decision-requests), answered by the reviewer on 2026-10-26 as DEC-034 and DEC-036 to DEC-046 ([answers](#reviewer-answers-2026-10-26)). Downloads were authorised separately as DEC-035, effective after the pass. **Outstanding:** the reviewer's confirmation of the [draft `source_approval` records](source-approvals.md) SA-01 to SA-09, including their S-criteria standings and the SA-04 forward-only proposal for FOMC statement times, and of the §5 amendment (DEC-038, DEC-046) |
+| Decision: pending / passed / reopened | **Pending**: pass after confirmation (DEC-046) |
+| Decision rationale and reviewer identity | Reviewer: the user (DEC-034). Rationale: pending the confirmation |
 | Affected downstream gates if changed | G02 to G07 depend on G01.<br>- **Source baseline:** fixes P02's capture targets.<br>- **Proposed values:** fix the P02 to P05 capture, quality, clock and recovery thresholds.<br>- **Model-evaluation thresholds:** stay with the P06 pre-registration |
 
 ## Coordinator's readiness note
@@ -64,3 +64,48 @@ Each request names the affected IDs and lists options, with the coordinator's re
 - **Steps 0, 1 and 3:** authorising these permits public file downloads and keyless public REST calls. Step 1's Kraken REST comparison falls under F-4a. It permits no account, key or live capture.
 - **Step 2 (live capture):** needs a separate capture authorisation at the P02 boundary.
 - **Whose decision:** this authorisation is the user's to give, and it is not a gate decision.
+
+## Reviewer answers, 2026-10-26
+
+The reviewer is the user (DEC-034). They answered the interactive questions on 2026-10-26, choosing the recommended option each time. The table below gives each chosen option's **label** verbatim. The full question texts, and the chosen options' descriptions, are given verbatim under [questions as asked](#questions-as-asked-2026-10-26). The questions condensed the GR wording in the table above. Where a DEC relies on a description, it quotes it.
+
+| GR | Option chosen (verbatim) | Decision |
+| --- | --- | --- |
+| GR-01 | "Me (the user) (Recommended)" | DEC-034 |
+| Downloads (not a GR) | "Yes, after G01 (Recommended)" | DEC-035 |
+| GR-02 | "Binance primary, Kraken check (Recommended)" | DEC-036 |
+| GR-03 | "Research Binance, paper Kraken (Recommended)" | DEC-037 |
+| GR-04 | "Records + accepted limits (Recommended)" | DEC-038 |
+| GR-05 | "Per-source, never mixed (Recommended)" | DEC-039 |
+| GR-06 | "Approved rule (Recommended)" | DEC-040 |
+| GR-07 | "Forward-only (Recommended)" | DEC-041 |
+| GR-08 | "Approve with amendments (Recommended)" | DEC-042 |
+| GR-09 | "Accept as gaps (Recommended)" | DEC-043 |
+| GR-10 | "Adopt them (Recommended)" | DEC-044 |
+| GR-11 | "Confirm defaults (Recommended)" | DEC-045 |
+| GR-12 | "Pass after records (Recommended)" | DEC-046 |
+
+**Applied, pending the pass:**
+- **Records:** [source approvals](source-approvals.md), drafts SA-01 to SA-09.
+- **Register:** the §5 amendment, and the W-1 and W-7 amendments ([acceptance objectives](acceptance-objectives.md#decisions-recorded-at-g01-2026-10-26)).
+- **Data-access decision:** its status line ([data-access decision](data-access-decision.md)).
+
+## Questions as asked, 2026-10-26
+
+Verbatim text of each question put to the reviewer, followed by the chosen option's label and description. Unchosen options are summarised in the decision requests above.
+
+| Topic | Question (verbatim) | Chosen option: label — description (verbatim) |
+| --- | --- | --- |
+| GR-01 | "GR-01: Who reviews G01 (the research and data-access gate)?" | "Me (the user) (Recommended)" — "Same as G00. You answer GR-02 to GR-12 next, point-and-click; I transcribe them into the gate record." |
+| Downloads | "Separately from G01: once G01 passes, may I run the sample plan's public downloads (steps 0, 1 and 3)? That means two months of Binance Vision daily bars plus one day of trades, Kraken's archive ZIPs plus one week of keyless REST candles, and the publication times for one FOMC, CPI and COT release. No account, key or live capture." | "Yes, after G01 (Recommended)" — "Authorises steps 0, 1 and 3 only, under the GR-10 operating conditions; files kept outside the repo, checksums recorded. Live capture (step 2) still needs its own authorisation." |
+| GR-02 | "GR-02: Which source should supply crypto daily-bar history?" | "Binance primary, Kraken check (Recommended)" — "Binance Vision's terms explicitly permit personal backtesting. Against: models derived from it can't be used live without a licence; F-5b′ open; delistings and venue status unverified. Kraken archive cross-checks." |
+| GR-03 | "GR-03: Binance trains, but live/paper data would come from Kraken (F-8). How should training and paper-simulation venues relate?" | "Research Binance, paper Kraken (Recommended)" — "Any model used in paper simulation is trained and run on Kraken; keeps Binance-derived models out of later live use. Cost: Binance findings must be revalidated on Kraken; paper carries Kraken's ambiguity." |
+| GR-04 | "GR-04: No source yet meets S-1 (no source_approval record) and S-2 (retention open/ambiguous) under the register's §5 rule. How should that apply?" | "Records + accepted limits (Recommended)" — "Before the pass I draft source_approval records for every baseline source stating their open items; §5 is amended so a recorded, reviewer-accepted limitation satisfies S-1/S-2 for personal non-commercial use. Any change of use reopens it." |
+| GR-05 | "GR-05: Binance pairs are mostly USDT-quoted; W-1 says USD (F-5d). Which quote-currency rule?" | "Per-source, never mixed (Recommended)" — "USD on Kraken, USDT on Binance, never mixed within one model; USDT/USD basis recorded as a limitation." |
+| GR-06 | "GR-06: No historical venue status exists for archived bars (F-7, F-7b). How should backtests treat it?" | "Approved rule (Recommended)" — "Missing or zero-volume day = status-unknown, no new entries that day; otherwise assume the venue was open. Recorded as an assumption with its limitation." |
+| GR-07 | "GR-07: Coin Metrics Community has unresolved publication timing (S-7) and only limited assets/30 days of history. What to do?" | "Forward-only (Recommended)" — "available_at = retrieved_at, no history until completion times are documented; limits recorded." |
+| GR-08 | "GR-08: Approve the register's proposed values (W-1, W-2 N=10, W-4 2 pairs/depth 10, W-7, T-2a, T-3, T-5 100 ms, T-6, Q-4 95%, R-3 p95≤60 s, R-4 ≥99%, R-5 ≤2 GB), plus the FRED available_at rule and the 3 VAL gaps as P02 test obligations?" | "Approve with amendments (Recommended)" — "As proposed, with W-1 amended per GR-02/GR-05 and W-7 per GR-06/GR-07/GR-09." |
+| GR-09 | "GR-09: Accept the recorded gaps as scope adjustments? (ETF source, corporate actions and NYSE calendar deferred under DEC-029; no historical L2; no L3 (H-OF4); no live second venue (H-OF6); H-OF7 NOII paid/issuer holdings unresolved; H-OF8 and on-chain RPC out of scope.)" | "Accept as gaps (Recommended)" — "Recorded as accepted scope adjustments; Alpaca Basic stays noted as the ETF alternative if the key boundary is reopened." |
+| GR-10 | "GR-10: Adopt these operating conditions for any download: reasonable load, respect robot-exclusion headers, REST pulls only on explicit invocation, verify every published checksum?" | "Adopt them (Recommended)" — "They come from Binance's general terms and 09-CONNECTORS.md ('No hidden spend'); they bind the sample plan." |
+| GR-11 | "GR-11: Confirm the DEC-017 initial-scope defaults? Universe: US ETFs + crypto spot (derivatives context only; ETFs follow crypto per DEC-029). Horizon: daily first. Budget: £0. The sample-plan items F-4d/f/g/h/i and F-5c become P02 dependencies." | "Confirm defaults (Recommended)" — "Converts your earlier research assumptions into G01 commitments; still authorises no spending, implementation or trading." |
+| GR-12 | "GR-12: G01 decision. Under your GR-04 answer, source_approval records must be drafted before the pass. How should the pass happen?" | "Pass after records (Recommended)" — "I draft the source_approval records and the amended §5 rule; you confirm them in one question; then G01 passes and is recorded with these conditions. P02 can then start." |
