@@ -50,6 +50,8 @@ Pass only when all selected event types have versioned contracts and provenance 
 
 On 2026-10-28 the user approved the thresholds (DEC-056), authorised the retrievals (DEC-057) and assigned the implementation on held files (DEC-058). [TASK-P02-002](../../tasks/TASK-P02-002.md) built it and ran the plan on held files ([results](../../evidence/P02/capture-validation-results.md)). All 19 runnable fixtures and all 7 recovery scenarios pass. One archive/REST difference was found (F-4h).
 
-**Exact next step:** the DEC-057 retrievals and live capture (CV-11, CV-12, F-15), then the user's review for G02.
+[TASK-P02-005](../../tasks/TASK-P02-005.md) built the network side and ran the authorised calls ([results](../../evidence/P02/network-capture.md)): 18 HEAD requests, one daily REST test, and a 1-hour live capture. In the live capture, Q-5, R-1 to R-5 passed, T-5 was flagged (the clock is 34–258 ms off), and T-6 was not triggered.
+
+**Exact next step:** the user installs the 30-day job and decides when to start the 7-day live window; then RC-05 to RC-08 injection, and the user's review for G02.
 
 **Implementation boundary:** capture code for held files exists (`src/gladiator_capture/`, DEC-058). Network transports, live capture and the DEC-057 retrievals are later tasks. Trading is out of scope.

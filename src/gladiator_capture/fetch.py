@@ -58,7 +58,7 @@ def fetch(request: str, transport: Transport, store: RawStore, *, source_id: str
             resp, reason = None, type(exc).__name__
         if resp is not None:
             store.journal(JournalEntry(now, request, "attempt", None, resp.status, len(resp.body)))
-            if resp.status in (401, 403):
+            if resp.status in (401, 403) or 300 <= resp.status < 400:  # refusals and unfollowed redirects are terminal
                 reason = f"http_{resp.status}"
                 break
             if resp.status == 429:

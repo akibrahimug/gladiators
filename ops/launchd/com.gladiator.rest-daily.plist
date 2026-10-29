@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  DEC-061: the 30-day Kraken REST pull, daily at 00:15 UTC. Install steps: ops/launchd/README.md.
+  CODE_PATH and DATA_PATH must be absolute paths OUTSIDE ~/Documents, ~/Desktop and ~/Downloads
+  (macOS privacy controls block background jobs there). StartCalendarInterval is local time.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.gladiator.rest-daily</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>-I</string>
+    <string>CODE_PATH/capture.py</string>
+    <string>daily</string>
+    <string>--out</string>
+    <string>DATA_PATH/rest-daily</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>0</integer>
+    <key>Minute</key>
+    <integer>15</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>DATA_PATH/rest-daily/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>DATA_PATH/rest-daily/launchd.err.log</string>
+</dict>
+</plist>
