@@ -299,6 +299,10 @@ class ReviewFixTests(unittest.TestCase):
         self.assertEqual(A.entry_blocked(recs, gap(29, "data_gap"), d, 20), "data_gap_in_last_completed_interval")
         self.assertIsNone(A.entry_blocked(recs, gap(29, "no_trade"), d, 20))
         self.assertIsNone(A.entry_blocked(recs, gap(30, "data_gap"), d, 20))  # the bar still forming at D
+        later = [A.GapInterval("s", "f", "i", start + 29 * step, start + 30 * step, "data_gap", "x", d + 1)]
+        self.assertIsNone(A.entry_blocked(recs, later, d, 20))  # found after D: no lookahead
+        span = [A.GapInterval("s", "f", "i", start + 29 * step + 5, start + 31 * step, "data_gap", "trade_id", 0)]
+        self.assertEqual(A.entry_blocked(recs, span, d, 20), "data_gap_in_last_completed_interval")
         self.assertEqual(A.entry_blocked(recs, [], d, 40), "coverage_below_q4")
         self.assertIsNone(A.entry_blocked(recs, [], d, 20))
 
