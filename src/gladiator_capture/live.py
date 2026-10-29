@@ -223,7 +223,30 @@ class Capture:
         self.maint_since = None
 
     def _book(self, ws, kind: str, d: dict, recv_ns: int) -> None:
+        """Apply one book message. If it cannot be parsed or checked, the book may already hold
+        unverified levels, so it is invalidated and resynced before the error is re-raised (Q-5)."""
         sym = d["symbol"]
+        try:
+            self._apply_book(ws, kind, d, recv_ns, sym)
+        except (WebSocketClosed, OSError):
+            raise
+        except Exception:
+            self._resync(ws, sym, "parse_error", recv_ns)
+            raise
+
+    def _resync(self, ws, sym: str, reason: str, recv_ns: int) -> None:
+        b = self.books[sym]
+        self.invalidate(sym, reason, recv_ns)
+        b.resync_times = [t for t in b.resync_times if recv_ns - t < 60 * 1_000_000_000]
+        if len(b.resync_times) >= RESYNC_MAX_PER_MIN:
+            self.st["resync_capped"] += 1
+            return
+        b.resync_times.append(recv_ns)
+        self.st["resyncs"] += 1
+        ws.send_text(json.dumps({"method": "unsubscribe", "params": {"channel": "book", "symbol": [sym], "depth": DEPTH}}))
+        self.subscribe(ws, "book", {"depth": DEPTH, "snapshot": True}, symbols=[sym])
+
+    def _apply_book(self, ws, kind: str, d: dict, recv_ns: int, sym: str) -> None:
         b = self.books[sym]
         if kind == "snapshot":
             b.bids, b.asks = {}, {}
@@ -256,15 +279,7 @@ class Capture:
                 self.event("book_valid", symbol=sym)
         else:
             self.st["checksum_fail"] += 1
-            self.invalidate(sym, "checksum_mismatch", recv_ns)
-            b.resync_times = [t for t in b.resync_times if recv_ns - t < 60 * 1_000_000_000]
-            if len(b.resync_times) >= RESYNC_MAX_PER_MIN:
-                self.st["resync_capped"] += 1
-                return
-            b.resync_times.append(recv_ns)
-            self.st["resyncs"] += 1
-            ws.send_text(json.dumps({"method": "unsubscribe", "params": {"channel": "book", "symbol": [sym], "depth": DEPTH}}))
-            self.subscribe(ws, "book", {"depth": DEPTH, "snapshot": True}, symbols=[sym])
+            self._resync(ws, sym, "checksum_mismatch", recv_ns)
 
     # -- loop ------------------------------------------------------------------
     def run(self) -> dict:

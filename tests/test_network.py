@@ -170,6 +170,17 @@ class MoreCaptureTests(CaptureTests):
         self.assertEqual((summary["parse_errors"], summary["checksum_ok"]), (1, 2))
         self.assertEqual(len(lines), 5)
 
+    def test_malformed_update_invalidates_and_resyncs(self):  # Q-5 / S-15 (Codex review of PR #30)
+        frames = self.frames()
+        bad = {"channel": "book", "type": "update", "data": [{"symbol": "BTC/USD", "bids": [{"price": 100.0, "qty": 9}],
+                                                              "asks": []}]}  # quantity changed, no checksum
+        frames.insert(1, json.dumps(bad))
+        summary, fake, _ = self.run_capture(frames)
+        self.assertEqual((summary["parse_errors"], summary["resyncs"]), (1, 1))
+        self.assertIn("unsubscribe", [m["method"] for m in fake.sent])
+        # the following good update is not accepted on the unverified book
+        self.assertEqual((summary["checksum_ok"], summary["checksum_fail"]), (1, 0))
+
     def test_updates_skipped_until_snapshot(self):
         frames = self.frames()
         summary, _, _ = self.run_capture([frames[1]] + frames)  # update before any snapshot

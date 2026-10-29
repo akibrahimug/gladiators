@@ -125,7 +125,7 @@ A file whose digit count contradicts its era is quarantined as a schema mismatch
 
 | Source | `available_at` | Basis | Authority |
 | --- | --- | --- | --- |
-| Binance daily or monthly file | The file's `Last-Modified`; if that is not recorded, `retrieved_at`. A later re-retrieval with different bytes gives the new version `retrieved_at` | `archive_published`, else `retrieved` | T-2a; DEC-053. **Consequence:** files backfilled on 2021-06-22 (every pre-launch month in the retained listings) make those older bars available only from 2021-06-22. See [§8](#8-for-the-g02-reviewer) |
+| Binance daily or monthly file | The file's `Last-Modified` + 6 h, flagged `available_at_estimated` (DEC-069: `Last-Modified` is only the earliest possible publication time); if `Last-Modified` is not recorded, `retrieved_at`. A later re-retrieval with different bytes gives the new version `retrieved_at` | `archive_published`, else `retrieved` | T-2a; DEC-053; DEC-069. **Consequence:** files backfilled on 2021-06-22 (every pre-launch month in the retained listings) make those older bars available only from 2021-06-22. See [§8](#8-for-the-g02-reviewer) |
 | Kraken quarterly or full archive | The MANIFEST `generated` date (2026-10-01 for both Q3 and the full archive); `retrieved_at` if it is absent. **Consequence:** historical Kraken bars become available only from 2026-10-01 ([§8](#8-for-the-g02-reviewer)) | `archive_published` | T-2a; F-4i |
 | Kraken REST `OHLC` | `received_at`, for completed bars only; the current incomplete bar is dropped (Proposed; C16) | `live_receive` | "completed bars only" (v10 10:18) |
 | Any revised record | Our `retrieved_at` for the revised object | `retrieved` | DEC-053 |
@@ -354,7 +354,7 @@ C12: F-4j, F-5e and CPI timing came out of TASK-P01-013 and P01-014, after DEC-0
 - T-2a's default, the archive publication time, makes Kraken archive history unusable at its own dates, because the Q3 and full archives were both generated on 2026-10-01.
 - T-2a allows bar-close timing only "if the venue documents availability at bar close" and the archive matches what was served at the time. That is F-4h, which is still Unresolved.
 - Kraken history is what DEC-037 uses for the paper-simulation models, so F-4h decides whether Kraken backtests are possible.
-- **Binance has a similar, smaller effect.** In the retained listings, every monthly file for months before the archive's launch was written on 2021-06-22. Under T-2a those bars are available only from 2021-06-22, so Binance research history before mid-2021 cannot be used at its own dates either. Most later files publish within days, though the listings show some late ones (for example LUNCUSDT 2024-07, 281 days after its month).
+- **Binance has a similar, smaller effect.** In the retained listings, every monthly file for months before the archive's launch was written on 2021-06-22. Under T-2a those bars are available only from 2021-06-22 (plus DEC-069's 6 h), so Binance research history before mid-2021 cannot be used at its own dates either. Most later files publish within days, though the listings show some late ones (for example LUNCUSDT 2024-07, 281 days after its month).
 - The capture validation plan (P02 task 5) should propose how to close F-4h, for example by comparing forward REST bars received at bar close with the next archive release.
 
 ## Decisions asked, 2026-10-28
