@@ -49,10 +49,10 @@ Unchosen options:
 
 ## Validation
 
-- **Tests:** `/usr/bin/python3 -I -B -m unittest discover -s tests` gives 74 OK on Python 3.9 and 3.12 at `8228135`.
+- **Tests:** `/usr/bin/python3 -I -B -m unittest discover -s tests` gives 74 OK on Python 3.9 and 3.12 at `8228135` and `8ce10f2`.
   - Against the pre-fix code (`b62ec71`), 9 of them fail or error. The short-write test reproduces Codex's `JSONDecodeError` on reopen.
   - Against the first fix (`fa8ef7b`), 3 still fail or error: the last-completed-interval, member-retry and parse-error-bucket cases.
-- **Validation runner** (`run_validation.py`, held files, code at `8228135`): 19 of 19 runnable fixtures and 10 of 10 recovery scenarios pass. The report, SHA-256 `71ef844b…2201`, is byte-identical across two runs. It replaces `b21845b5…3ef2`.
+- **Validation runner** (`run_validation.py`, held files, code at `8228135`; re-run at `8ce10f2` with the same hash): 19 of 19 runnable fixtures and 10 of 10 recovery scenarios pass. The report, SHA-256 `71ef844b…2201`, is byte-identical across two runs. It replaces `b21845b5…3ef2`.
 - **Changes in the report:**
   - DEC-069 changes the W-A content hash from `d29b8f86…8599` to `e5c6aaf0…b84a`. W-A is the only window with a content hash. W-B and W-D records also move, but the report gives no hash for them.
   - The delisting strings (four in W-F, one in F-11) now read `>= last bar (lower bound); status_unknown after`.
