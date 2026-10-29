@@ -75,22 +75,25 @@ def fetch(request: str, transport: Transport, store: RawStore, *, source_id: str
                 if cl is not None and int(cl) != len(resp.body):
                     reason = "truncated"
                 else:
-                    with tempfile.NamedTemporaryFile(delete=False) as tmp:
-                        tmp.write(resp.body)
                     obj = None
+                    tmp = None
                     try:
+                        tmp = tempfile.NamedTemporaryFile(delete=False)
+                        tmp.write(resp.body)
+                        tmp.close()
                         obj = store.ingest_file(Path(tmp.name), source_id=source_id,
                                                 source_approval_id=source_approval_id, request=request,
                                                 published_checksum=published_checksum,
                                                 server_last_modified=resp.headers.get("Last-Modified"),
                                                 http_status=resp.status)
                     except OSError as exc:  # RC-06: write failure; stop, do not retry into a full disk
-                        for part in store.root.glob("objects/*/*.part"):
-                            part.unlink()
-                        reason = f"write_failed:{type(exc).__name__}"
+                        from .rawstore import CopyHashMismatch
+                        reason = "copy_hash_mismatch" if isinstance(exc, CopyHashMismatch) else f"write_failed:{type(exc).__name__}"
                         break
                     finally:
-                        Path(tmp.name).unlink(missing_ok=True)
+                        if tmp is not None:
+                            tmp.close()
+                            Path(tmp.name).unlink(missing_ok=True)
                     if not obj.quarantined:
                         return FetchResult(obj, None, attempts)
                     reason = "checksum_mismatch"

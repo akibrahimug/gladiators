@@ -33,6 +33,7 @@ DEPTH = 10
 RECONNECT_DELAYS_S = (1, 2, 5, 10, 30, 60)
 RESYNC_MAX_PER_MIN = 6
 SEGMENT_NS = 3600 * 1_000_000_000
+NTP_INTERVAL_NS = 30 * 1_000_000_000  # DEC-066: every 30 s; after one failed query the next good sample is ~60 s + query time later
 
 
 def _fmt(value: Decimal, decimals: int) -> str:
@@ -79,9 +80,17 @@ class Book:
         return book_checksum(self.asks, self.bids, self.price_dec, self.qty_dec)
 
 
+_RFC3339 = __import__("re").compile(r"^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:\d{2})$")
+
+
 def rfc3339_to_ns(text: str) -> int:
-    dt = datetime.fromisoformat(text.replace("Z", "+00:00"))
-    return int(dt.timestamp()) * 1_000_000_000 + dt.microsecond * 1000
+    """RFC 3339 to integer ns, for any fraction length (Python 3.9's fromisoformat accepts only 3 or 6)."""
+    m = _RFC3339.match(text)
+    if not m:
+        raise ValueError(f"not RFC 3339: {text!r}")
+    base = datetime.fromisoformat(m.group(1) + ("+00:00" if m.group(3) == "Z" else m.group(3)))
+    frac = (m.group(2) or "").ljust(9, "0")[:9]
+    return int(base.timestamp()) * 1_000_000_000 + int(frac)
 
 
 def ntp_offset_ms(server: str = "time.apple.com", timeout: float = 2.0) -> Optional[float]:
@@ -281,7 +290,7 @@ class Capture:
                         self.offset_ms = off
                         self.st["ntp_offsets_ms"].append(off)
                         self.event("ntp", offset_ms=off)
-                        next_ntp = self.mono() + 60 * 1_000_000_000
+                        next_ntp = self.mono() + NTP_INTERVAL_NS
                     text = ws.recv_text()
                     recv_ns = self.clock()
                     self.journal(recv_ns, text)

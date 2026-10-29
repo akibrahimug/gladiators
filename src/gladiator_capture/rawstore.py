@@ -6,8 +6,10 @@ It performs no network access (DEC-058).
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
+import os
 import shutil
 import time
 import zipfile
@@ -60,6 +62,10 @@ class JournalEntry:
     detail: Optional[str] = None
 
 
+class CopyHashMismatch(OSError):
+    """The stored copy's hash differs from the source's."""
+
+
 class RawStore:
     """Content-addressed, append-only store rooted outside the repository.
 
@@ -67,38 +73,120 @@ class RawStore:
     current record for each request, so the same bytes under two requests keep separate
     retrieval records."""
 
-    def __init__(self, root: Path, clock=time.time_ns):
+    def __init__(self, root: Path, clock=time.time_ns, auto_recover: bool = True, read_only: bool = False):
+        """A writer (the default) takes an exclusive lock on `.writer.lock` until close(), repairs a
+        cut-off final journal or index line, and runs recover() (RC-05). Both are safe because no
+        other writer can be mid-ingest.
+
+        `read_only=True` takes no lock and changes nothing. Use it for analysis, including any
+        store that a process without the lock may be writing (the 7-day capture, DEC-064)."""
         self.root = Path(root)
         self.clock = clock
-        (self.root / "objects").mkdir(parents=True, exist_ok=True)
+        self.read_only = read_only
+        self._lock_fd = None
         self._index_path = self.root / "index.jsonl"
         self._journal_path = self.root / "journal.jsonl"
+        self.repaired: list = []
+        if not read_only:
+            (self.root / "objects").mkdir(parents=True, exist_ok=True)
+            self._lock_fd = os.open(self.root / ".writer.lock", os.O_RDWR | os.O_CREAT, 0o644)
+            try:
+                fcntl.flock(self._lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError:
+                os.close(self._lock_fd)
+                self._lock_fd = None
+                raise RuntimeError(f"raw store {self.root} is held by another writer")
+            for p in (self._journal_path, self._index_path):
+                self._repair_tail(p)
         self.objects: dict[str, RawObject] = {}
         self.latest_by_request: dict[str, str] = {}
         self.object_for_request: dict[str, RawObject] = {}
-        if self._index_path.exists():
-            for line in self._index_path.read_text().splitlines():
-                obj = RawObject(**json.loads(line))
-                self.objects.setdefault(obj.raw_id, obj)
-                if obj.member_path is None and not obj.quarantined:
-                    self.latest_by_request[obj.request] = obj.raw_id
-                    self.object_for_request[obj.request] = obj
+        self.indexed: set = set()
+        self.truncated_lines: list = []  # set only for read-only opens; writers repair the tail
+        for d in self._read_lines(self._index_path):
+            obj = RawObject(**d)
+            self.objects.setdefault(obj.raw_id, obj)
+            self.indexed.add((obj.request, obj.raw_id))
+            if obj.member_path is None and not obj.quarantined:
+                self.latest_by_request[obj.request] = obj.raw_id
+                self.object_for_request[obj.request] = obj
+        self.last_recovery = self.recover() if auto_recover and not read_only else None
+
+    def _repair_tail(self, path: Path) -> None:
+        """Cut a file back to its last newline, so that a fragment left by a failed write cannot
+        merge with the next line (RC-06). The cut bytes are kept beside the file."""
+        if not path.exists():
+            return
+        data = path.read_bytes()
+        if not data or data.endswith(b"\n"):
+            return
+        keep = data.rfind(b"\n") + 1
+        frag = path.with_name(path.name + f".cut-{self.clock()}")
+        frag.write_bytes(data[keep:])
+        with open(path, "r+b") as fh:
+            fh.truncate(keep)
+        self.repaired.append({"file": path.name, "bytes_cut": len(data) - keep, "kept_as": frag.name})
+
+    def close(self) -> None:
+        if getattr(self, "_lock_fd", None) is not None:
+            fcntl.flock(self._lock_fd, fcntl.LOCK_UN)
+            os.close(self._lock_fd)
+            self._lock_fd = None
+
+    def __del__(self):
+        try:
+            self.close()
+        except Exception:
+            pass
+
+    def _read_lines(self, path: Path) -> list:
+        """Parsed JSON lines. A truncated final line (a write cut off by a full disk) is skipped
+        and recorded rather than failing the store."""
+        if not path.exists():
+            return []
+        lines = path.read_bytes().split(b"\n")
+        out = []
+        for i, line in enumerate(lines):
+            if not line.strip():
+                continue
+            try:
+                out.append(json.loads(line))
+            except ValueError:
+                if i >= len(lines) - 2:
+                    self.truncated_lines.append(path.name)
+                    continue
+                raise
+        return out
+
+    @staticmethod
+    def _append(path: Path, record: dict) -> None:
+        """One complete line per write; a short write is an error (RC-06)."""
+        data = (json.dumps(record, sort_keys=True) + "\n").encode()
+        fd = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o644)
+        try:
+            if os.write(fd, data) != len(data):
+                raise OSError("short write")
+        finally:
+            os.close(fd)
 
     def object_path(self, raw_id: str) -> Path:
         return self.root / "objects" / raw_id[:2] / raw_id
 
+    def _writable(self) -> None:
+        if self.read_only:
+            raise PermissionError("raw store opened read-only")
+
     def journal(self, entry: JournalEntry) -> None:
-        with open(self._journal_path, "a") as fh:
-            fh.write(json.dumps(asdict(entry), sort_keys=True) + "\n")
+        self._writable()
+        self._append(self._journal_path, asdict(entry))
 
     def journal_entries(self) -> list:
-        if not self._journal_path.exists():
-            return []
-        return [JournalEntry(**json.loads(x)) for x in self._journal_path.read_text().splitlines()]
+        return [JournalEntry(**d) for d in self._read_lines(self._journal_path)]
 
     def _index(self, obj: RawObject) -> None:
-        with open(self._index_path, "a") as fh:
-            fh.write(json.dumps(asdict(obj), sort_keys=True) + "\n")
+        self._writable()
+        self._append(self._index_path, asdict(obj))
+        self.indexed.add((obj.request, obj.raw_id))
 
     def ingest_file(
         self,
@@ -115,6 +203,7 @@ class RawStore:
         """Store a held or retrieved file. Identical bytes at the same request are idempotent
         (S-02a); different bytes at the same request are a new version (S-09). A published
         checksum is always verified, including on a repeat (S-01)."""
+        self._writable()
         now = self.clock()
         raw_id = sha256_file(path)
         size = Path(path).stat().st_size
@@ -137,15 +226,20 @@ class RawStore:
             quarantined=quarantined, reason="checksum_mismatch" if quarantined else None,
         )
         dest = self.object_path(raw_id)
+        self.journal(JournalEntry(now, request, "started", raw_id, http_status, size))  # RC-05 marker
         if not dest.exists():
             dest.parent.mkdir(parents=True, exist_ok=True)
             tmp = dest.with_suffix(".part")
-            shutil.copyfile(path, tmp)
-            if sha256_file(tmp) != raw_id:
-                tmp.unlink()
-                self.journal(JournalEntry(now, request, "failed", None, http_status, size, "copy_hash_mismatch"))
-                raise IOError("copy hash mismatch")
-            tmp.rename(dest)
+            try:
+                self._copy(path, tmp)
+                if sha256_file(tmp) != raw_id:
+                    raise CopyHashMismatch(raw_id)
+                tmp.rename(dest)
+            except OSError as exc:  # RC-06: write failure or bad copy; nothing partial is kept
+                tmp.unlink(missing_ok=True)
+                reason = "copy_hash_mismatch" if isinstance(exc, CopyHashMismatch) else f"write_failed:{type(exc).__name__}"
+                self.journal(JournalEntry(self.clock(), request, "failed", raw_id, http_status, size, reason))
+                raise
         self.objects.setdefault(raw_id, obj)
         self._index(obj)
         if not quarantined:
@@ -155,7 +249,39 @@ class RawStore:
                                   obj.reason))
         return obj
 
+    _copy = staticmethod(shutil.copyfile)  # replaceable in fault-injection tests (RC-06)
+
+    def recover(self) -> dict:
+        """RC-05: after a crash, find ingests journalled as `started` with no completion entry,
+        remove their partial files, and journal each as `recovered_incomplete`. Completed objects
+        are untouched; re-running the same ingest is idempotent (S-02a)."""
+        self._writable()
+        done_outcomes = {"stored", "quarantined", "duplicate", "failed", "recovered_incomplete", "recovered_complete"}
+        open_: dict = {}
+        for e in self.journal_entries():
+            key = (e.request, e.raw_id)
+            if e.outcome == "started":
+                open_[key] = e
+            elif e.outcome in done_outcomes:
+                open_.pop(key, None)
+        removed = []
+        for p in self.root.glob("objects/*/*.part"):
+            p.unlink()
+            removed.append(p.name)
+        incomplete, complete = [], []
+        for (request, raw_id), e in open_.items():
+            if (request, raw_id) in self.indexed and self.object_path(raw_id).exists():
+                complete.append({"request": request, "raw_id": raw_id})  # crashed after indexing
+                outcome, detail = "recovered_complete", "indexed before the crash"
+            else:
+                incomplete.append({"request": request, "raw_id": raw_id})
+                outcome, detail = "recovered_incomplete", "no completion marker"
+            self.journal(JournalEntry(self.clock(), request, outcome, raw_id, e.http_status, e.byte_length, detail))
+        return {"incomplete": incomplete, "completed_before_crash": complete, "partials_removed": removed,
+                "tail_repairs": list(self.repaired)}
+
     def _member_obj(self, container: RawObject, name: str, data: bytes) -> RawObject:
+        self._writable()
         rid = sha256_bytes(data)
         dest = self.object_path(rid)
         if not dest.exists():
