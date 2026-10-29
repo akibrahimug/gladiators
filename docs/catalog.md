@@ -41,6 +41,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/evidence/P01/source-reassessment.md](<evidence/P01/source-reassessment.md>) |
 | [docs/evidence/P01/source-registry.md](<evidence/P01/source-registry.md>) |
 | [docs/evidence/P02/capture-and-recovery.md](<evidence/P02/capture-and-recovery.md>) |
+| [docs/evidence/P02/capture-validation-results.md](<evidence/P02/capture-validation-results.md>) |
 | [docs/evidence/P02/capture-validation-plan.md](<evidence/P02/capture-validation-plan.md>) |
 | [docs/evidence/P02/event-contract.md](<evidence/P02/event-contract.md>) |
 | [docs/evidence/README.md](<evidence/README.md>) |
@@ -510,6 +511,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P01-013.md](<tasks/TASK-P01-013.md>) |
 | [docs/tasks/TASK-P01-014.md](<tasks/TASK-P01-014.md>) |
 | [docs/tasks/TASK-P02-001.md](<tasks/TASK-P02-001.md>) |
+| [docs/tasks/TASK-P02-002.md](<tasks/TASK-P02-002.md>) |
 | [docs/tasks/TASK-P02-004.md](<tasks/TASK-P02-004.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
 | [docs/traceability/components.md](<traceability/components.md>) |
