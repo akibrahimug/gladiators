@@ -45,7 +45,7 @@ The command was `/usr/bin/python3 -I -B tools/apply_clock_1h.py src <scratchpad>
   - 5 queries failed, giving gaps of about 125 s.
 - **The user's decision (DEC-066):** query every 30 s from the next capture. No record exceeded the 1 s or 60 s offset limits.
 
-**Do not open the running 7-day store with this code.** The 7-day capture (DEC-064) runs code `5b69e7f`, which takes no writer lock. Until it ends, about 2026-11-04 10:35 UTC, open `~/gladiator-data/live-7d/store` only with `RawStore(..., read_only=True)`, which refuses `recover()` and every write. A writer open would remove the capture's in-progress `.part` copy and write into its journal.
+**Do not open the running 7-day store with this code.** The 7-day capture (DEC-064) runs code `5b69e7f`, which takes no writer lock. Until it has exited, about 2026-11-04 23:57 UTC (its timer counts awake time only; see the [live run interruption](live-run-interruption.md)), open `~/gladiator-data/live-7d/store` only with `RawStore(..., read_only=True)`, which refuses `recover()` and every write. A writer open would remove the capture's in-progress `.part` copy and write into its journal.
 
 ## 3. CV-11 status
 
