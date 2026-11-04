@@ -142,6 +142,13 @@ class AnalysisTests(unittest.TestCase):
         self.assertAlmostEqual(r["pairs"]["ETH/USD"]["invalid_s_capture_events_only"], 0)
         self.assertTrue(r["Q5"]["pass"])
 
+    def test_parse_error_at_its_frames_own_time(self):  # attribution boundary: event ns == frame ns
+        bad = json.dumps({"channel": "book", "type": "update", "data": [{"symbol": "ETH/USD", "bids": []}]})
+        frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 30 * S + 5, bad), (T0 + 40 * S, snap("ETH/USD"))])
+        ev = valid_both(0) + [(T0 + 30 * S + 5, "parse_error", {"error": "KeyError"}), (T0 + 40 * S, "book_valid", {"symbol": "ETH/USD"})]
+        r = self.basic(frames, ev, duration_s=100)
+        self.assertEqual(r["parse_error_detail"][0]["invalidates"], ["ETH/USD"])
+
     def test_parse_error_on_other_frame_invalidates_nothing(self):
         frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 30 * S + 5, trade("ETH/USD", T0 + 30 * S))])
         ev = valid_both(0) + [(T0 + 30 * S + 9, "parse_error", {"error": "KeyError"}),

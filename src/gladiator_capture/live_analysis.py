@@ -268,7 +268,10 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
                     recv, text = int(rec["recv_ns"]), rec["frame"]
                 except (ValueError, KeyError, TypeError):
                     malformed_frames.append(f"{seg.name}:{ln}")
+                    last_info = {"channel": "unreadable_journal_line", "symbols": [], "frame": f"{seg.name}:{ln}"}
                     continue
+                # strict <: the event is written after its own frame is handled, so its time is >= that frame's
+                # recv_ns; an event at exactly this frame's time therefore belongs to this frame, not the one before
                 while pi < len(pe_times) and pe_times[pi] < recv:
                     pe_attr[pi] = last_info
                     pi += 1
