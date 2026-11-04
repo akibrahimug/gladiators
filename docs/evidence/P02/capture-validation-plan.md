@@ -17,7 +17,7 @@
 | CV-03 | Every fixture F-01 to F-18 gives exactly its expected result | Event contract §5; F-18 below | All fixtures pass | VAL-004 |
 | CV-04 | Q-1: invalid rows are quarantined, never cleaned (fixtures F-02b, F-03, F-06, F-06b) | Q-1 | The fixtures pass. In W-A, 620 rows, of which 0 are quarantined | **New: closes the Q-1 VAL gap** (DEC-042) |
 | CV-05 | Q-2: every missing interval is classified into one of the three classes | Q-2 as amended | `GapInterval` count equals the expected-grid gaps. W-E: XBTUSD 12 and ETHUSD 6, all `status_unknown`. W-A: 0 | VAL-004 |
-| CV-06 | Q-3: one coverage report per snapshot (raw, accepted, quarantined, duplicate and missing counts). **Fails closed** when coverage is inadequate | Q-3 | The report exists for each window, with counts equal to the expected values: W-A 620 / 620 / 0 / 0 / 0; W-E XBTUSD 4,731 rows and 12 gaps, ETHUSD 4,067 rows and 6 gaps. Fail-closed trigger: a pair below Q-4's 95 %, or any `status_unknown` interval on the decision day (DEC-040), blocks new entries on that pair, and the report says so | **New: closes the Q-3 VAL gap** |
+| CV-06 | Q-3: one coverage report per snapshot (raw, accepted, quarantined, duplicate and missing counts). **Fails closed** when coverage is inadequate | Q-3 | The report exists for each window, with counts equal to the expected values: W-A 620 / 620 / 0 / 0 / 0; W-E XBTUSD 4,731 rows and 12 gaps, ETHUSD 4,067 rows and 6 gaps. Fail-closed trigger: a pair below Q-4's 95 %, or a `data_gap` or `status_unknown` interval in the last completed interval before the decision (DEC-040; corrected 2026-10-29, TASK-P02-008), blocks new entries on that pair, and the report says so | **New: closes the Q-3 VAL gap** |
 | CV-07 | Q-4 pre-fold coverage: ≥ 95 % of look-back days present or `no_trade`. A pair listed partway through the look-back counts only days since listing, and must meet the minimum training length. A delisting ends the series | Q-4 | F-18 passes. On W-E, XBTUSD and ETHUSD qualify for any 365-day look-back starting after 2015-12-31: at most 1 missing day (ETHUSD 2018-01-12) | **New: closes the Q-4 VAL gap** |
 | CV-08 | Q-7: every record has `venue`, `source_id` and `feed_id`, and none is labelled consolidated | Q-7 | 100 % (schema check) | **Closes the Q-7 gap** (event contract §3) |
 | CV-09 | Normalized-layer replay determinism: two replays of the same raw objects give byte-identical output | Q-6; DEC-054 | The output hashes are equal | VAL-003 (G03), checked here for the normalized layer |
@@ -94,7 +94,7 @@ The event contract (§8) notes that Kraken archive history counts as available o
 
 DEC-035 covers only the sample plan's own steps.
 
-**F-4j.** An `AssetPairs` snapshot taken with each REST pull dates future Kraken delistings to within a day. Past delisting dates stay upper bounds.
+**F-4j.** An `AssetPairs` snapshot taken with each REST pull dates future Kraken delistings to within a day. Past delisting dates are known only from below: the last bar is a lower bound (corrected 2026-10-29, TASK-P02-008).
 
 ## 5. P01 sample results carried forward
 

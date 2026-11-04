@@ -87,6 +87,7 @@ class RawStore:
         self._index_path = self.root / "index.jsonl"
         self._journal_path = self.root / "journal.jsonl"
         self.repaired: list = []
+        self.unusable: Optional[str] = None
         if not read_only:
             (self.root / "objects").mkdir(parents=True, exist_ok=True)
             self._lock_fd = os.open(self.root / ".writer.lock", os.O_RDWR | os.O_CREAT, 0o644)
@@ -158,16 +159,33 @@ class RawStore:
                 raise
         return out
 
-    @staticmethod
-    def _append(path: Path, record: dict) -> None:
-        """One complete line per write; a short write is an error (RC-06)."""
+    def _append(self, path: Path, record: dict) -> None:
+        """One complete line per write. A short or failed write is rolled back to the previous
+        end of the file before the error is raised, so a later append cannot join the fragment
+        (RC-06). If the rollback itself fails, the store refuses further writes until it is
+        reopened, when _repair_tail cuts the fragment."""
         data = (json.dumps(record, sort_keys=True) + "\n").encode()
         fd = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o644)
         try:
-            if os.write(fd, data) != len(data):
-                raise OSError("short write")
+            size = os.fstat(fd).st_size  # the end of the file; the writer lock excludes other appenders
+            try:
+                written = os.write(fd, data)
+            except OSError as e:
+                self._roll_back(fd, path, size, e)
+                raise
+            if written != len(data):
+                err = OSError("short write")
+                self._roll_back(fd, path, size, err)
+                raise err
         finally:
             os.close(fd)
+
+    def _roll_back(self, fd: int, path: Path, size: int, err: OSError) -> None:
+        try:
+            os.ftruncate(fd, size)
+            self.repaired.append({"file": path.name, "rolled_back_to": size, "error": str(err)[:200]})
+        except OSError:
+            self.unusable = f"rollback_failed:{path.name}"
 
     def object_path(self, raw_id: str) -> Path:
         return self.root / "objects" / raw_id[:2] / raw_id
@@ -175,6 +193,8 @@ class RawStore:
     def _writable(self) -> None:
         if self.read_only:
             raise PermissionError("raw store opened read-only")
+        if self.unusable:
+            raise OSError(f"raw store unusable until reopened ({self.unusable})")
 
     def journal(self, entry: JournalEntry) -> None:
         self._writable()
@@ -240,8 +260,8 @@ class RawStore:
                 reason = "copy_hash_mismatch" if isinstance(exc, CopyHashMismatch) else f"write_failed:{type(exc).__name__}"
                 self.journal(JournalEntry(self.clock(), request, "failed", raw_id, http_status, size, reason))
                 raise
+        self._index(obj)  # before registering, so a rolled-back index line is retried, not skipped
         self.objects.setdefault(raw_id, obj)
-        self._index(obj)
         if not quarantined:
             self.latest_by_request[request] = raw_id
             self.object_for_request[request] = obj
@@ -294,8 +314,8 @@ class RawStore:
             container_raw_id=container.raw_id, member_path=name, supersedes_raw_id=container.supersedes_raw_id,
         )
         if rid not in self.objects:
+            self._index(obj)  # before registering (see ingest_file)
             self.objects[rid] = obj
-            self._index(obj)
         return obj
 
     def member(self, container: RawObject, name: str) -> RawObject:

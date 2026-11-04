@@ -137,7 +137,7 @@ class Capture:
         self.st = {"frames": 0, "trades": 0, "book_updates": 0, "checksum_ok": 0, "checksum_fail": 0, "resyncs": 0,
                    "resync_capped": 0, "disconnects": 0, "parse_errors": 0, "subscribe_errors": 0,
                    "latency_raw_ms": {}, "ntp_offsets_ms": [], "recovery_disconnect_s": [],
-                   "recovery_checksum_s": [], "initial_sync_s": {}, "maintenance_ns": 0,
+                   "recovery_checksum_s": [], "recovery_parse_error_s": [], "initial_sync_s": {}, "maintenance_ns": 0,
                    "invalid_book_ns": {s: 0 for s in symbols}, "invalid_in_maintenance_ns": {s: 0 for s in symbols},
                    "status": []}
 
@@ -223,7 +223,30 @@ class Capture:
         self.maint_since = None
 
     def _book(self, ws, kind: str, d: dict, recv_ns: int) -> None:
+        """Apply one book message. If it cannot be parsed or checked, the book may already hold
+        unverified levels, so it is invalidated and resynced before the error is re-raised (Q-5)."""
         sym = d["symbol"]
+        try:
+            self._apply_book(ws, kind, d, recv_ns, sym)
+        except (WebSocketClosed, OSError):
+            raise
+        except Exception:
+            self._resync(ws, sym, "parse_error", recv_ns)
+            raise
+
+    def _resync(self, ws, sym: str, reason: str, recv_ns: int) -> None:
+        b = self.books[sym]
+        self.invalidate(sym, reason, recv_ns)
+        b.resync_times = [t for t in b.resync_times if recv_ns - t < 60 * 1_000_000_000]
+        if len(b.resync_times) >= RESYNC_MAX_PER_MIN:
+            self.st["resync_capped"] += 1
+            return
+        b.resync_times.append(recv_ns)
+        ws.send_text(json.dumps({"method": "unsubscribe", "params": {"channel": "book", "symbol": [sym], "depth": DEPTH}}))
+        self.subscribe(ws, "book", {"depth": DEPTH, "snapshot": True}, symbols=[sym])
+        self.st["resyncs"] += 1  # counted once the resubscribe is sent
+
+    def _apply_book(self, ws, kind: str, d: dict, recv_ns: int, sym: str) -> None:
         b = self.books[sym]
         if kind == "snapshot":
             b.bids, b.asks = {}, {}
@@ -250,21 +273,15 @@ class Capture:
                         self.st["initial_sync_s"][sym] = dur / 1e9
                     elif b.invalid_reason == "disconnect":
                         self.st["recovery_disconnect_s"].append(dur / 1e9)
+                    elif b.invalid_reason == "parse_error":
+                        self.st["recovery_parse_error_s"].append(dur / 1e9)
                     else:
                         self.st["recovery_checksum_s"].append(dur / 1e9)
                 b.valid, b.invalid_since_ns, b.synced_once = True, None, True
                 self.event("book_valid", symbol=sym)
         else:
             self.st["checksum_fail"] += 1
-            self.invalidate(sym, "checksum_mismatch", recv_ns)
-            b.resync_times = [t for t in b.resync_times if recv_ns - t < 60 * 1_000_000_000]
-            if len(b.resync_times) >= RESYNC_MAX_PER_MIN:
-                self.st["resync_capped"] += 1
-                return
-            b.resync_times.append(recv_ns)
-            self.st["resyncs"] += 1
-            ws.send_text(json.dumps({"method": "unsubscribe", "params": {"channel": "book", "symbol": [sym], "depth": DEPTH}}))
-            self.subscribe(ws, "book", {"depth": DEPTH, "snapshot": True}, symbols=[sym])
+            self._resync(ws, sym, "checksum_mismatch", recv_ns)
 
     # -- loop ------------------------------------------------------------------
     def run(self) -> dict:
@@ -366,7 +383,8 @@ class Capture:
                                                   "mean SNTP offset. ingest - receive is not measured: frames are "
                                                   "journalled before parsing, and normalization runs offline",
             "initial_sync_s": st["initial_sync_s"], "recovery_disconnect_s_R3": dist(st["recovery_disconnect_s"]),
-            "recovery_checksum_s": dist(st["recovery_checksum_s"]), "maintenance_s": maint / 1e9,
+            "recovery_checksum_s": dist(st["recovery_checksum_s"]),
+            "recovery_parse_error_s": dist(st["recovery_parse_error_s"]), "maintenance_s": maint / 1e9,
             "invalid_in_maintenance_s": {s: v / 1e9 for s, v in st["invalid_in_maintenance_ns"].items()}, "R4": r4,
             "ntp_offset_ms_T5": {"samples": len(offs), "failed": len(st["ntp_offsets_ms"]) - len(offs),
                                  "mean": mean_off, "max_abs": max((abs(o) for o in offs), default=None),

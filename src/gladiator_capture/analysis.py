@@ -137,11 +137,20 @@ def qualifies(records: list, gaps: list, start_ns: int, end_ns: int, step_ns: in
 
 def entry_blocked(records: list, gaps: list, decision_day_ns: int, lookback_days: int, step_ns: int = DAY_NS) -> Optional[str]:
     """CV-06 fail-closed trigger: new entries on a pair are blocked when its look-back coverage is
-    below Q-4, or when the decision day is status_unknown (DEC-040). Returns the reason or None."""
+    below Q-4, or when the last completed interval before the decision, [D - step, D), overlaps a
+    data_gap or status_unknown (DEC-040; 10-DATA:18 completed bars only, :40 missing critical price
+    coverage stops new entries). no_trade does not block. Only gaps known by D (available_at <= D)
+    count, so a replay cannot block on a gap found later (10-DATA:18). A bar missing at D is
+    itself a gap known at D, so this does not fail open. Callers build gaps from what is visible
+    at D; for a feed that publishes late (DEC-069), its last completed bar may not be visible yet
+    and then blocks entries until it is. Returns the reason or None."""
     if not qualifies(records, gaps, decision_day_ns - lookback_days * step_ns, decision_day_ns, step_ns):
         return "coverage_below_q4"
-    if any(g.gap_class == "status_unknown" and g.interval_start <= decision_day_ns < g.interval_end for g in gaps):
-        return "status_unknown_on_decision_day"
+    last_start = decision_day_ns - step_ns
+    for cls in ("data_gap", "status_unknown"):
+        if any(g.gap_class == cls and g.available_at <= decision_day_ns and g.interval_start < decision_day_ns
+               and g.interval_end > last_start for g in gaps):
+            return f"{cls}_in_last_completed_interval"
     return None
 
 

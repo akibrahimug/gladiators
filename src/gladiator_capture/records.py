@@ -163,14 +163,25 @@ def _period_from_name(name: str) -> tuple:
     return start, datetime(y + (mo == 12), mo % 12 + 1, 1, tzinfo=timezone.utc), "monthly"
 
 
-def availability(raw, archive_published_ns: Optional[int]) -> tuple:
+# DEC-069: a Binance file's Last-Modified is only the earliest time it could have been public, so
+# its records take Last-Modified plus this margin and are flagged as estimated.
+BINANCE_PUBLICATION_MARGIN_NS = 6 * 3600 * NS["s"]
+
+
+def availability(raw, archive_published_ns: Optional[int], margin_ns: int = 0) -> tuple:
     """§3.1 and DEC-053. A superseding object always takes our retrieval time; otherwise the
-    archive's publication time if known; otherwise our retrieval time."""
+    archive's publication time plus margin_ns (DEC-069) if known; otherwise our retrieval time."""
     if getattr(raw, "supersedes_raw_id", None):
         return raw.retrieved_at_ns, "retrieved"
     if archive_published_ns:
-        return archive_published_ns, "archive_published"
+        return archive_published_ns + margin_ns, "archive_published"
     return raw.retrieved_at_ns, "retrieved"
+
+
+def _binance_availability(raw) -> tuple:
+    """DEC-069: (available_at, basis, flags) for a Binance file."""
+    available_at, basis = availability(raw, http_date_to_ns(raw.server_last_modified), BINANCE_PUBLICATION_MARGIN_NS)
+    return available_at, basis, (["available_at_estimated"] if basis == "archive_published" else [])
 
 
 def _locator(raw, i: int) -> str:
@@ -206,7 +217,7 @@ def parse_binance_klines(data: bytes, *, name: str, symbol: str, interval: str, 
                          rights_id: str = "SA-01", rewrite_listed: bool = False) -> ParseResult:
     start, end, kind = _period_from_name(name)
     unit = binance_era_unit(start)
-    available_at, basis = availability(raw, http_date_to_ns(raw.server_last_modified))
+    available_at, basis, est = _binance_availability(raw)
     out = []
     for i, row in enumerate(csv.reader(io.StringIO(data.decode()))):
         if len(row) != 12:
@@ -221,7 +232,7 @@ def parse_binance_klines(data: bytes, *, name: str, symbol: str, interval: str, 
             venue="binance", native_symbol=symbol, source_event_time=t, source_time_unit=unit,
             received_at=raw.retrieved_at_ns, ingested_at=ingested_at, available_at=available_at,
             available_at_basis=basis, raw_id=raw.raw_id, raw_locator=_locator(raw, i), rights_id=rights_id,
-            native_seq=t, quality_flags=_rewrite_flags(raw, rewrite_listed),
+            native_seq=t, quality_flags=est + _rewrite_flags(raw, rewrite_listed),
             fields={"interval": interval, "open": row[1], "high": row[2], "low": row[3], "close": row[4],
                     "volume": row[5], "native_close_time": row[6], "quote_volume": row[7], "trade_count": row[8],
                     "taker_buy_base_volume": row[9], "taker_buy_quote_volume": row[10], "quote_currency": "USDT"},
@@ -243,7 +254,7 @@ def parse_binance_trades(data: bytes, *, name: str, symbol: str, raw, ingested_a
                          rights_id: str = "SA-01") -> ParseResult:
     start, end, kind = _period_from_name(name)
     unit = binance_era_unit(start)
-    available_at, basis = availability(raw, http_date_to_ns(raw.server_last_modified))
+    available_at, basis, est = _binance_availability(raw)
     period_end_ns = int(end.timestamp()) * NS["s"]
     out = []
     for i, row in enumerate(csv.reader(io.StringIO(data.decode()))):
@@ -258,7 +269,7 @@ def parse_binance_trades(data: bytes, *, name: str, symbol: str, raw, ingested_a
             native_symbol=symbol, source_event_time=t, source_time_unit=unit, received_at=raw.retrieved_at_ns,
             ingested_at=ingested_at, available_at=available_at, available_at_basis=basis, raw_id=raw.raw_id,
             raw_locator=_locator(raw, i), rights_id=rights_id, native_seq=tid if tid is not None else -1,
-            fields={"native_trade_id": tid, "price": row[1], "qty": row[2], "quote_qty": row[3],
+            quality_flags=list(est), fields={"native_trade_id": tid, "price": row[1], "qty": row[2], "quote_qty": row[3],
                     "is_buyer_maker": row[5], "side_semantics": "buyer_is_maker", "is_best_match": row[6],
                     "quote_currency": "USDT"},
         )

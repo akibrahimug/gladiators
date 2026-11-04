@@ -56,6 +56,8 @@ On the same day, the 7-day live window started at 10:35 UTC (DEC-064). [TASK-P02
 
 On 2026-10-29 the coordinator installed the 30-day job (DEC-068; first pull 10:16 UTC, last pull 2026-11-27), and the user accepted the pre-first-sample clock rule (DEC-067) ([TASK-P02-007](../../tasks/TASK-P02-007.md)).
 
+On 2026-10-29 [TASK-P02-008](../../tasks/TASK-P02-008.md) fixed five Codex review findings ([review fixes](../../evidence/P02/review-fixes.md)) and recorded DEC-069 (Binance `available_at` = `Last-Modified` + 6 h, flagged).
+
 **Exact next step:** the 7-day window ends about 2026-11-04 10:35 UTC. Its results then go to the user for the G02 review. The 30-day pull runs until 2026-11-27.
 
 **Implementation boundary:** capture code for held files exists (`src/gladiator_capture/`, DEC-058). Network transports, live capture and the DEC-057 retrievals are later tasks. Trading is out of scope.

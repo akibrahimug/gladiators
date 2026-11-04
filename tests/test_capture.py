@@ -99,7 +99,8 @@ class BinanceParseTests(unittest.TestCase):
         self.assertEqual(len(res.records), 31)
         r = res.records[0]
         self.assertEqual((r.source_time_unit, r.available_at_basis), ("ms", "archive_published"))
-        self.assertEqual(r.available_at, 1736297427 * R.NS["s"])
+        self.assertEqual(r.available_at, 1736297427 * R.NS["s"] + R.BINANCE_PUBLICATION_MARGIN_NS)  # DEC-069
+        self.assertIn("available_at_estimated", r.quality_flags)
         self.assertNotIn("late", r.quality_flags)  # monthly files are exempt from TH-6
 
     def test_fallback_to_retrieved(self):
@@ -245,7 +246,10 @@ class ReviewFixTests(unittest.TestCase):
         self.assertEqual((v2[0].available_at, v2[0].available_at_basis), (later, "retrieved"))
         self.assertIn("last_modified_after_period", v2[0].quality_flags)
         merged = A.apply_revision(v1, v2)
-        self.assertEqual({r.version for r in A.as_of(merged, R.http_date_to_ns(lm))}, {1})
+        self.assertEqual(A.as_of(merged, R.http_date_to_ns(lm)), [])  # DEC-069: not yet visible at Last-Modified
+        seen = R.http_date_to_ns(lm) + R.BINANCE_PUBLICATION_MARGIN_NS
+        self.assertEqual({r.version for r in A.as_of(merged, seen)}, {1})
+        self.assertNotIn("available_at_estimated", v2[0].quality_flags)  # a revision's retrieval time is observed
         self.assertEqual(v2[0].supersedes_record_id, v1[0].record_id)
 
     def test_bar_key_stable_when_rows_shift(self):  # M2
@@ -287,10 +291,20 @@ class ReviewFixTests(unittest.TestCase):
         step = DAY_S * R.NS["s"]
         recs = AnalysisTests().bars(list(range(30)))
         start = DEC_2024 * R.NS["s"]
-        gaps = [A.GapInterval("s", "f", "i", start + 29 * step, start + 30 * step, "status_unknown", "x", 0)]
-        self.assertEqual(A.entry_blocked(recs, gaps, start + 29 * step, 20), "status_unknown_on_decision_day")
-        self.assertEqual(A.entry_blocked(recs, [], start + 29 * step, 40), "coverage_below_q4")
-        self.assertIsNone(A.entry_blocked(recs, [], start + 29 * step, 20))
+        d = start + 30 * step  # decision at the end of day 29; day 29 is the last completed bar
+
+        def gap(day, cls):
+            return [A.GapInterval("s", "f", "i", start + day * step, start + (day + 1) * step, cls, "x", 0)]
+        self.assertEqual(A.entry_blocked(recs, gap(29, "status_unknown"), d, 20), "status_unknown_in_last_completed_interval")
+        self.assertEqual(A.entry_blocked(recs, gap(29, "data_gap"), d, 20), "data_gap_in_last_completed_interval")
+        self.assertIsNone(A.entry_blocked(recs, gap(29, "no_trade"), d, 20))
+        self.assertIsNone(A.entry_blocked(recs, gap(30, "data_gap"), d, 20))  # the bar still forming at D
+        later = [A.GapInterval("s", "f", "i", start + 29 * step, start + 30 * step, "data_gap", "x", d + 1)]
+        self.assertIsNone(A.entry_blocked(recs, later, d, 20))  # found after D: no lookahead
+        span = [A.GapInterval("s", "f", "i", start + 29 * step + 5, start + 31 * step, "data_gap", "trade_id", 0)]
+        self.assertEqual(A.entry_blocked(recs, span, d, 20), "data_gap_in_last_completed_interval")
+        self.assertEqual(A.entry_blocked(recs, [], d, 40), "coverage_below_q4")
+        self.assertIsNone(A.entry_blocked(recs, [], d, 20))
 
     def test_qualifies_listing_partway(self):  # Q-4 listing clause
         step = DAY_S * R.NS["s"]

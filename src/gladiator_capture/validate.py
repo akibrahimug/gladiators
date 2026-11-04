@@ -255,7 +255,8 @@ class Run:
             recs = self.kraken_pair(pair)
             last = ts_date(recs[-1].event_time_ns())
             out[pair] = {"records": len(recs), "last_bar": last, "listed_in_assetpairs": pair in listed,
-                         "delisting_date": f"<= {last} (upper bound)" if pair not in listed else "not delisted"}
+                         "delisting_date": f">= {last} (lower bound); status_unknown after" if pair not in listed
+                         else "not delisted"}
         self.report["windows"]["W-F"] = out
 
     def w_g(self):
@@ -440,7 +441,7 @@ class Run:
                                            expect_ok=False, expect_calls=1, expect_reason="http_403")
         decision = int(datetime(2025, 1, 7, tzinfo=timezone.utc).timestamp()) * R.NS["s"]
         vis_before, vis_after = len(A.as_of(orig, decision)), len(A.as_of(orig, orig[0].available_at))
-        fx["F-16"] = {"input": base_hash, "visible_at_2025-01-07": vis_before, "visible_from_last_modified": vis_after,
+        fx["F-16"] = {"input": base_hash, "visible_at_2025-01-07": vis_before, "visible_from_available_at": vis_after,
                       "pass": vis_before == 0 and vis_after == 31}
         hdr = (self.sample / "dl-sample-context" / "cftc_deacmesf.htm.hdr").read_text()
         cot_avail = R.http_date_to_ns(re.search(r"^last-modified:\s*(.+?)\s*$", hdr, re.I | re.M).group(1))
