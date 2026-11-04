@@ -12,6 +12,8 @@
 #     >/dev/null 2>&1 &
 # Stop it before the first run ends with: kill <watcher pid>  (nothing else is touched).
 set -u
+set -o pipefail
+shopt -s execfail
 
 FIRST_PID="${1:?first-run python pid required}"
 FIRST_OUT="$HOME/gladiator-data/live-7d"
@@ -28,10 +30,11 @@ abort() { log "ABORT ($1): $2; rerun not started"; exit "$1"; }
 mkdir -p "$(dirname "$LOG")"
 log "armed by pid $$; waiting for first run pid $FIRST_PID"
 
-ps -p "$FIRST_PID" -o command= | grep -q -- "capture.py live --out $FIRST_OUT " \
-  || abort 1 "pid $FIRST_PID is not the first run's capture"
+is_first_run() { ps -p "$FIRST_PID" -o command= | grep -q -- "capture.py live --out $FIRST_OUT "; }
+is_first_run || abort 1 "pid $FIRST_PID is not the first run's capture"
 
-while kill -0 "$FIRST_PID" 2>/dev/null; do sleep 60; done
+# Re-check identity on every poll, so a reused pid is not mistaken for the first run.
+while is_first_run; do sleep 60; done
 log "first run pid $FIRST_PID exited"
 sleep 10
 
@@ -42,13 +45,19 @@ log "first run summary present ($(wc -c < "$FIRST_OUT/live-summary.jsonl" | tr -
 [ -e "$CODE" ] && abort 3 "$CODE already exists"
 [ -e "$OUT" ] && abort 3 "$OUT already exists"
 
-git -C "$REPO" fetch -q origin master || abort 4 "git fetch of origin/master failed"
+fetched=no
+for i in 1 2 3 4 5 6 7 8 9 10; do
+  if git -C "$REPO" fetch -q origin master >> "$LOG" 2>&1; then fetched=yes; break; fi
+  log "git fetch attempt $i failed; retrying in 60 s"; sleep 60
+done
+[ "$fetched" = yes ] || abort 4 "git fetch of origin/master failed 10 times"
 REV=$(git -C "$REPO" rev-parse origin/master) || abort 4 "cannot resolve origin/master"
 if git -C "$REPO" merge-base --is-ancestor "$FIX_COMMIT" "$REV"; then FIXES=yes; else FIXES=no; fi
 
 mkdir -p "$CODE" || abort 5 "cannot create $CODE"
-git -C "$REPO" archive "$REV" | tar -x -C "$CODE" || abort 5 "git archive of $REV failed"
-echo "$REV" > "$CODE/REVISION"
+git -C "$REPO" archive "$REV" | tar -x -C "$CODE" || abort 5 "git archive of $REV or its extraction failed"
+[ -f "$CODE/capture.py" ] || abort 5 "$CODE/capture.py missing after extraction"
+echo "$REV" > "$CODE/REVISION" || abort 5 "cannot write $CODE/REVISION"
 log "code copied from origin/master $REV to $CODE; PR #33 fixes included: $FIXES"
 
 ( cd "$CODE" && /usr/bin/python3 -I -B -m unittest discover -s tests ) >> "$LOG" 2>&1 \
@@ -59,3 +68,4 @@ mkdir -p "$OUT" || abort 7 "cannot create $OUT"
 cd "$CODE" || abort 7 "cannot enter $CODE"
 log "starting rerun: caffeinate -i -s /usr/bin/python3 -I -B $CODE/capture.py live --out $OUT --seconds $SECONDS_7D (pid $$ after exec)"
 exec caffeinate -i -s /usr/bin/python3 -I -B "$CODE/capture.py" live --out "$OUT" --seconds "$SECONDS_7D" > "$OUT/run.log" 2>&1
+abort 8 "exec of the rerun command failed"

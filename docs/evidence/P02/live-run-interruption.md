@@ -49,7 +49,7 @@ Disk: 98 GB free on 2026-10-31. The first run holds 12 GB after about 63.9 h awa
 
 ### Watcher (TASK-P02-010, 2026-11-04)
 
-The user chose to have the rerun started automatically ([TASK-P02-010](../../tasks/TASK-P02-010.md)). At 2026-11-04 10:10:47 UTC the coordinator armed [`ops/rerun/run2-watcher.sh`](../../../ops/rerun/run2-watcher.sh) against the first run's pid 76475, under `caffeinate -i -s`, from `~/gladiator-data/run2-watcher/`. The watcher does steps 1 to 4 above:
+The user chose to have the rerun started automatically ([TASK-P02-010](../../tasks/TASK-P02-010.md)). At 2026-11-04 10:10:47 UTC the coordinator armed [`ops/rerun/run2-watcher.sh`](../../../ops/rerun/run2-watcher.sh) against the first run's pid 76475, under `caffeinate -i -s`, from `~/gladiator-data/run2-watcher/`. It re-armed the watcher at 10:20:35 UTC after review fixes, as pid 1192. The watcher does steps 1 to 4 above:
 
 - It waits for the first run to exit and requires that run's `live-summary.jsonl`.
 - It copies `origin/master` as it is at that moment into `~/gladiator-capture-run2`, recording the revision and whether #33 is included.
@@ -57,4 +57,4 @@ The user chose to have the rerun started automatically ([TASK-P02-010](../../tas
 
 If any check fails, it logs the reason and does not start the rerun. The start is recorded here once it is observed.
 
-Disk on 2026-11-04 10:10 UTC: 265 GB free. The first run held 27 GB after about 6.6 days awake, which agrees with the estimate of about 31 GB for a full run.
+Disk on 2026-11-04 10:10 UTC: 265 GB free. The first run held 27 GB after about 6.42 days awake. Scaled to 7 days that is about 29.4 GB, close to the estimate of about 31 GB for a full run.
