@@ -6,9 +6,11 @@ TASK-P02-003. This page records the analysis method, the user's decisions of 202
 
 The rules and their tests are listed on the [task card](../../tasks/TASK-P02-003.md#method-dec-071-and-the-review-fixes). In short:
 
-- **R-4 (DEC-071):** a pair's book is invalid during the union of the capture's own invalid intervals, a `parse_error` (the PR #30 defect in the run-1 code), and every frame silence over 15 s, from the last frame before it to the first one after it. Venue maintenance is excluded. The capture's built-in `invalid_book_ns` is shown beside it for comparison and is not used.
+- **R-4 (DEC-071):** a pair's book is invalid during the union of the capture's own invalid intervals, a `parse_error` on one of its book frames (the PR #30 defect in the run-1 code; an upper bound there), and every frame silence over 15 s, from the last frame before it to the first one after it. Venue maintenance is excluded. The capture's built-in `invalid_book_ns` is shown beside it for comparison and is not used.
 - **R-3** runs from each `disconnect` to the pair's next `book_valid`. **Q-5:** every `book_valid` needs a fresh book snapshot for that pair since the pair was last invalidated.
-- **T-3** uses 1 ms bins per channel, pair and UTC day, raw and SNTP-corrected. **T-5/T-6** report time under each flag; before the first sample counts as unknown (DEC-067).
+- **T-3** uses 1 ms bins per channel, pair and UTC day, raw and SNTP-corrected. **T-5/T-6** report time under each flag. Before the first sample counts only for T-6 intraday (DEC-067), and the intraday figure is split by cause.
+- **R-3** starts at the `disconnect` event, which for a receive timeout is up to 15 s after the last frame.
+- **Limit:** times are wall-clock. A clock step just after a wake can shorten or lengthen a silence near it; this is not corrected.
 - **R-5** gzips each closed segment at level 6. **Integrity:** every frame line parses, each segment's SHA-256 matches its store index entry, and every store line and object checks out.
 - A run with no `live-summary.jsonl` has not finished. Its newest segment is still open, so it is skipped and the report is **provisional**.
 
