@@ -46,3 +46,15 @@ Corrections to the question, found in review after the answer:
 6. The G02 analysis uses the rerun for R-4 and reports both runs.
 
 Disk: 98 GB free on 2026-10-31. The first run holds 12 GB after about 63.9 h awake: 6.1 GB of hourly frame segments plus 6.0 GB in the raw store, which keeps an ingested copy of each closed segment. A full run is therefore about 31 GB, and the rerun adds about the same. The first run's remaining 19 GB plus the rerun's 31 GB leave about 48 GB free once both have finished. The frames alone come to about 1.15 GB per pair per day, within R-5's 2 GB.
+
+### Watcher (TASK-P02-010, 2026-11-04)
+
+The user chose to have the rerun started automatically ([TASK-P02-010](../../tasks/TASK-P02-010.md)). At 2026-11-04 10:10:47 UTC the coordinator armed [`ops/rerun/run2-watcher.sh`](../../../ops/rerun/run2-watcher.sh) against the first run's pid 76475, under `caffeinate -i -s`, from `~/gladiator-data/run2-watcher/`. The watcher does steps 1 to 4 above:
+
+- It waits for the first run to exit and requires that run's `live-summary.jsonl`.
+- It copies `origin/master` as it is at that moment into `~/gladiator-capture-run2`, recording the revision and whether #33 is included.
+- It runs the offline tests, then starts the rerun.
+
+If any check fails, it logs the reason and does not start the rerun. The start is recorded here once it is observed.
+
+Disk on 2026-11-04 10:10 UTC: 265 GB free. The first run held 27 GB after about 6.6 days awake, which agrees with the estimate of about 31 GB for a full run.

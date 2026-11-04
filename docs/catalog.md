@@ -522,6 +522,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P02-007.md](<tasks/TASK-P02-007.md>) |
 | [docs/tasks/TASK-P02-008.md](<tasks/TASK-P02-008.md>) |
 | [docs/tasks/TASK-P02-009.md](<tasks/TASK-P02-009.md>) |
+| [docs/tasks/TASK-P02-010.md](<tasks/TASK-P02-010.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
 | [docs/traceability/components.md](<traceability/components.md>) |
 | [docs/traceability/requirements-matrix.md](<traceability/requirements-matrix.md>) |
