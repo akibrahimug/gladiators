@@ -1,6 +1,6 @@
 # 30-day Kraken REST pull (DEC-061)
 
-This is the user's step. The coordinator does not install the job.
+This is the user's step. One exception: on 2026-10-29 the user asked the coordinator to install it (DEC-068).
 
 The job runs `capture.py daily` once a day at 00:15 UTC. Each run makes three keyless calls (Kraken `OHLC` for XBTUSD and ETHUSD, and `AssetPairs`), after a robots check and with polite pauses (DEC-044). The job stops pulling by itself 30 days after its first run (DEC-057).
 

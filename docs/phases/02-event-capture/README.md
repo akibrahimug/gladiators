@@ -54,6 +54,8 @@ On 2026-10-28 the user approved the thresholds (DEC-056), authorised the retriev
 
 On the same day, the 7-day live window started at 10:35 UTC (DEC-064). [TASK-P02-006](../../tasks/TASK-P02-006.md) added RC-05 to RC-08 ([results](../../evidence/P02/recovery-results.md)), so CV-11 now passes.
 
-**Exact next step:** the user installs the 30-day job (DEC-061). The 7-day window ends about 2026-11-04 10:35 UTC; its results then go to the user for the G02 review.
+On 2026-10-29 the coordinator installed the 30-day job (DEC-068; first pull 10:16 UTC, last pull 2026-11-27), and the user accepted the pre-first-sample clock rule (DEC-067) ([TASK-P02-007](../../tasks/TASK-P02-007.md)).
+
+**Exact next step:** the 7-day window ends about 2026-11-04 10:35 UTC. Its results then go to the user for the G02 review. The 30-day pull runs until 2026-11-27.
 
 **Implementation boundary:** capture code for held files exists (`src/gladiator_capture/`, DEC-058). Network transports, live capture and the DEC-057 retrievals are later tasks. Trading is out of scope.
