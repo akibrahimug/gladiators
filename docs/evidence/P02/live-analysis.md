@@ -48,7 +48,29 @@ Command: `/usr/bin/python3 -I -B analyse.py rest --run ~/gladiator-data/rest-dai
 
 ### Run 1 (DEC-064), provisional, 2026-11-04
 
-RESULTS_RUN1
+Command: `python3.12 -I -B analyse.py live --run ~/gladiator-data/live-7d --out <scratchpad>/live-7d-prov.json`, 11:16–11:49 UTC, code `d6bc907`. Report SHA-256 `72c43357…6faf`; 1,961 s, 258 MB peak memory. Scratchpad only: the run was still writing. **Provisional:** it covers 164 closed segments, 2026-10-28 10:35:31 to 2026-11-04 10:57:10 UTC (168.4 h), and skips the open segment. The run has 0 parse errors and 0 unreadable lines, so `bca6079`'s attribution change cannot alter it.
+
+| Check | BTC/USD | ETH/USD | Against |
+| --- | --- | --- | --- |
+| **R-4** valid share, DEC-071 | **91.99 %** | **91.99 %** | ≥ 99 %: **fails** (expected; [interruption](live-run-interruption.md)) |
+| Invalid time: DEC-071 / capture events only | 48,546 s / 121 s | 48,546 s / 121 s | the capture's own count misses the sleep |
+| Longest valid stretch | 30.65 h (10-31 18:28 to 11-02 01:07) | same | each reconnect of about 2 s ends a stretch |
+| **R-3** recovery after a disconnect | n = 71; p50 1.62 s, p95 2.44 s, max 3.93 s | same | p95 ≤ 60 s: **passes**, 0 breaches |
+
+| Check | Result |
+| --- | --- |
+| Frames | 53,438,905 in 164 segments; 0 unreadable lines; 0 unreadable `events.jsonl` lines |
+| Silences over 15 s (DEC-071) | 25, totalling 48,462 s (13.46 h), all but one in the 10-29 19:03 to 10-30 08:57 sleep. This matches the 2026-10-31 scan |
+| Clock steps | Some silences overlap. For example, a frame at 10-29 19:07:23 is followed by one at 19:06:56, so the wall clock stepped back about 27 s after a wake. The union of intervals absorbs the overlap, so the totals are unaffected. This is the clock-step limit stated above, now observed |
+| Events | 71 `disconnect`, 72 `connected`, 142 `book_invalid`, 144 `book_valid`, **0 `parse_error`**, 662 `venue_status`, 9,274 `ntp` |
+| Maintenance | 126 s, 10-29 08:01:08 to 08:03:14 UTC; excluded from R-4 |
+| **Q-5** | Every `book_valid` follows a fresh snapshot for its pair: **passes** |
+| **T-3** (offset-corrected p50 / p95 / p99, per day) | Book updates: 14–45 / 86–186 / 138–289 ms. Trades: 15–50 / 93–248 / 140–439 ms. 2026-11-04 has the highest figures. Raw p50 is −38 to −79 ms, because the local clock is behind. Reported, not required |
+| Items older than 15 s on receipt | 3,471 (book 1,662 BTC and 1,716 ETH; trades 67 and 26), all on 10-29/30, delivered after a wake (up to 2.0 h old). The silence before each is already invalid under DEC-071. The few seconds of valid book that follow each wake are not separately excluded |
+| **T-5** | 9,274 samples, 305 failed; 4,305 over 100 ms; maximum 1,908 ms; 297,650 s (82.7 h) with `timestamp_uncertainty_ms` set. Four gaps between good samples exceed 1 h, all in the sleep; the longest is 13,817 s |
+| **T-6** | Two samples over 1 s (1,908 ms at 10-30 07:56:37 and 1,892 ms at 08:24:37); none over 60 s. Intraday abstention 68,132 s: 0.1 s before the first sample, 3,663 s with an offset over 1 s, and 64,469 s with a sample over 60 s old. The last is mostly the sleep, plus the slack of run 1's 60 s query interval (before DEC-066). Daily abstention: 0 s |
+| **R-5** | 1.34 GB gzip for 14.3 GB of frames: **95 MB per pair per day**, against a 2 GB limit: **passes** |
+| Integrity and provenance | 164 of 164 segment hashes equal their index entries, all SR-02/SA-03; index and journal 164 lines each, all parse; 164 objects present with matching length and hash; 164 `stored` outcomes; opens read-only |
 
 ### Still to do
 
