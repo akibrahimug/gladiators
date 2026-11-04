@@ -46,6 +46,7 @@ T6_DAILY_MS = 60_000
 T6_STALE_NS = 60 * 10**9
 T5_STALE_NS = 3600 * 10**9
 DAY_NS = 86400 * 10**9
+CAPTURE_MARKERS = ("events.jsonl", "daily-summary.jsonl", "store/index.jsonl", "capture.py", ".git")
 STALE_FRAME_MS = 15_000  # a book/trade item older than this on receipt is reported (buffered after a wake)
 
 
@@ -150,6 +151,19 @@ def scan_jsonl(path: Path) -> dict:
     return res
 
 
+def _good_lines(path: Path) -> list:
+    out = []
+    if path.exists():
+        for line in path.read_bytes().split(b"\n"):
+            try:
+                if line.strip():
+                    json.loads(line)
+                    out.append(line)
+            except ValueError:
+                pass
+    return out
+
+
 def sha256_and_gzip(path: Path, compress: bool) -> tuple:
     h = hashlib.sha256()
     z = zlib.compressobj(6, zlib.DEFLATED, 31) if compress else None
@@ -186,7 +200,8 @@ def check_store(root: Path) -> dict:
             bad_hash.append(raw_id)
     res["objects"] = {"indexed": len(st.objects), "missing": missing, "length_mismatch": bad_len,
                       "hash_mismatch": bad_hash}
-    res["journal_outcomes"] = dict(sorted(Counter(e.get("outcome") for e in st._read_lines(root / "journal.jsonl")).items()))
+    res["journal_outcomes"] = dict(sorted(Counter(json.loads(l).get("outcome") for l in _good_lines(root / "journal.jsonl")).items()))
+    res["provenance"] = dict(sorted(Counter(f"{o.source_id}/{o.source_approval_id}" for o in st.objects.values()).items()))
     res["ok"] = (not res["index"]["malformed_interior"] and not res["journal"]["malformed_interior"]
                  and not missing and not bad_len and not bad_hash)
     return res
@@ -239,6 +254,10 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
     seg_rows = []
     oi, cur_off = 0, None
     prev = None
+    # each parse_error is attributed to the last frame received before it (the capture logs the event
+    # right after handling that frame); only a book frame makes a book's time invalid
+    pe_times = sorted(e["at_ns"] for e in events if e.get("kind") == "parse_error")
+    pe_attr, pi, last_info = [None] * len(pe_times), 0, None
     for seg in segs:
         digest, gz = sha256_and_gzip(seg, compress)
         n_seg = 0
@@ -250,6 +269,9 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
                 except (ValueError, KeyError, TypeError):
                     malformed_frames.append(f"{seg.name}:{ln}")
                     continue
+                while pi < len(pe_times) and pe_times[pi] < recv:
+                    pe_attr[pi] = last_info
+                    pi += 1
                 frames += 1
                 n_seg += 1
                 if first_recv is None:
@@ -258,6 +280,7 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
                 if prev is not None and recv - prev > SILENCE_NS:
                     silences.append((prev, recv))
                 prev = recv
+                last_info = {"channel": "other", "symbols": [], "frame": f"{seg.name}:{ln}"}
                 if '"book"' not in text and '"trade"' not in text:
                     continue
                 try:
@@ -266,6 +289,9 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
                     malformed_frames.append(f"{seg.name}:{ln}:frame")
                     continue
                 ch, typ = msg.get("channel"), msg.get("type")
+                if isinstance(msg.get("data"), list):
+                    last_info["symbols"] = sorted({d.get("symbol") for d in msg["data"] if isinstance(d, dict) and d.get("symbol")})
+                last_info["channel"] = ch if ch in ("book", "trade") else "other"
                 if ch not in ("book", "trade") or typ not in ("snapshot", "update"):
                     continue
                 while oi < len(good_ntp) and good_ntp[oi][0] <= recv:
@@ -291,6 +317,12 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
                         stale_items[f"{ch}:{sym}"] += 1
         seg_rows.append({"file": seg.name, "frames": n_seg, "bytes": seg.stat().st_size, "gzip_bytes": gz,
                          "sha256": digest})
+    while pi < len(pe_times):
+        pe_attr[pi] = last_info
+        pi += 1
+    pe_by_time = {}
+    for t, info in zip(pe_times, pe_attr):
+        pe_by_time.setdefault(t, []).append(info)
 
     # run window
     if summary is not None:
@@ -301,8 +333,13 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
         start = min(cands) if cands else 0
         end = last_recv or start
     wall = end - start
+    analysed_end = end if not provisional else (last_recv or end)
+    inconsistent = None
+    if summary is not None and last_recv is not None and last_recv > end + SILENCE_NS:
+        inconsistent = f"last frame {iso(last_recv)} is after the summary's end {iso(end)}; the run may still be writing"
 
-    # capture-reported invalid intervals per pair, plus parse_error as invalidation (review fixes)
+    # capture-reported invalid intervals per pair; a parse_error on a book frame also invalidates that
+    # book until its next book_valid (the PR #30 defect in 5b69e7f; review fixes)
     inv = {s: [] for s in symbols}
     since = {s: start for s in symbols}  # books start invalid
     last_invalidation = {s: start for s in symbols}
@@ -311,23 +348,34 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
     recov = {s: [] for s in symbols}
     pending_disc = {s: None for s in symbols}
     snap_i = {s: 0 for s in symbols}
+    pe_seen = Counter()
     for e in sorted(events, key=lambda e: e["at_ns"]):
         k, t = e.get("kind"), e["at_ns"]
+        if t > analysed_end:  # a provisional report covers only the frames analysed
+            continue
         counts[k] += 1
-        if k in ("book_invalid", "parse_error", "disconnect"):
-            targets = [e["symbol"]] if k == "book_invalid" else symbols
-            for s in targets:
-                if s not in since:
-                    continue
-                if since[s] is None:
-                    since[s] = t
-                last_invalidation[s] = t
-            if k == "disconnect":
-                disconnects.append(t)
-                for s in symbols:
-                    pending_disc[s] = t if pending_disc[s] is None else pending_disc[s]
-            if k == "parse_error":
-                parse_errors.append(t)
+        targets = []
+        if k == "book_invalid":
+            targets = [e.get("symbol")]
+        elif k == "disconnect":
+            targets = symbols
+        elif k == "parse_error":
+            info = pe_by_time[t][pe_seen[t]]
+            pe_seen[t] += 1
+            if info and info["channel"] == "book":
+                targets = info["symbols"]
+            parse_errors.append({"at": iso(t), "error": e.get("error"), "frame": info,
+                                 "invalidates": targets})
+        for s in targets:
+            if s not in since:
+                continue
+            if since[s] is None:
+                since[s] = t
+            last_invalidation[s] = t
+        if k == "disconnect":
+            disconnects.append(t)
+            for s in symbols:
+                pending_disc[s] = t if pending_disc[s] is None else pending_disc[s]
         elif k == "book_valid":
             s = e.get("symbol")
             if s not in since:
@@ -363,13 +411,12 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
     silence_iv = list(silences)
     if last_recv is not None and not provisional and end - last_recv > SILENCE_NS:
         silence_iv.append((last_recv, end))
-    analysed_end = end if not provisional else (last_recv or end)
 
     pairs = {}
     for s in symbols:
         own = merge(clip(inv[s], start, analysed_end))
         both = merge(clip(own + silence_iv, start, analysed_end))
-        initial = [iv for iv in own if iv[0] == start][:1]
+        initial = subtract([iv for iv in own if iv[0] == start][:1], maint)  # initial sync outside maintenance
         denom = (analysed_end - start) - total(maint)
         invalid = total(subtract(both, maint))
         invalid_excl_init = total(subtract(subtract(both, maint), initial))
@@ -391,18 +438,22 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
             pairs[s]["capture_summary_valid_share_not_for_R4"] = ((summary.get("R4") or {}).get(s) or {}).get("valid_share")
 
     # T-5 / T-6 time coverage from the latest successful sample
-    def flag_time(pred_off, stale_ns):
-        flagged = []
-        pts = [(t, o) for t, o in good_ntp if start <= t <= analysed_end]
-        lead = [(start, pts[0][0] if pts else analysed_end)]  # before the first sample: unknown (DEC-067)
-        flagged += lead
+    pts = [(t, o) for t, o in good_ntp if start <= t <= analysed_end]
+    lead = [(start, pts[0][0] if pts else analysed_end)]  # before the first sample: unknown (DEC-067)
+
+    def flag_iv(pred_off, stale_ns=None):
+        over, stale = [], []
         for i, (t, o) in enumerate(pts):
             nxt = pts[i + 1][0] if i + 1 < len(pts) else analysed_end
             if pred_off(abs(o)):
-                flagged.append((t, nxt))
+                over.append((t, nxt))
             elif stale_ns is not None and nxt - t > stale_ns:
-                flagged.append((t + stale_ns, nxt))
-        return total(merge(flagged)) / 1e9
+                stale.append((t + stale_ns, nxt))
+        return merge(over), merge(stale)
+
+    t5_over, _ = flag_iv(lambda a: a > T5_FLAG_MS)
+    t6_over, t6_stale = flag_iv(lambda a: a > T6_INTRADAY_MS, T6_STALE_NS)
+    t6d_over, _ = flag_iv(lambda a: a > T6_DAILY_MS)
 
     in_window = [o for t, o in good_ntp if start <= t <= analysed_end]
     gaps = [b - a for (a, _), (b, _) in zip(good_ntp, good_ntp[1:])]
@@ -415,9 +466,11 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
         "over_60s": sum(1 for o in in_window if abs(o) > T6_DAILY_MS),
         "max_interval_between_samples_s": max(gaps, default=0) / 1e9 if gaps else None,
         "intervals_over_1h": sum(1 for g in gaps if g > T5_STALE_NS),
-        "T5_uncertainty_flag_s": flag_time(lambda a: a > T5_FLAG_MS, None),
-        "T6_intraday_abstain_s": flag_time(lambda a: a > T6_INTRADAY_MS, T6_STALE_NS),
-        "T6_daily_abstain_s": flag_time(lambda a: a > T6_DAILY_MS, None),
+        "T5_uncertainty_flag_s": total(t5_over) / 1e9,
+        "T6_intraday_abstain_s": total(merge(lead + t6_over + t6_stale)) / 1e9,
+        "T6_intraday_by_cause_s": {"before_first_sample_DEC067": total(lead) / 1e9, "offset_over_1s": total(t6_over) / 1e9,
+                                   "sample_older_than_60s": total(t6_stale) / 1e9},
+        "T6_daily_abstain_s": total(t6d_over) / 1e9,
     }
 
     latency = {}
@@ -426,16 +479,20 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
 
     gz_total = sum(r["gzip_bytes"] or 0 for r in seg_rows)
     covered_days = (last_recv - first_recv) / DAY_NS if first_recv is not None and last_recv else None
+    window_days = (analysed_end - start) / DAY_NS if analysed_end > start else None
 
     # segment hashes against the store index
     store_root = run / "store"
     store = check_store(store_root) if store_root.exists() else {"exists": False}
-    seg_index = {}
+    seg_index, seg_prov_bad = {}, []
     if store.get("opens_read_only"):
         st = RawStore(store_root, read_only=True)
         for obj in st.objects.values():
             if "#segment:" in obj.request:
-                seg_index[obj.request.split("#segment:")[1]] = obj.raw_id
+                name = obj.request.split("#segment:")[1]
+                seg_index[name] = obj.raw_id
+                if (obj.source_id, obj.source_approval_id) != ("SR-02", "SA-03"):
+                    seg_prov_bad.append(name)
     seg_mismatch = [r["file"] for r in seg_rows if seg_index.get(r["file"]) not in (None, r["sha256"])]
     seg_unindexed = [r["file"] for r in seg_rows if r["file"] not in seg_index]
 
@@ -450,6 +507,9 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
         "silences": {"count": len(silences), "total_s": total(silences) / 1e9,
                      "over_60s": [[iso(a), iso(b), (b - a) / 1e9] for a, b in silences if b - a > 60 * 10**9]},
         "events": dict(sorted(counts.items())), "disconnects": len(disconnects), "parse_errors": len(parse_errors),
+        "parse_error_detail": parse_errors[:50],
+        "R3_basis": "from the disconnect event (detection) to the next book_valid; for a timeout this starts up to 15 s "
+                    "after the last frame, which the DEC-071 gap already covers",
         "pairs": pairs,
         "Q5": {"book_valid_without_fresh_snapshot": q5_violations, "pass": not q5_violations},
         "T3_latency": latency,
@@ -459,10 +519,15 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
         "R5_storage": {"uncompressed_bytes": sum(r["bytes"] for r in seg_rows), "gzip_bytes": gz_total if compress else None,
                        "gzip_bytes_per_pair_per_day": (gz_total / len(symbols) / covered_days)
                        if compress and covered_days else None,
+                       "gzip_bytes_per_pair_per_window_day": (gz_total / len(symbols) / window_days)
+                       if compress and window_days else None,
+                       "basis": "per day of frames received (first to last frame); the window figure includes time without frames",
                        "pass": (gz_total / len(symbols) / covered_days) <= 2 * 10**9 if compress and covered_days else None},
         "segments": seg_rows,
         "store": store,
-        "segment_hash_vs_index": {"checked": len(seg_rows), "mismatch": seg_mismatch, "not_indexed": seg_unindexed},
+        "segment_hash_vs_index": {"checked": len(seg_rows), "mismatch": seg_mismatch, "not_indexed": seg_unindexed,
+                                  "provenance_not_SR02_SA03": seg_prov_bad},
+        "inconsistent_summary": inconsistent,
         "capture_summary": None if summary is None else {k: summary.get(k) for k in
                                                          ("duration_s", "frames", "disconnects", "parse_errors",
                                                           "checksum_fail", "resyncs", "resync_capped", "R4",
@@ -504,6 +569,9 @@ def main(argv=None) -> int:
     for guard, why in ((run, "the run directory"), (repo, "the repository (DEC-030)")):
         if guard == out.parent or guard in out.parents:
             sys.exit(f"--out must be outside {why}")
+    for d in out.parents:
+        if any((d / m).exists() for m in CAPTURE_MARKERS):
+            sys.exit(f"--out must not be inside a capture directory ({d})")
     report = analyse_live(run, a.symbols.split(","), compress=not a.no_compress) if a.kind == "live" else analyse_rest(run)
     report["analysed_at_utc"] = datetime.now(timezone.utc).isoformat()
     out.parent.mkdir(parents=True, exist_ok=True)

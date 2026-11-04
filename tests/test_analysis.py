@@ -69,6 +69,17 @@ def valid_both(t_s):
     return [(T0 + t_s * S, "book_valid", {"symbol": s}) for s in SYMS]
 
 
+def disc(t_s):
+    """What live.py writes on a disconnect: book_invalid for each pair, then the disconnect."""
+    t = T0 + t_s * S
+    return [(t, "book_invalid", {"symbol": s, "reason": "disconnect"}) for s in SYMS] + [(t, "disconnect", {"error": "timeout"})]
+
+
+def trade(sym, at_ns):
+    return json.dumps({"channel": "trade", "type": "update",
+                       "data": [{"symbol": sym, "price": 1, "qty": 1, "trade_id": 1, "timestamp": ts(at_ns)}]})
+
+
 class AnalysisTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -106,9 +117,8 @@ class AnalysisTests(unittest.TestCase):
 
     def test_maintenance_excluded(self):
         frames = steady(0, 1000, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 520 * S, snap(s)) for s in SYMS])
-        ev = valid_both(0) + [(T0 + 500 * S, "venue_status", {"data": [{"system": "maintenance"}]}),
-                              (T0 + 501 * S, "disconnect", {}),
-                              (T0 + 600 * S, "venue_status", {"data": [{"system": "online"}]})] + valid_both(520)
+        ev = (valid_both(0) + [(T0 + 500 * S, "venue_status", {"data": [{"system": "maintenance"}]})] + disc(501)
+              + [(T0 + 600 * S, "venue_status", {"data": [{"system": "online"}]})] + valid_both(520))
         r = self.basic(frames, ev)
         self.assertEqual(r["window"]["maintenance_s"], 100)
         self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_dec071"], 0)
@@ -116,24 +126,64 @@ class AnalysisTests(unittest.TestCase):
 
     def test_q5_requires_fresh_snapshot(self):
         frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 60 * S, snap("BTC/USD"))])
-        ev = valid_both(0) + [(T0 + 50 * S, "disconnect", {})] + valid_both(61)
+        ev = valid_both(0) + disc(50) + valid_both(61)
         r = self.basic(frames, ev, duration_s=100)
         self.assertFalse(r["Q5"]["pass"])
         self.assertEqual([v["symbol"] for v in r["Q5"]["book_valid_without_fresh_snapshot"]], ["ETH/USD"])
 
-    def test_parse_error_opens_invalid_interval(self):  # the PR #30 defect on the running capture
-        frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 40 * S, snap(s)) for s in SYMS])
-        ev = valid_both(0) + [(T0 + 30 * S, "parse_error", {"error": "KeyError"})] + valid_both(40)
+    def test_parse_error_on_book_frame_invalidates_that_book(self):  # the PR #30 defect in 5b69e7f
+        bad = json.dumps({"channel": "book", "type": "update", "data": [{"symbol": "BTC/USD", "bids": []}]})
+        frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 30 * S + 5, bad), (T0 + 40 * S, snap("BTC/USD"))])
+        ev = valid_both(0) + [(T0 + 30 * S + 9, "parse_error", {"error": "KeyError"}), (T0 + 40 * S, "book_valid", {"symbol": "BTC/USD"})]
         r = self.basic(frames, ev, duration_s=100)
         self.assertEqual(r["parse_errors"], 1)
-        self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_capture_events_only"], 10)
+        self.assertEqual(r["parse_error_detail"][0]["invalidates"], ["BTC/USD"])
+        self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_capture_events_only"], 10 - 9e-9)
+        self.assertAlmostEqual(r["pairs"]["ETH/USD"]["invalid_s_capture_events_only"], 0)
         self.assertTrue(r["Q5"]["pass"])
+
+    def test_parse_error_on_other_frame_invalidates_nothing(self):
+        frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 30 * S + 5, trade("ETH/USD", T0 + 30 * S))])
+        ev = valid_both(0) + [(T0 + 30 * S + 9, "parse_error", {"error": "KeyError"}),
+                              (T0 + 60 * S + 9, "parse_error", {"error": "JSONDecodeError"})]  # after a heartbeat
+        r = self.basic(frames, ev, duration_s=100)
+        self.assertEqual([d["frame"]["channel"] for d in r["parse_error_detail"]], ["trade", "other"])
+        self.assertEqual([d["invalidates"] for d in r["parse_error_detail"]], [[], []])
+        for s in SYMS:
+            self.assertEqual(r["pairs"][s]["invalid_s_capture_events_only"], 0)
+
+    def test_checksum_mismatch_book_invalid_event(self):  # the resync path writes only book_invalid
+        frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 23 * S, snap("BTC/USD"))])
+        ev = valid_both(0) + [(T0 + 20 * S, "book_invalid", {"symbol": "BTC/USD", "reason": "checksum_mismatch"}),
+                              (T0 + 23 * S, "book_valid", {"symbol": "BTC/USD"})]
+        r = self.basic(frames, ev, duration_s=100)
+        self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_dec071"], 3)
+        self.assertAlmostEqual(r["pairs"]["ETH/USD"]["invalid_s_dec071"], 0)
+        self.assertTrue(r["Q5"]["pass"])
+        ev[-1] = (T0 + 22 * S, "book_valid", {"symbol": "BTC/USD"})  # before its fresh snapshot
+        r = self.basic(frames, ev, duration_s=100)
+        self.assertFalse(r["Q5"]["pass"])
+
+    def test_q5_ignores_book_valid_outside_frames(self):
+        frames = steady(5, 50, extra=[(T0 + 5 * S, snap(s)) for s in SYMS])
+        r = self.basic(frames, valid_both(1) + disc(10) + valid_both(12), duration_s=50)
+        self.assertEqual([v["book_valid_at"] for v in r["Q5"]["book_valid_without_fresh_snapshot"]],
+                         [ts(T0 + 12 * S)] * 2)  # the one at 1 s precedes every frame and is not judged
+
+    def test_initial_sync_variant(self):
+        frames = steady(0, 1000, extra=[(T0 + 20 * S, snap(s)) for s in SYMS] + [(T0 + 505 * S, snap(s)) for s in SYMS])
+        ev = ([(T0 + 0, "venue_status", {"data": [{"system": "maintenance"}]}),
+               (T0 + 10 * S, "venue_status", {"data": [{"system": "online"}]})] + valid_both(20) + disc(500) + valid_both(505))
+        p = self.basic(frames, ev)["pairs"]["BTC/USD"]
+        # invalid outside maintenance: 10-20 (initial) and 500-505; denominator 990
+        self.assertAlmostEqual(p["valid_share_dec071"], 1 - 15 / 990)
+        self.assertAlmostEqual(p["valid_share_dec071_excl_initial_sync"], 1 - 5 / 980)
 
     def test_r3_from_disconnect_to_valid(self):
         frames = steady(0, 300, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 103 * S, snap(s)) for s in SYMS]
                         + [(T0 + 270 * S, snap(s)) for s in SYMS])
-        ev = (valid_both(0) + [(T0 + 100 * S, "disconnect", {})] + valid_both(103)
-              + [(T0 + 200 * S, "disconnect", {})] + valid_both(270))
+        ev = (valid_both(0) + disc(100) + valid_both(103)
+              + disc(200) + disc(230) + valid_both(270))  # R-3 runs from the first of two disconnects
         r = self.basic(frames, ev, duration_s=300)
         r3 = r["pairs"]["BTC/USD"]["R3_recovery_s"]
         self.assertEqual((r3["n"], r3["max"]), (2, 70.0))
@@ -141,9 +191,10 @@ class AnalysisTests(unittest.TestCase):
 
     def test_provisional_skips_open_segment(self):
         segs = [steady(0, 10, extra=[(T0, snap(s)) for s in SYMS]), steady(10, 20)]
-        run = Run(self.dir / "run", segs, valid_both(0), summary=False)
+        run = Run(self.dir / "run", segs, valid_both(0) + disc(15) + valid_both(16), summary=False)
         r = A.analyse_live(run.root, SYMS, compress=False)
         self.assertTrue(r["provisional"])
+        self.assertEqual((r["disconnects"], r["pairs"]["BTC/USD"]["R3_recovery_s"]["n"]), (0, 0))  # after the analysed frames
         self.assertEqual(r["skipped_open_segment"], f"frames-{T0 + 10 * S}.jsonl")
         self.assertEqual(r["frames"]["segments"], 1)
         self.assertEqual(r["window"]["analysed_end"], ts(T0 + 9 * S))
@@ -165,7 +216,19 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual([x["offset_ms"] for x in c["over_1s"]], [1500.0])
         # unknown before 10 s, >1 s from 40 to 100 s, stale after 160 s (no sample after 100 s)
         self.assertAlmostEqual(c["T6_intraday_abstain_s"], 10 + 60 + 240)
-        self.assertAlmostEqual(c["T5_uncertainty_flag_s"], 10 + 60)
+        self.assertEqual(c["T6_intraday_by_cause_s"], {"before_first_sample_DEC067": 10, "offset_over_1s": 60,
+                                                       "sample_older_than_60s": 240})
+        self.assertAlmostEqual(c["T5_uncertainty_flag_s"], 60)  # DEC-067 gives no uncertainty value before a sample
+        self.assertEqual(c["T6_daily_abstain_s"], 0)
+
+    def test_t6_daily_and_stale_items(self):
+        frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 50 * S, upd("ETH/USD", T0 + 30 * S)),
+                                                                     (T0 + 51 * S, trade("BTC/USD", T0 + 51 * S))])
+        ev = valid_both(0) + [(T0, "ntp", {"offset_ms": 1.0}), (T0 + 40 * S, "ntp", {"offset_ms": 70_000.0}),
+                              (T0 + 70 * S, "ntp", {"offset_ms": 1.0})]
+        r = self.basic(frames, ev, duration_s=100)
+        self.assertEqual(r["clock_T5_T6"]["T6_daily_abstain_s"], 30)
+        self.assertEqual(r["T3_items_older_than_15s_on_receipt"], {"book:ETH/USD": 1})
 
     def test_r5_gzip_size(self):
         frames = steady(0, 1000, extra=[(T0, snap(s)) for s in SYMS])
@@ -196,6 +259,42 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(r["store"]["index"]["malformed_interior"], [1])
         self.assertTrue(r["store"]["index"]["incomplete_tail"])
         self.assertFalse(r["store"]["opens_read_only"])  # an interior bad line makes the store refuse to open
+
+    def test_unindexed_segment_and_provenance(self):
+        run = Run(self.dir / "run", [steady(0, 10, extra=[(T0, snap(s)) for s in SYMS])], valid_both(0), duration_s=10,
+                  ingest=False)
+        r = A.analyse_live(run.root, SYMS, compress=False)
+        self.assertEqual(r["segment_hash_vs_index"]["not_indexed"], [f"frames-{T0}.jsonl"])
+        st = RawStore(run.root / "store", clock=lambda: T0)
+        seg = next(run.root.glob("frames-*.jsonl"))
+        st.ingest_file(seg, source_id="SR-05", source_approval_id="SA-02",
+                       request=f"wss://ws.kraken.com/v2#segment:{seg.name}", retrieved_at_ns=T0)
+        st.close()
+        r = A.analyse_live(run.root, SYMS, compress=False)
+        self.assertEqual(r["segment_hash_vs_index"]["provenance_not_SR02_SA03"], [seg.name])
+
+    def test_store_object_missing_or_short(self):
+        run = Run(self.dir / "run", [steady(0, 10), steady(10, 20)], valid_both(0), duration_s=20)
+        objs = sorted(p for p in (run.root / "store" / "objects").rglob("*") if p.is_file())
+        objs[0].unlink()
+        objs[1].write_bytes(objs[1].read_bytes()[:-1])
+        res = A.check_store(run.root / "store")
+        self.assertEqual((res["objects"]["missing"], res["objects"]["length_mismatch"]), ([objs[0].name], [objs[1].name]))
+        self.assertFalse(res["ok"])
+
+    def test_bad_journal_line_reported_not_raised(self):  # the short-append defect, review fixes
+        run = Run(self.dir / "run", [steady(0, 10)], valid_both(0), duration_s=10)
+        j = run.root / "store" / "journal.jsonl"
+        j.write_bytes(b'{"at_ns": 1, "outc' + b"\n" + j.read_bytes())
+        res = A.check_store(run.root / "store")
+        self.assertEqual(res["journal"]["malformed_interior"], [1])
+        self.assertFalse(res["ok"])
+        self.assertTrue(res["opens_read_only"])
+
+    def test_summary_older_than_frames_is_flagged(self):
+        frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS])
+        r = self.basic(frames, valid_both(0), duration_s=50)
+        self.assertIn("may still be writing", r["inconsistent_summary"])
 
     def test_store_object_tamper_detected(self):
         run = Run(self.dir / "run", [steady(0, 10)], valid_both(0), duration_s=10)
@@ -230,6 +329,11 @@ class AnalysisTests(unittest.TestCase):
         repo = Path(__file__).resolve().parents[1]
         with self.assertRaises(SystemExit):
             A.main(["live", "--run", str(run.root), "--out", str(repo / "r.json")])
+        with self.assertRaises(SystemExit):  # inside another capture directory
+            other = self.dir / "other"
+            other.mkdir()
+            (other / "events.jsonl").write_text("")
+            A.main(["live", "--run", str(run.root), "--out", str(other / "x" / "r.json")])
         out = self.dir / "reports" / "r.json"
         with redirect_stdout(io.StringIO()):
             self.assertEqual(A.main(["live", "--no-compress", "--run", str(run.root), "--out", str(out)]), 0)
