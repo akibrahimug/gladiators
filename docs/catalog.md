@@ -44,6 +44,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/evidence/P02/capture-validation-results.md](<evidence/P02/capture-validation-results.md>) |
 | [docs/evidence/P02/capture-validation-plan.md](<evidence/P02/capture-validation-plan.md>) |
 | [docs/evidence/P02/event-contract.md](<evidence/P02/event-contract.md>) |
+| [docs/evidence/P02/live-analysis.md](<evidence/P02/live-analysis.md>) |
 | [docs/evidence/P02/live-run-interruption.md](<evidence/P02/live-run-interruption.md>) |
 | [docs/evidence/P02/network-capture.md](<evidence/P02/network-capture.md>) |
 | [docs/evidence/P02/recovery-results.md](<evidence/P02/recovery-results.md>) |
@@ -516,6 +517,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P01-014.md](<tasks/TASK-P01-014.md>) |
 | [docs/tasks/TASK-P02-001.md](<tasks/TASK-P02-001.md>) |
 | [docs/tasks/TASK-P02-002.md](<tasks/TASK-P02-002.md>) |
+| [docs/tasks/TASK-P02-003.md](<tasks/TASK-P02-003.md>) |
 | [docs/tasks/TASK-P02-004.md](<tasks/TASK-P02-004.md>) |
 | [docs/tasks/TASK-P02-005.md](<tasks/TASK-P02-005.md>) |
 | [docs/tasks/TASK-P02-006.md](<tasks/TASK-P02-006.md>) |

@@ -60,6 +60,8 @@ On 2026-10-29 [TASK-P02-008](../../tasks/TASK-P02-008.md) fixed five Codex revie
 
 On 2026-10-31 [TASK-P02-009](../../tasks/TASK-P02-009.md) found that a user-initiated sleep paused the 7-day capture for 13.46 h on 2026-10-29/30, so the run fails R-4 ([live run interruption](../../evidence/P02/live-run-interruption.md)). The user chose to rerun the window after this one ends (DEC-070).
 
-**Exact next step:** the first 7-day run ends about 2026-11-04 23:57 UTC; its timer counts awake time only. The rerun then starts from a separate code copy and ends about 2026-11-12. Both runs then go to the user for the G02 review. The 30-day pull runs until 2026-11-27.
+On 2026-11-04 the user chose the R-4 gap rule (DEC-071: last frame + 15 s) before any run was measured with it, and assigned the read-only run analysis (DEC-072, [TASK-P02-003](../../tasks/TASK-P02-003.md); [live analysis](../../evidence/P02/live-analysis.md)).
+
+**Exact next step:** the first 7-day run ends about 2026-11-04 23:57 UTC; its timer counts awake time only. The rerun then starts from a separate code copy and ends about 2026-11-12. TASK-P02-003 analyses each run once it has ended, and the 30-day pull after 2026-11-27. Both runs then go to the user for the G02 review. The 30-day pull runs until 2026-11-27.
 
 **Implementation boundary:** capture code for held files exists (`src/gladiator_capture/`, DEC-058). Network transports, live capture and the DEC-057 retrievals are later tasks. Trading is out of scope.

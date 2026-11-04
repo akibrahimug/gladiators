@@ -67,16 +67,16 @@
 - *Inference:* either REST data changed after the archive was generated, or the two are built from different trade sets.
 - Either way, archive values are **not** always what REST serves later, which is T-2a's second condition. Under T-2a, such a difference is a correction with its own `available_at`.
 
-**2. Comparison rule: current against Proposed.**
+**2. Comparison rule: decided as DEC-059 (2026-10-28).**
 
 | Rule | Mismatches (of 31 bars per pair) |
 | --- | --- |
 | **Current** event contract §4.1: archive volume rounded to 8 decimals must equal REST | **4.** XBTUSD 2026-09-10 (real), plus ETHUSD 2026-09-11, 09-15 and 09-21, which are float rounding: after rounding, the differences are 1 to 2 × 10⁻⁸ |
 | **Proposed:** relative volume tolerance of 10⁻⁹, as in the P01 sample | **1** (XBTUSD 2026-09-10) |
 
-The current rule is the official result until the user decides. The Proposed rule is reported alongside it, not substituted for it.
+*Update 2026-11-04 (TASK-P02-003):* the user chose the relative 10⁻⁹ tolerance on 2026-10-28 (DEC-059), and the event contract §4.1 and `validate.py` apply it, so the official count is **1**. The 8-decimal row is kept as the record of the earlier rule. The user confirmed the choice again on 2026-11-04 ([live analysis](live-analysis.md#decisions-asked-2026-11-04)).
 
-**3. Proposed refinement to event contract §3: bar keys.**
+**3. Event contract §3 bar keys: decided as DEC-060 (2026-10-28).**
 - Bars now key on `bar_start` (`native_seq` = the bar start), not the row index.
 - A row index makes the key shift when a revision inserts a row, and when the 30-day REST pull's sliding window moves.
-- The contract allows "native ID or row index"; this narrows it for bars. It is **Proposed**, for the user to confirm.
+- The contract allowed "native ID or row index"; this narrows it for bars. *Update 2026-11-04:* the user accepted it on 2026-10-28 (DEC-060), and the contract §3 says so. The user confirmed it again on 2026-11-04 ([live analysis](live-analysis.md#decisions-asked-2026-11-04)).
