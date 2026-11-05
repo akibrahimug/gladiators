@@ -69,7 +69,7 @@ If any check fails, it logs the reason and does not start the rerun.
 
 **Announced maintenance.** The rerun's first `status` frame announces Kraken maintenance of the WebSocket, FIX and REST APIs from 2026-11-05 07:00 to 14:00 UTC (event 54, "WebSocket, FIX + REST API Maintenance", phase `reminder_24h`). The rerun's code reconnects indefinitely, at most 60 s apart (`RECONNECT_DELAYS_S`). A refused handshake raises `ConnectionError`, and a DNS or TLS failure raises an `OSError` subclass. The reconnect loop catches both, so an outage does not end the capture. R-4 excludes venue-declared maintenance (RC-11); how much of the 7 h is excluded depends on whether the venue reports `maintenance` on the `status` channel before it drops the connection.
 
-**Outcome.** Kraken withdrew the maintenance before it started. At 07:01:20 UTC the `status` frames list no upcoming maintenance, and the system stayed `online` throughout.
+**Outcome.** The item left the `upcoming_maintenance` list at 07:01:20 UTC, 80 s after its announced start. The status stayed `online` and data kept flowing, so the feed saw no maintenance. Kraken removes items from that list at about their start (seen for three announcements), so leaving the list is not a withdrawal (the read-only analysis, TASK-P02-003, [#36](https://github.com/akibrahimug/gladiators/pull/36)).
 
 ### Rerun stopped by a kernel panic (2026-11-05)
 
@@ -95,7 +95,7 @@ Unchosen options:
 
 The same round asked how R-4 should treat announced maintenance (DEC-074). That rule belongs to the analysis and is recorded with TASK-P02-003 (PR [#36](https://github.com/akibrahimug/gladiators/pull/36)).
 
-"All checks clean" in the question meant the rerun's own events: no parse error, and every disconnect recovered within 2 s. The read-only analysis has not been run on run 2.
+"All checks clean" in the question meant the rerun's own events: no parse error, and every disconnect recovered within 2 s. The read-only analysis's provisional report on run 2 is recorded by TASK-P02-003 ([#36](https://github.com/akibrahimug/gladiators/pull/36)).
 
 ### Run 3 start (DEC-073, 2026-11-05)
 
