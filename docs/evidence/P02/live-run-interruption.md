@@ -46,3 +46,66 @@ Corrections to the question, found in review after the answer:
 6. The G02 analysis uses the rerun for R-4 and reports both runs.
 
 Disk: 98 GB free on 2026-10-31. The first run holds 12 GB after about 63.9 h awake: 6.1 GB of hourly frame segments plus 6.0 GB in the raw store, which keeps an ingested copy of each closed segment. A full run is therefore about 31 GB, and the rerun adds about the same. The first run's remaining 19 GB plus the rerun's 31 GB leave about 48 GB free once both have finished. The frames alone come to about 1.15 GB per pair per day, within R-5's 2 GB.
+
+### Watcher (TASK-P02-010, 2026-11-04)
+
+The user chose to have the rerun started automatically ([TASK-P02-010](../../tasks/TASK-P02-010.md)). At 2026-11-04 10:10:47 UTC the coordinator armed [`ops/rerun/run2-watcher.sh`](../../../ops/rerun/run2-watcher.sh) against the first run's pid 76475, under `caffeinate -i -s`, from `~/gladiator-data/run2-watcher/`. It re-armed the watcher at 10:20:35 UTC after review fixes, as pid 1192. The watcher does steps 1 to 4 above:
+
+- It waits for the first run to exit and requires that run's `live-summary.jsonl`.
+- It copies `origin/master` as it is at that moment into `~/gladiator-capture-run2`, recording the revision and whether #33 is included.
+- It runs the offline tests, then starts the rerun.
+
+If any check fails, it logs the reason and does not start the rerun.
+
+### Rerun start (observed 2026-11-05)
+
+| Step | Observed |
+| --- | --- |
+| 1. First run ended | `live-summary.jsonl` written at 2026-11-05 00:01 UTC; `duration_s` 653,057.5 (181.4 h of wall clock, including the 13.5 h sleep), 62,332,037 frames, 76 disconnects, 0 parse errors. The capture's own R-4 count (99.98 %) misses the sleep; the read-only analysis (TASK-P02-003, [#36](https://github.com/akibrahimug/gladiators/pull/36)) applies DEC-071. Its `caffeinate` released its sleep assertion at 00:01:16 UTC (`pmset -g log`) |
+| 2. Code | 00:01:59 UTC: copied from `origin/master` `d0b6b868a1ec2b84745ee21400daf470bbf1a992` into `~/gladiator-capture-run2`; `REVISION` holds the same SHA. Watcher log: "PR #33 fixes included: yes" |
+| Offline tests | 74 tests OK on `d0b6b86`, 00:02:00 UTC |
+| 3. Started | 00:02:00 UTC: `caffeinate -i -s /usr/bin/python3 -I -B ~/gladiator-capture-run2/capture.py live --out ~/gladiator-data/live-7d-run2 --seconds 604800`. Python pid 1192 (the watcher's, after `exec`), `caffeinate` pid 50517, which holds `PreventSystemSleep` from 00:02:00 UTC. First event `connected` at 00:02:01.255 UTC, first frame segment `frames-1793836921284145000.jsonl` at 00:02:01.284 UTC. The first SNTP offsets are 20 to 26 ms |
+| Expected end | About 2026-11-12 00:02 UTC if the Mac stays awake; the timer counts awake time only |
+
+**Announced maintenance.** The rerun's first `status` frame announces Kraken maintenance of the WebSocket, FIX and REST APIs from 2026-11-05 07:00 to 14:00 UTC (event 54, "WebSocket, FIX + REST API Maintenance", phase `reminder_24h`). The rerun's code reconnects indefinitely, at most 60 s apart (`RECONNECT_DELAYS_S`). A refused handshake raises `ConnectionError`, and a DNS or TLS failure raises an `OSError` subclass. The reconnect loop catches both, so an outage does not end the capture. R-4 excludes venue-declared maintenance (RC-11); how much of the 7 h is excluded depends on whether the venue reports `maintenance` on the `status` channel before it drops the connection.
+
+**Outcome.** The item left the `upcoming_maintenance` list at 07:01:20 UTC, 80 s after its announced start. The status stayed `online` and data kept flowing, so the feed saw no maintenance. Kraken removes items from that list at about their start (seen for three announcements), so leaving the list is not a withdrawal (the read-only analysis, TASK-P02-003, [#36](https://github.com/akibrahimug/gladiators/pull/36)).
+
+### Rerun stopped by a kernel panic (2026-11-05)
+
+| Item | Observed |
+| --- | --- |
+| Last frame | 2026-11-05 08:11:50.047 UTC (last `events.jsonl` line 08:11:20). The capture had run 8.16 h: 3 disconnects (00:52, 03:54, 04:09 UTC), each recovered in under 2 s; 0 parse errors; status always `online` |
+| Cause | Kernel panic at 08:12:50 UTC: "x86 CPU CATERR detected" (`/Library/Logs/DiagnosticReports/ProxiedDevice-Bridge/panic-full-2026-11-05-081250.0003.ips`, summarised in `.contents.panic`). This is a hardware-level CPU error reported by the iMac's T2 bridge, not a sleep. The unified log has no entries between 08:10 and 09:05 UTC |
+| Restart | The Mac booted at 09:05:08 UTC (`kern.boottime`; `last`: "reboot time Thu Nov 5 09:05"). `pmset -g log`: "SMC shutdown cause: 5: Software initiated shutdown" |
+| Data left | `~/gladiator-data/live-7d-run2`: 2.3 GB in 9 frame segments, 8 of them ingested into the store; the 9th (08:02 to 08:11 UTC) was still open. No `live-summary.jsonl`, and `run.log` is empty. Kept unchanged as evidence |
+| Side effect | The reboot cleared `/private/tmp`, which held the coordinator's worktrees and its link and preservation check scripts. Every branch had been pushed, so nothing was lost; the worktrees and scripts were recreated |
+
+### Decision asked 2026-11-05
+
+Asked with the interactive question tool. The question and options, verbatim:
+
+| Decision | Question (verbatim) | Chosen option: label — description (verbatim) |
+| --- | --- | --- |
+| DEC-073 | "The DEC-070 rerun stopped after 8.2 h. At 08:12:50 UTC today the iMac kernel-panicked with 'x86 CPU CATERR detected' (a hardware-level CPU error), and it was down until it booted at 09:05. The capture can't resume after a reboot. Its partial data (9 segments, 3 short disconnects, all checks clean) is kept. A fresh 7-day run started now would end about 12 Nov 09:30 UTC, still before the 30-day pull ends (27 Nov), so G02 isn't delayed. What should happen?" | "Start a fresh run now (Recommended)" — "New 7-day run from master d0b6b86 into ~/gladiator-data/live-7d-run3; keep run 2's partial data as evidence. If the panic recurs, we learn that early." |
+
+Unchosen options:
+- "Check hardware first" — "You run Apple Diagnostics (hold D at startup) or check the panic yourself; I start the run once you say so. Delays the end date by however long that takes."
+- "Stop live reruns" — "No further 7-day run. Judge R-4 at G02 on run 1 (fails, 92.56 %) plus run 2's 8.2 h."
+
+The same round asked how R-4 should treat announced maintenance (DEC-074). That rule belongs to the analysis and is recorded with TASK-P02-003 (PR [#36](https://github.com/akibrahimug/gladiators/pull/36)).
+
+"All checks clean" in the question meant the rerun's own events: no parse error, and every disconnect recovered within 2 s. The read-only analysis's provisional report on run 2 is recorded by TASK-P02-003 ([#36](https://github.com/akibrahimug/gladiators/pull/36)).
+
+### Run 3 start (DEC-073, 2026-11-05)
+
+| Step | Observed |
+| --- | --- |
+| Code | `master` was still `d0b6b868a1ec2b84745ee21400daf470bbf1a992` after `git fetch`. That revision was extracted with `git archive` into a new copy, `~/gladiator-capture-run3`, with `REVISION`. `diff -r -q` against `~/gladiator-capture-run2` finds no difference. 74 offline tests OK with `/usr/bin/python3 -I -B -m unittest discover -s tests` |
+| Started | 09:15:59 UTC by the coordinator: `nohup caffeinate -i -s /usr/bin/python3 -I -B ~/gladiator-capture-run3/capture.py live --out ~/gladiator-data/live-7d-run3 --seconds 604800`, output to `run.log` in that directory. Python pid 6634, `caffeinate` pid 6636 |
+| First events | `connected` at 09:16:00.836 UTC; both books valid at 09:16:01.157; first SNTP offset 82 ms; `status` `online` with no upcoming maintenance |
+| Expected end | About 2026-11-12 09:16 UTC if the Mac stays up; still before the 30-day pull's last day (2026-11-27) |
+
+Run 3 takes run 2's place for R-4 under DEC-070. The G02 analysis reports all three runs. Steps 4 to 6 of the rerun plan apply unchanged. To stop it, `kill 6634`.
+
+Disk on 2026-11-04 10:10 UTC: 265 GB free. The first run held 27 GB after about 6.42 days awake. Scaled to 7 days that is about 29.4 GB, close to the estimate of about 31 GB for a full run.
