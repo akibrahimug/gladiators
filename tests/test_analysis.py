@@ -80,6 +80,16 @@ def trade(sym, at_ns):
                        "data": [{"symbol": sym, "price": 1, "qty": 1, "trade_id": 1, "timestamp": ts(at_ns)}]})
 
 
+def status(t_s, items, system="online"):
+    """A venue_status event as live.py writes it, with an `upcoming_maintenance` list."""
+    return (T0 + t_s * S, "venue_status", {"data": [{"system": system, "upcoming_maintenance": items, "emergency": []}]})
+
+
+def notice(a_s, b_s, event_id=54, services=("spot_fix", "spot_rest", "spot_ws")):
+    return {"event_id": event_id, "affected_services": list(services), "title": "API Maintenance",
+            "expected_start_utc": ts(T0 + a_s * S), "expected_end_utc": ts(T0 + b_s * S)}
+
+
 class AnalysisTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -123,6 +133,64 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(r["window"]["maintenance_s"], 100)
         self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_dec071"], 0)
         self.assertEqual(r["pairs"]["BTC/USD"]["valid_share_dec071"], 1.0)
+
+    def outage(self, statuses, extra_events=()):
+        """Frames stop at 499 s and resume at 800 s; the capture times out at 515 s, valid again at 801 s."""
+        frames = steady(0, 499, extra=[(T0, snap(s)) for s in SYMS]) + steady(800, 1000, extra=[(T0 + 801 * S, snap(s)) for s in SYMS])
+        ev = sorted(valid_both(0) + disc(515) + valid_both(801) + list(statuses) + list(extra_events), key=lambda e: e[0])
+        return self.basic(frames, ev)
+
+    def test_announced_maintenance_excluded_without_status(self):  # DEC-074
+        r = self.outage([status(100, [notice(500, 900)]), status(850, [notice(500, 900)]), status(950, [])])
+        w = r["window"]
+        self.assertEqual(w["maintenance_status_s"], 0)
+        self.assertEqual(w["maintenance_announced_s"], 400)
+        self.assertEqual(w["maintenance_s"], 400)
+        self.assertEqual(w["announced_maintenance"][0]["excluded"], [ts(T0 + 500 * S), ts(T0 + 900 * S)])
+        p = r["pairs"]["BTC/USD"]
+        self.assertAlmostEqual(p["invalid_s_dec071"], 2.0, places=3)  # 498 -> 500 falls before the window
+        self.assertAlmostEqual(p["valid_share_dec071"], 1 - 2 / 600, places=6)
+
+    def test_announced_maintenance_withdrawn_before_start(self):
+        r = self.outage([status(100, [notice(500, 900)]), status(200, [])])
+        w = r["window"]
+        self.assertEqual(w["maintenance_s"], 0)
+        self.assertIsNone(w["announced_maintenance"][0]["excluded"])
+        self.assertEqual(w["announced_maintenance"][0]["withdrawn_at"], ts(T0 + 200 * S))
+        self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_dec071"], 801 - 498, places=3)
+
+    def test_announced_maintenance_cut_at_withdrawal(self):  # as on 2026-11-05: withdrawn 80 s after its start
+        r = self.outage([status(100, [notice(450, 900)]), status(470, [notice(450, 900)]), status(480, [])])
+        self.assertEqual(r["window"]["maintenance_s"], 30)  # 450 -> 480
+        self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_dec071"], 801 - 498, places=3)
+
+    def test_announced_maintenance_latest_times_and_rest_only(self):
+        r = self.outage([status(100, [notice(300, 400), notice(500, 900, event_id=7, services=["spot_rest"])]),
+                         status(200, [notice(500, 850)]), status(950, [])])
+        w = r["window"]
+        self.assertEqual([m["event_id"] for m in w["announced_maintenance"]], [54])  # REST-only ignored
+        self.assertEqual(w["maintenance_s"], 350)  # rescheduled to 500 -> 850
+        self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_dec071"], 2.0, places=3)
+
+    def test_status_and_announced_maintenance_not_double_counted(self):
+        r = self.outage([status(100, [notice(500, 900)]), status(550, [notice(500, 900)], system="maintenance"),
+                         status(650, [notice(500, 900)]), status(950, [])])
+        w = r["window"]
+        self.assertEqual(w["maintenance_status_s"], 100)
+        self.assertEqual(w["maintenance_s"], 400)
+
+    def test_announced_maintenance_reannounced_or_malformed(self):
+        r = self.outage([status(100, [notice(500, 900), notice(700, 600, event_id=8)]), status(200, []),
+                         status(300, [notice(500, 900)]), status(950, [])])
+        w = r["window"]
+        self.assertEqual([m["event_id"] for m in w["announced_maintenance"]], [54])  # end before start: ignored
+        self.assertEqual(w["maintenance_s"], 400)  # announced again after the withdrawal at 200 s
+
+    def test_utc_ns(self):
+        self.assertEqual(A.utc_ns("2026-11-05T07:00:00.000000Z"), 1793862000 * S)
+        self.assertEqual(A.utc_ns("2026-11-05T07:00:00.250000Z"), 1793862000 * S + 250_000_000)
+        for bad in (None, 5, "soon", "2026-11-05T07:00:00"):
+            self.assertIsNone(A.utc_ns(bad))
 
     def test_q5_requires_fresh_snapshot(self):
         frames = steady(0, 100, extra=[(T0, snap(s)) for s in SYMS] + [(T0 + 60 * S, snap("BTC/USD"))])

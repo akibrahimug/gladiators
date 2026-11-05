@@ -8,8 +8,11 @@ or a REST-pull directory (`daily-summary.jsonl`, `store/`) and reports:
       `parse_error` also opening an interval for each pair (the PR #30 defect, review fixes), and
   (b) DEC-071 frame silences: when the next frame arrives more than 15 s after the previous one,
       the gap runs from the last frame received to the next one.
-  Venue maintenance is excluded (RC-11). The capture's built-in `invalid_book_ns` is reported
-  beside it and is not used for R-4.
+  Venue maintenance is excluded (RC-11, DEC-074): time while the `status` channel reports
+  "maintenance", plus each WebSocket maintenance window the venue announced in its `status` frames
+  (`upcoming_maintenance`). An announced window that a later frame no longer lists is withdrawn: it
+  counts only up to that frame, and not at all if withdrawn before it started. The capture's
+  built-in `invalid_book_ns` is reported beside it and is not used for R-4.
 - R-3: time from each `disconnect` to the next `book_valid` per pair.
 - Q-5: every `book_valid` must follow a book snapshot frame for that pair received since the pair
   was last invalidated.
@@ -113,6 +116,57 @@ def dist(xs: list) -> dict:
         return {"n": 0, "p50": None, "p95": None, "max": None}
     pick = lambda q: xs[min(len(xs) - 1, int(q * len(xs)))]
     return {"n": len(xs), "p50": pick(.5), "p95": pick(.95), "max": xs[-1]}
+
+
+def utc_ns(text) -> Optional[int]:
+    """An RFC 3339 UTC time from a venue frame as epoch ns; None if absent or unreadable."""
+    if not isinstance(text, str):
+        return None
+    try:
+        dt = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        return None
+    return int(dt.timestamp()) * 10**9 + dt.microsecond * 1000
+
+
+def announced_maintenance(statuses: list) -> list:
+    """DEC-074: the venue-announced WebSocket maintenance windows, from time-ordered (t, status data).
+
+    Each `upcoming_maintenance` item that lists `spot_ws` among its `affected_services` (or names no
+    services) is tracked by `event_id`, keeping its most recent announced start and end. The first
+    later frame that carries an `upcoming_maintenance` list without it withdraws it, and the window
+    counts only up to that frame: not at all when it is withdrawn before it starts. Kraken also drops
+    an item once its window has ended, which then changes nothing.
+    """
+    known = {}
+    for t, data in statuses:
+        if not isinstance(data, dict) or not isinstance(data.get("upcoming_maintenance"), list):
+            continue
+        listed = set()
+        for item in data["upcoming_maintenance"]:
+            if not isinstance(item, dict):
+                continue
+            services = item.get("affected_services")
+            if isinstance(services, list) and "spot_ws" not in services:
+                continue
+            a, b = utc_ns(item.get("expected_start_utc")), utc_ns(item.get("expected_end_utc"))
+            if a is None or b is None or b <= a:
+                continue
+            key = item.get("event_id", (a, b))
+            listed.add(key)
+            known[key] = {"event_id": item.get("event_id"), "title": item.get("title"), "start": a, "end": b,
+                          "first_listed": known.get(key, {}).get("first_listed", t), "withdrawn_at": None}
+        for key, w in known.items():
+            if key not in listed and w["withdrawn_at"] is None:
+                w["withdrawn_at"] = t
+    out = []
+    for w in known.values():
+        stop = w["end"] if w["withdrawn_at"] is None else min(w["end"], w["withdrawn_at"])
+        w["excluded"] = (w["start"], stop) if stop > w["start"] else None
+        out.append(w)
+    return sorted(out, key=lambda w: w["start"])
 
 
 def iso(ns: Optional[int]) -> Optional[str]:
@@ -348,6 +402,7 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
     last_invalidation = {s: start for s in symbols}
     q5_violations = []
     disconnects, parse_errors, maint, maint_since, counts = [], [], [], None, Counter()
+    statuses = []
     recov = {s: [] for s in symbols}
     pending_disc = {s: None for s in symbols}
     snap_i = {s: 0 for s in symbols}
@@ -398,7 +453,9 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
                 recov[s].append((t - pending_disc[s]) / 1e9)
                 pending_disc[s] = None
         elif k == "venue_status":
-            system = ((e.get("data") or [{}])[0] or {}).get("system")
+            data = (e.get("data") or [{}])[0] or {}
+            statuses.append((t, data))
+            system = data.get("system") if isinstance(data, dict) else None
             if system == "maintenance" and maint_since is None:
                 maint_since = t
             elif system != "maintenance" and maint_since is not None:
@@ -409,7 +466,10 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
             inv[s].append((since[s], end))
     if maint_since is not None:
         maint.append((maint_since, end))
-    maint = merge(clip(maint, start, end))
+    maint_status = merge(clip(maint, start, end))
+    announced = announced_maintenance(statuses)
+    maint_announced = merge(clip([w["excluded"] for w in announced if w["excluded"]], start, end))
+    maint = merge(maint_status + maint_announced)
 
     silence_iv = list(silences)
     if last_recv is not None and not provisional and end - last_recv > SILENCE_NS:
@@ -502,7 +562,13 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
     return {
         "run": str(run), "provisional": provisional, "skipped_open_segment": skipped_open_segment,
         "window": {"start": iso(start), "end": iso(end), "analysed_end": iso(analysed_end), "wall_h": wall / 3.6e12,
-                   "maintenance_s": total(maint) / 1e9, "maintenance_intervals": [[iso(a), iso(b)] for a, b in maint]},
+                   "maintenance_rule": "DEC-074: status 'maintenance' plus announced spot_ws windows, cut at withdrawal",
+                   "maintenance_s": total(maint) / 1e9, "maintenance_intervals": [[iso(a), iso(b)] for a, b in maint],
+                   "maintenance_status_s": total(maint_status) / 1e9, "maintenance_announced_s": total(maint_announced) / 1e9,
+                   "announced_maintenance": [{"event_id": w["event_id"], "title": w["title"], "announced": [iso(w["start"]), iso(w["end"])],
+                                              "first_listed": iso(w["first_listed"]), "withdrawn_at": iso(w["withdrawn_at"]),
+                                              "excluded": None if w["excluded"] is None else [iso(x) for x in w["excluded"]]}
+                                             for w in announced]},
         "frames": {"segments": len(seg_rows), "frames": frames, "first": iso(first_recv), "last": iso(last_recv),
                    "malformed": malformed_frames[:50], "malformed_count": len(malformed_frames),
                    "events_malformed_lines": events_malformed},
