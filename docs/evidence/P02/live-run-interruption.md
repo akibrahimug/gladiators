@@ -55,6 +55,18 @@ The user chose to have the rerun started automatically ([TASK-P02-010](../../tas
 - It copies `origin/master` as it is at that moment into `~/gladiator-capture-run2`, recording the revision and whether #33 is included.
 - It runs the offline tests, then starts the rerun.
 
-If any check fails, it logs the reason and does not start the rerun. The start is recorded here once it is observed.
+If any check fails, it logs the reason and does not start the rerun.
+
+### Rerun start (observed 2026-11-05)
+
+| Step | Observed |
+| --- | --- |
+| 1. First run ended | `live-summary.jsonl` written at 2026-11-05 00:01 UTC; `duration_s` 653,057.5 (181.4 h of wall clock, including the 13.5 h sleep), 62,332,037 frames, 76 disconnects, 0 parse errors. The capture's own R-4 count (99.98 %) misses the sleep; the read-only analysis (TASK-P02-003, [#36](https://github.com/akibrahimug/gladiators/pull/36)) applies DEC-071. Its `caffeinate` released its sleep assertion at 00:01:16 UTC (`pmset -g log`) |
+| 2. Code | 00:01:59 UTC: copied from `origin/master` `d0b6b868a1ec2b84745ee21400daf470bbf1a992` into `~/gladiator-capture-run2`; `REVISION` holds the same SHA. Watcher log: "PR #33 fixes included: yes" |
+| Offline tests | 74 tests OK on `d0b6b86`, 00:02:00 UTC |
+| 3. Started | 00:02:00 UTC: `caffeinate -i -s /usr/bin/python3 -I -B ~/gladiator-capture-run2/capture.py live --out ~/gladiator-data/live-7d-run2 --seconds 604800`. Python pid 1192 (the watcher's, after `exec`), `caffeinate` pid 50517, which holds `PreventSystemSleep` from 00:02:00 UTC. First event `connected` at 00:02:01.255 UTC, first frame segment `frames-1793836921284145000.jsonl` at 00:02:01.284 UTC. The first SNTP offsets are 20 to 26 ms |
+| Expected end | About 2026-11-12 00:02 UTC if the Mac stays awake; the timer counts awake time only |
+
+**Announced maintenance.** The rerun's first `status` frame announces Kraken maintenance of the WebSocket, FIX and REST APIs from 2026-11-05 07:00 to 14:00 UTC (event 54, "WebSocket, FIX + REST API Maintenance", phase `reminder_24h`). The rerun's code reconnects indefinitely, at most 60 s apart (`RECONNECT_DELAYS_S`). A refused handshake raises `ConnectionError`, and a DNS or TLS failure raises an `OSError` subclass. The reconnect loop catches both, so an outage does not end the capture. R-4 excludes venue-declared maintenance (RC-11); how much of the 7 h is excluded depends on whether the venue reports `maintenance` on the `status` channel before it drops the connection.
 
 Disk on 2026-11-04 10:10 UTC: 265 GB free. The first run held 27 GB after about 6.42 days awake. Scaled to 7 days that is about 29.4 GB, close to the estimate of about 31 GB for a full run.

@@ -62,6 +62,8 @@ On 2026-10-31 [TASK-P02-009](../../tasks/TASK-P02-009.md) found that a user-init
 
 On 2026-11-04 [TASK-P02-010](../../tasks/TASK-P02-010.md) armed a watcher that starts the rerun once the first run has ended cleanly (user's choice).
 
-**Exact next step:** the first 7-day run ends about 2026-11-04 23:57 UTC; its timer counts awake time only. The watcher then starts the rerun from a separate copy of `master`, and the rerun ends about 2026-11-12. Record its start and check it daily for sleep (TASK-P02-010). Both runs then go to the user for the G02 review. The 30-day pull runs until 2026-11-27.
+On 2026-11-05 at 00:02 UTC the first run had ended cleanly and the watcher started the rerun from `master` `d0b6b86`, which includes #33's fixes ([rerun start](../../evidence/P02/live-run-interruption.md#rerun-start-observed-2026-11-05)).
+
+**Exact next step:** check the rerun daily for sleep, read-only (TASK-P02-010, from 2026-11-06 00:02 UTC). It ends about 2026-11-12 00:02 UTC if the Mac stays awake. Kraken has announced API maintenance for 2026-11-05 07:00–14:00 UTC. Both runs then go to the user for the G02 review. The 30-day pull runs until 2026-11-27.
 
 **Implementation boundary:** capture code for held files exists (`src/gladiator_capture/`, DEC-058). Network transports, live capture and the DEC-057 retrievals are later tasks. Trading is out of scope.
