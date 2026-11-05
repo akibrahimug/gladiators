@@ -35,17 +35,20 @@ Unchosen options:
 
 ## Decision asked 2026-11-05
 
-Asked with the interactive question tool, in the same round as DEC-073 (the fresh run after the kernel panic, recorded on the live run interruption page by TASK-P02-010, [#35](https://github.com/akibrahimug/gladiators/pull/35)). Run 2 had just stopped. Its only announced window had been withdrawn 80 s after its start, and no run used for R-4 contained an announced window. The question and options, verbatim:
+Asked with the interactive question tool, in the same round as DEC-073 (the fresh run after the kernel panic, recorded on the live run interruption page by TASK-P02-010, [#35](https://github.com/akibrahimug/gladiators/pull/35)). Run 2 had just stopped. Its only announced window had left the `upcoming_maintenance` list 80 s after its start, and no run used for R-4 contained an announced window. The question and options, verbatim:
 
 | Decision | Question (verbatim) | Chosen option: label — description (verbatim) |
 | --- | --- | --- |
 | DEC-074 | "Kraken announced, then withdrew at 07:01 UTC, a 7-hour WebSocket/FIX/REST maintenance for today, 07:00–14:00 UTC. If it is rescheduled inside the next run, R-4 (≥ 99 % valid, excluding 'venue-declared maintenance') currently excludes only time when the status channel reports 'maintenance'. If Kraken drops the connection without sending that status first, up to 7 h would count as invalid, about 4 %, and R-4 would fail. Which rule should apply? I'm asking before it happens, so the rule is fixed before the outcome is known." | "Status + announced window (Recommended)" — "Exclude status-reported maintenance plus the window the venue last announced in its status frames, if it was not withdrawn before it started. A small analysis change with tests, in PR #36." |
 
+
+The question's "withdrew at 07:01 UTC" was the coordinator's reading at the time. The item left the list 80 s after its start, which Kraken does for every item at about its start (below).
+
 Unchosen options:
 - "Status channel only" — "Keep the current rule. Time dropped without a 'maintenance' status counts as invalid."
 - "Report both, decide at G02" — "Compute both; you choose at the G02 review. Not fixed in advance."
 
-**How it is applied.** Only items whose `affected_services` include `spot_ws` count; the book and trade feeds arrive over the WebSocket. Each item keeps the times of its latest announcement. The option does not cover a window withdrawn after it started, as happened on 2026-11-05. The analysis then counts it only up to the first `status` frame that no longer lists it. That is the stricter reading, because it excludes less time. During a real outage no frames arrive, so the window runs to its announced end or to the first frame after reconnecting.
+**How it is applied.** Only items whose `affected_services` include `spot_ws`, or that name no services, count; the book and trade feeds arrive over the WebSocket. Each item is tracked by its `event_id`, or by its times if it has no usable id. It keeps the times of its latest announcement, and its window is clipped to the run. As the option reads, the whole announced window is excluded unless a status frame stopped listing the item before its start. Listing it again cancels that. Kraken removes items from the list at about their start (below), so leaving the list later is not a withdrawal. A window counts from its announced start even if it was first listed later. Frames without an `upcoming_maintenance` list change nothing. Items with unreadable times are skipped and counted in the report. A first implementation (`b7d6753`) cut a window at the first frame that no longer listed it. Review M1 showed that this undoes the rule when the connection drops after Kraken has unlisted the item, so `cf03f00` follows the option as written.
 
 ## Results
 
@@ -62,15 +65,18 @@ Command: `/usr/bin/python3 -I -B analyse.py rest --run ~/gladiator-data/rest-dai
 
 ### Run 1 (DEC-064), final, 2026-11-05
 
-Command: `python3.12 -I -B analyse.py live --run ~/gladiator-data/live-7d --out ~/gladiator-data/analysis/live-7d.json`, 09:23–10:01 UTC, code `b7d6753` (DEC-074 included). Report SHA-256 `65ae7724a501fc4c977c492e09930bf227ffe667ae4784a0681f158f17b27e3b`; 2,290 s, 244 MB peak memory. Not provisional: the run wrote `live-summary.jsonl` at 2026-11-05 00:01 UTC. Window: `ran_at_utc` 2026-10-28 10:35:30.616 plus `duration_s` 653,057.5 s, so 181.40 h of wall clock to 2026-11-04 23:59:48 UTC. 178 segments, 62,332,037 frames. The report replaces two earlier ones:
+Command: `python3.12 -I -B analyse.py live --run ~/gladiator-data/live-7d --out ~/gladiator-data/analysis/live-7d.json`, 10:12–10:50 UTC, code `cf03f00` (DEC-074 as the option reads). Report SHA-256 `2343a77208955bb2f5bfa81bd78f7f3cb37be2117254c484d47735e23d109b9e`; 2,273 s, 246 MB peak memory. Not provisional: the run wrote `live-summary.jsonl` at 2026-11-05 00:01 UTC. Window: `ran_at_utc` 2026-10-28 10:35:30.616 plus `duration_s` 653,057.5 s, so 181.40 h of wall clock to 2026-11-04 23:59:48 UTC. 178 segments, 62,332,037 frames. The report replaces three earlier ones:
 - the provisional report `72c43357…6faf` (164 segments, code `d6bc907`);
-- a first final report, `46e8d52c…ffdea`, made at 00:05–00:39 UTC on `bca6079`, before DEC-074. It gave R-4 92.56 %, with 126 s of maintenance, and is otherwise identical.
+- a first final report, `46e8d52c…ffdea`, made at 00:05–00:39 UTC on `bca6079`, before DEC-074. It gave R-4 92.56 %, with 126 s of maintenance;
+- `65ae7724…7b27e3b`, on `b7d6753`. It cut announced windows when they left the list, and gave R-4 92.69 % with 1,113 s of maintenance (review M1).
+
+Apart from maintenance and R-4, all three give the same results.
 
 | Check | BTC/USD | ETH/USD | Against |
 | --- | --- | --- | --- |
-| **R-4** valid share, DEC-071 and DEC-074 | **92.69 %** | **92.69 %** | ≥ 99 %: **fails** (the sleep; [interruption](live-run-interruption.md)) |
-| Invalid time: DEC-071 / capture events only | 47,655 s / 130 s | 47,655 s / 130 s | the capture's own summary gives 99.98 %, which misses the sleep |
-| Excluding the 1.25 s initial sync | 92.69 % | 92.69 % | |
+| **R-4** valid share, DEC-071 and DEC-074 | **92.43 %** | **92.43 %** | ≥ 99 %: **fails** (the sleep; [interruption](live-run-interruption.md)) |
+| Invalid time: DEC-071 / capture events only | 47,651 s / 125 s | 47,651 s / 125 s | the capture's own summary gives 99.98 %, which misses the sleep |
+| Excluding the 1.25 s initial sync | 92.43 % | 92.43 % | |
 | Longest valid stretch | 30.65 h (10-31 18:28 to 11-02 01:07) | same | each reconnect of about 2 s ends a stretch |
 | **R-3** recovery after a disconnect | n = 76; p50 1.62 s, p95 2.44 s, max 3.93 s | same | p95 ≤ 60 s: **passes**, 0 breaches |
 
@@ -78,7 +84,7 @@ Command: `python3.12 -I -B analyse.py live --run ~/gladiator-data/live-7d --out 
 | --- | --- |
 | Frames and events | 0 unreadable frame lines; 0 unreadable `events.jsonl` lines. Events: 76 `disconnect`, 77 `connected`, 152 `book_invalid`, 154 `book_valid`, **0 `parse_error`**, 744 `venue_status`, 10,055 `ntp`. The summary agrees: 0 checksum failures, 0 resyncs |
 | Silences over 15 s (DEC-071) | 25, totalling 48,462 s (13.46 h), all but one in the 10-29 19:03 to 10-30 08:57 sleep. Unchanged since the provisional report. Some overlap because the clock stepped back about 27 s after a wake; the union absorbs it |
-| Maintenance (DEC-074) | 1,113 s in all. Status channel: 126 s, 10-29 08:01:08 to 08:03:14. Announced windows (`spot_ws`): event 47, 10-29 08:01:00 to 08:01:19, overlapping the status interval; event 50, **10-30 08:00 to 08:15 in full (900 s)**: the Mac was asleep, and the first status frame without it came at 08:24:11, after its end; event 53, 11-04 11:45:00 to 11:46:19. Event 54 (11-05 07:00) lies after the window. Event 50 fell inside the sleep, so its 900 s would otherwise count as invalid; that adds 0.13 points to R-4. Without DEC-074 the figure is 92.56 % |
+| Maintenance (DEC-074) | 23,400 s (6.5 h) in all. Status channel: 126 s, 10-29 08:01:08 to 08:03:14, inside event 47's window. Announced `spot_ws` windows, each counted in full: event 47, 10-29 08:01 to 08:16 (left the list at 08:01:19); event 50, 10-30 08:00 to 08:15, inside the sleep (first frame without it at 08:24:11); event 53, "WebSocket API Maintenance", **11-04 11:45 to 17:45 (21,600 s)**, which left the list at 11:46:19 while data kept flowing. Event 54 (11-05 07:00) lies after the window. Event 53's 6 h of normal data leave the window. That lowers R-4 a little, because valid time leaves the share; it does not raise it. Event 50's 900 s and 4.5 s of reconnect time on 10-29 leave the invalid time. Without DEC-074 the figure is 92.56 % |
 | **Q-5** | Every `book_valid` follows a fresh snapshot for its pair: **passes** |
 | **T-3** (offset-corrected p50 / p95 / p99, per day) | Book updates: 14–42 / 86–184 / 138–312 ms. Trades: 15–48 / 93–236 / 140–426 ms. The highest figures are on 2026-11-04. Raw p50 is −32 to −79 ms, because the local clock is behind. Reported, not required |
 | Items older than 15 s on receipt | 3,471 (book 1,662 BTC and 1,716 ETH; trades 67 and 26), all on 10-29/30, delivered after a wake (up to 2.0 h old). The silence before each is already invalid |
@@ -87,17 +93,17 @@ Command: `python3.12 -I -B analyse.py live --run ~/gladiator-data/live-7d --out 
 | **R-5** | 1.55 GB gzip for 16.7 GB of frames: **103 MB per pair per day**, against 2 GB: **passes** |
 | Integrity and provenance | 178 of 178 segment hashes equal their index entries, all SR-02/SA-03; index and journal 178 lines each, all parse, no incomplete tail; 178 objects present with matching length and hash; 178 `stored` outcomes; opens read-only. Summary consistent with the frames |
 
-**Kraken's `upcoming_maintenance` list.** Three times, the item left the list within 80 s of its announced start (events 47, 53 and 54). For event 47 the venue really was in maintenance; for 53 and 54 the status stayed `online` and data kept flowing. So "withdrawn" in DEC-074 means "no longer listed". The cut still behaves as intended. While the socket is up, a real maintenance shows as a `maintenance` status, which is always excluded. During an outage, the drop is only seen in the first frame after reconnecting, so the window covers the outage.
+**Kraken's `upcoming_maintenance` list.** Three times, the item left the list within 80 s of its announced start (events 47, 53 and 54). For event 47 the venue really was in maintenance; for 53 and 54 the status stayed `online` and data kept flowing. Leaving the list after the start is therefore not a withdrawal, and DEC-074 counts the whole announced window, as the option reads. A cut at that point (`b7d6753`) would have undone the rule whenever Kraken drops the socket after unlisting the item (review M1).
 
 ### Run 2 (DEC-070), stopped by a kernel panic, 2026-11-05
 
-Command as above with `--run ~/gladiator-data/live-7d-run2 --out ~/gladiator-data/analysis/live-7d-run2.json`, 09:21–09:23 UTC, code `b7d6753`. Report SHA-256 `8c6fcf87c23a0d192e465d825c8fd970c78a06a48555943a252fbd2a6421a857`. A kernel panic stopped the run at 08:12 UTC (recorded by TASK-P02-010, [#35](https://github.com/akibrahimug/gladiators/pull/35)). It wrote no `live-summary.jsonl`, so the report is **provisional by construction**: the 9th segment (08:02 to 08:11 UTC, never ingested) is skipped. It covers 8.00 h, 00:02:01 to 08:02:01 UTC, 8 segments and 4,600,048 frames. Run 2 is not used for R-4; run 3 (DEC-073) takes its place.
+Command as above with `--run ~/gladiator-data/live-7d-run2 --out ~/gladiator-data/analysis/live-7d-run2.json`, 10:10–10:12 UTC, code `cf03f00`. Report SHA-256 `e8ce0c603655caeb13a2deae204734f784abfc0830bd329db8fa0ac43399afdd`. It replaces `8c6fcf87…421a857` (`b7d6753`: 99.93 %, 80.8 s of maintenance). A kernel panic stopped the run at 08:12 UTC (recorded by TASK-P02-010, [#35](https://github.com/akibrahimug/gladiators/pull/35)). It wrote no `live-summary.jsonl`, so the report is **provisional by construction**: the 9th segment (08:02 to 08:11 UTC, never ingested) is skipped. It covers 8.00 h, 00:02:01 to 08:02:01 UTC, 8 segments and 4,600,048 frames. Run 2 is not used for R-4; run 3 (DEC-073) takes its place.
 
 | Check | Result |
 | --- | --- |
-| R-4 | 99.93 % both pairs (20.4 s invalid: 5.4 s from the capture's events, plus one 16.2 s silence) |
+| R-4 | 99.92 % both pairs (20.4 s invalid: 5.4 s from the capture's events, plus one 16.2 s silence) |
 | R-3 | 3 disconnects; max 1.82 s |
-| Maintenance | 80.8 s: event 54, 07:00:00 to 07:01:20.8, when it left the list. The status stayed `online` throughout |
+| Maintenance | 3,721 s: event 54 from 07:00:00 to the end of the analysed frames at 08:02:01. It left the list at 07:01:20.8. The status stayed `online` throughout |
 | Q-5, parse errors | Passes; 0 |
 | T-5 / T-6 | 957 samples, 23 failed, 492 over 100 ms, max 225 ms; the longest interval between good samples is 94 s. T-6 intraday abstention 108 s, all from samples over 60 s old; none over 1 s |
 | R-5 | 157 MB per pair per day |
