@@ -62,6 +62,8 @@ On 2026-10-31 [TASK-P02-009](../../tasks/TASK-P02-009.md) found that a user-init
 
 On 2026-11-04 the user chose the R-4 gap rule (DEC-071: last frame + 15 s) before any run was measured with it, and assigned the read-only run analysis (DEC-072, [TASK-P02-003](../../tasks/TASK-P02-003.md); [live analysis](../../evidence/P02/live-analysis.md)).
 
-**Exact next step:** the first 7-day run ends about 2026-11-04 23:57 UTC; its timer counts awake time only. The rerun then starts from a separate code copy and ends about 2026-11-12. TASK-P02-003 analyses each run once it has ended, and the 30-day pull after 2026-11-27. Both runs then go to the user for the G02 review. The 30-day pull runs until 2026-11-27.
+On 2026-11-05 the user added announced WebSocket maintenance windows to R-4's exclusion (DEC-074), before any run used for R-4 contained one. Run 1's final analysis gives R-4 92.69 % for both pairs, a fail because of the 13.5 h sleep. R-3 p95 is 2.44 s, Q-5 passes, R-5 is 103 MB per pair per day, and store integrity is clean ([live analysis](../../evidence/P02/live-analysis.md#run-1-dec-064-final-2026-11-05)).
+
+**Exact next step:** run 3 (DEC-073, recorded by TASK-P02-010) runs until about 2026-11-12 09:16 UTC. TASK-P02-003 analyses it once it has ended, and the 30-day pull after 2026-11-27. The runs then go to the user for the G02 review.
 
 **Implementation boundary:** capture code for held files exists (`src/gladiator_capture/`, DEC-058). Network transports, live capture and the DEC-057 retrievals are later tasks. Trading is out of scope.

@@ -78,7 +78,7 @@ G01 passed on 2026-10-27 (DEC-047). Candidates become packets once they are expa
 | [TASK-P02-007](TASK-P02-007.md) | Record the 30-day job install, the clock rule and the PR merges | Documentation; TASK-P02-006; DEC-067, DEC-068. **Verified**; Open [#32](https://github.com/akibrahimug/gladiators/pull/32) |
 | [TASK-P02-008](TASK-P02-008.md) | Fix the Codex review findings on PRs #25 and #29 to #31 (DEC-069) | Implementation/documentation; TASK-P02-007. **Verified**; Open [#33](https://github.com/akibrahimug/gladiators/pull/33) |
 | [TASK-P02-009](TASK-P02-009.md) | Record the sleep gap in the 7-day capture and the rerun decision (DEC-070) | Documentation; TASK-P02-008; DEC-070. **Verified**; Open [#34](https://github.com/akibrahimug/gladiators/pull/34) |
-| [TASK-P02-003](TASK-P02-003.md) | Capture integrity and recovery evidence (CV-12): read-only analysis of the live runs and the 30-day pull | Implementation/validation; TASK-P02-002; DEC-071, DEC-072; VAL-004 capture stage (VAL-002 only for segment provenance). **In progress**; Draft [#36](https://github.com/akibrahimug/gladiators/pull/36) |
+| [TASK-P02-003](TASK-P02-003.md) | Capture integrity and recovery evidence (CV-12): read-only analysis of the live runs and the 30-day pull | Implementation/validation; TASK-P02-002; DEC-071, DEC-072, DEC-074; VAL-004 capture stage (VAL-002 only for segment provenance). **In progress** (run 1 final; run 3 and the 30-day pull to come); Draft [#36](https://github.com/akibrahimug/gladiators/pull/36) |
 
 ## P03
 
