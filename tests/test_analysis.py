@@ -152,17 +152,38 @@ class AnalysisTests(unittest.TestCase):
         self.assertAlmostEqual(p["valid_share_dec071"], 1 - 2 / 600, places=6)
 
     def test_announced_maintenance_withdrawn_before_start(self):
-        r = self.outage([status(100, [notice(500, 900)]), status(200, [])])
+        r = self.outage([status(100, [notice(500, 900)]), status(200, []), status(600, [])])
         w = r["window"]
         self.assertEqual(w["maintenance_s"], 0)
-        self.assertIsNone(w["announced_maintenance"][0]["excluded"])
-        self.assertEqual(w["announced_maintenance"][0]["withdrawn_at"], ts(T0 + 200 * S))
+        m = w["announced_maintenance"][0]
+        self.assertIsNone(m["excluded"])
+        self.assertEqual(m["unlisted_at"], ts(T0 + 200 * S))  # the later frame at 600 s does not move it
+        self.assertEqual(m["first_listed"], ts(T0 + 100 * S))
         self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_dec071"], 801 - 498, places=3)
 
-    def test_announced_maintenance_cut_at_withdrawal(self):  # as on 2026-11-05: withdrawn 80 s after its start
+    def test_announced_maintenance_unlisted_after_start_counts_in_full(self):  # Kraken unlists at about the start
         r = self.outage([status(100, [notice(450, 900)]), status(470, [notice(450, 900)]), status(480, [])])
-        self.assertEqual(r["window"]["maintenance_s"], 30)  # 450 -> 480
-        self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_dec071"], 801 - 498, places=3)
+        w = r["window"]
+        self.assertEqual(w["maintenance_s"], 450)  # 450 -> 900, as announced
+        self.assertEqual(w["announced_maintenance"][0]["unlisted_at"], ts(T0 + 480 * S))
+        self.assertAlmostEqual(r["pairs"]["BTC/USD"]["invalid_s_dec071"], 0, places=3)  # 498 -> 801 is inside
+
+    def test_announced_maintenance_clipped_and_frames_without_list(self):
+        no_list = (T0 + 300 * S, "venue_status", {"data": [{"system": "online"}]})
+        r = self.outage([status(100, [notice(900, 2000)]), no_list])
+        w = r["window"]
+        self.assertEqual(w["maintenance_s"], 100)  # clipped to the window's end at 1000 s
+        self.assertIsNone(w["announced_maintenance"][0]["unlisted_at"])  # a frame without the list changes nothing
+
+    def test_announced_maintenance_odd_items(self):
+        no_services = dict(notice(500, 600), event_id=None)
+        del no_services["affected_services"]
+        nameless = dict(notice(700, 750), event_id=None)
+        listy = dict(notice(760, 770), event_id=[1])
+        r = self.outage([status(100, [no_services, nameless, listy, "junk", dict(notice(1, 2), expected_end_utc="later")])])
+        w = r["window"]
+        self.assertEqual(w["maintenance_s"], 100 + 50 + 10)  # no services named counts; null and list ids kept apart
+        self.assertEqual(w["announced_items_skipped"], 2)
 
     def test_announced_maintenance_latest_times_and_rest_only(self):
         r = self.outage([status(100, [notice(300, 400), notice(500, 900, event_id=7, services=["spot_rest"])]),
@@ -185,10 +206,13 @@ class AnalysisTests(unittest.TestCase):
         w = r["window"]
         self.assertEqual([m["event_id"] for m in w["announced_maintenance"]], [54])  # end before start: ignored
         self.assertEqual(w["maintenance_s"], 400)  # announced again after the withdrawal at 200 s
+        self.assertEqual(w["announced_maintenance"][0]["first_listed"], ts(T0 + 100 * S))
 
     def test_utc_ns(self):
         self.assertEqual(A.utc_ns("2026-11-05T07:00:00.000000Z"), 1793862000 * S)
         self.assertEqual(A.utc_ns("2026-11-05T07:00:00.250000Z"), 1793862000 * S + 250_000_000)
+        self.assertEqual(A.utc_ns("2026-11-05T07:00:00.123456789Z"), 1793862000 * S + 123_456_000)
+        self.assertEqual(A.utc_ns("2026-11-05T08:00:00+01:00"), 1793862000 * S)
         for bad in (None, 5, "soon", "2026-11-05T07:00:00"):
             self.assertIsNone(A.utc_ns(bad))
 

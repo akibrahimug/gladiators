@@ -10,8 +10,7 @@ or a REST-pull directory (`daily-summary.jsonl`, `store/`) and reports:
       the gap runs from the last frame received to the next one.
   Venue maintenance is excluded (RC-11, DEC-074): time while the `status` channel reports
   "maintenance", plus each WebSocket maintenance window the venue announced in its `status` frames
-  (`upcoming_maintenance`). An announced window that a later frame no longer lists is withdrawn: it
-  counts only up to that frame, and not at all if withdrawn before it started. The capture's
+  (`upcoming_maintenance`), in full unless a later frame stopped listing it before its start. The capture's
   built-in `invalid_book_ns` is reported beside it and is not used for R-4.
 - R-3: time from each `disconnect` to the next `book_valid` per pair.
 - Q-5: every `book_valid` must follow a book snapshot frame for that pair received since the pair
@@ -33,6 +32,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 import zlib
 from collections import Counter
@@ -119,54 +119,65 @@ def dist(xs: list) -> dict:
 
 
 def utc_ns(text) -> Optional[int]:
-    """An RFC 3339 UTC time from a venue frame as epoch ns; None if absent or unreadable."""
+    """An RFC 3339 UTC time from a venue frame as epoch ns; None if absent or unreadable.
+
+    A fraction longer than 6 digits is cut to microseconds, so Python 3.9 and 3.12 agree.
+    """
     if not isinstance(text, str):
         return None
-    try:
-        dt = datetime.fromisoformat(text.replace("Z", "+00:00"))
-    except ValueError:
+    m = re.fullmatch(r"(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d)(?:\.(\d+))?(Z|[+-]\d\d:\d\d)", text)
+    if not m:
         return None
-    if dt.tzinfo is None:
+    frac = (m.group(2) or "")[:6].ljust(6, "0")
+    try:
+        dt = datetime.fromisoformat(f"{m.group(1)}.{frac}" + ("+00:00" if m.group(3) == "Z" else m.group(3)))
+    except ValueError:
         return None
     return int(dt.timestamp()) * 10**9 + dt.microsecond * 1000
 
 
-def announced_maintenance(statuses: list) -> list:
+def announced_maintenance(statuses: list) -> tuple:
     """DEC-074: the venue-announced WebSocket maintenance windows, from time-ordered (t, status data).
 
     Each `upcoming_maintenance` item that lists `spot_ws` among its `affected_services` (or names no
-    services) is tracked by `event_id`, keeping its most recent announced start and end. The first
-    later frame that carries an `upcoming_maintenance` list without it withdraws it, and the window
-    counts only up to that frame: not at all when it is withdrawn before it starts. Kraken also drops
-    an item once its window has ended, which then changes nothing.
+    services) is tracked by `event_id` (or by its times when it has no usable id), keeping its most
+    recent announced start and end. Frames without an `upcoming_maintenance` list are ignored. The
+    first frame with a list that no longer contains an item marks it unlisted. As the user's option
+    reads, the whole announced window is excluded unless the item was unlisted before its start;
+    listing it again clears that. Kraken removes items at about their start (observed for events 47,
+    53 and 54), so an unlisting after the start is not taken as a withdrawal. A window is excluded
+    from its announced start even if it was first listed later. Returns (windows, skipped items).
     """
-    known = {}
+    known, skipped = {}, 0
     for t, data in statuses:
         if not isinstance(data, dict) or not isinstance(data.get("upcoming_maintenance"), list):
             continue
         listed = set()
         for item in data["upcoming_maintenance"]:
             if not isinstance(item, dict):
+                skipped += 1
                 continue
             services = item.get("affected_services")
             if isinstance(services, list) and "spot_ws" not in services:
                 continue
             a, b = utc_ns(item.get("expected_start_utc")), utc_ns(item.get("expected_end_utc"))
             if a is None or b is None or b <= a:
+                skipped += 1
                 continue
-            key = item.get("event_id", (a, b))
+            eid = item.get("event_id")
+            key = ("id", eid) if isinstance(eid, (int, str)) and not isinstance(eid, bool) else ("times", a, b)
             listed.add(key)
-            known[key] = {"event_id": item.get("event_id"), "title": item.get("title"), "start": a, "end": b,
-                          "first_listed": known.get(key, {}).get("first_listed", t), "withdrawn_at": None}
+            known[key] = {"event_id": eid, "title": item.get("title"), "start": a, "end": b,
+                          "first_listed": known.get(key, {}).get("first_listed", t), "unlisted_at": None}
         for key, w in known.items():
-            if key not in listed and w["withdrawn_at"] is None:
-                w["withdrawn_at"] = t
+            if key not in listed and w["unlisted_at"] is None:
+                w["unlisted_at"] = t
     out = []
     for w in known.values():
-        stop = w["end"] if w["withdrawn_at"] is None else min(w["end"], w["withdrawn_at"])
-        w["excluded"] = (w["start"], stop) if stop > w["start"] else None
+        withdrawn = w["unlisted_at"] is not None and w["unlisted_at"] <= w["start"]
+        w["excluded"] = None if withdrawn else (w["start"], w["end"])
         out.append(w)
-    return sorted(out, key=lambda w: w["start"])
+    return sorted(out, key=lambda w: w["start"]), skipped
 
 
 def iso(ns: Optional[int]) -> Optional[str]:
@@ -467,7 +478,7 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
     if maint_since is not None:
         maint.append((maint_since, end))
     maint_status = merge(clip(maint, start, end))
-    announced = announced_maintenance(statuses)
+    announced, announced_skipped = announced_maintenance(statuses)
     maint_announced = merge(clip([w["excluded"] for w in announced if w["excluded"]], start, end))
     maint = merge(maint_status + maint_announced)
 
@@ -562,13 +573,14 @@ def analyse_live(run: Path, symbols: list, compress: bool = True) -> dict:
     return {
         "run": str(run), "provisional": provisional, "skipped_open_segment": skipped_open_segment,
         "window": {"start": iso(start), "end": iso(end), "analysed_end": iso(analysed_end), "wall_h": wall / 3.6e12,
-                   "maintenance_rule": "DEC-074: status 'maintenance' plus announced spot_ws windows, cut at withdrawal",
+                   "maintenance_rule": "DEC-074: status 'maintenance' plus each announced spot_ws window, unless unlisted before its start",
                    "maintenance_s": total(maint) / 1e9, "maintenance_intervals": [[iso(a), iso(b)] for a, b in maint],
                    "maintenance_status_s": total(maint_status) / 1e9, "maintenance_announced_s": total(maint_announced) / 1e9,
                    "announced_maintenance": [{"event_id": w["event_id"], "title": w["title"], "announced": [iso(w["start"]), iso(w["end"])],
-                                              "first_listed": iso(w["first_listed"]), "withdrawn_at": iso(w["withdrawn_at"]),
+                                              "first_listed": iso(w["first_listed"]), "unlisted_at": iso(w["unlisted_at"]),
                                               "excluded": None if w["excluded"] is None else [iso(x) for x in w["excluded"]]}
-                                             for w in announced]},
+                                             for w in announced],
+                   "announced_items_skipped": announced_skipped},
         "frames": {"segments": len(seg_rows), "frames": frames, "first": iso(first_recv), "last": iso(last_recv),
                    "malformed": malformed_frames[:50], "malformed_count": len(malformed_frames),
                    "events_malformed_lines": events_malformed},
