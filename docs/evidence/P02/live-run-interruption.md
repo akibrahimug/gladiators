@@ -109,3 +109,28 @@ The same round asked how R-4 should treat announced maintenance (DEC-074). That 
 Run 3 takes run 2's place for R-4 under DEC-070. The G02 analysis reports all three runs. Steps 4 to 6 of the rerun plan apply unchanged. To stop it, `kill 6634`.
 
 Disk on 2026-11-04 10:10 UTC: 265 GB free. The first run held 27 GB after about 6.42 days awake. Scaled to 7 days that is about 29.4 GB, close to the estimate of about 31 GB for a full run.
+
+### Run 3 day-1 check (2026-11-06)
+
+Rerun plan step 5, read-only, at 2026-11-06 17:21–17:35 UTC (32.1 h into run 3). Nothing in the run directory was written to; the analysis tool was not run against the open store.
+
+| Check | Method | Observed |
+| --- | --- | --- |
+| Process | `ps` | Python pid 6634 and `caffeinate` pid 6636 alive |
+| Sleep | `pmset -g log`, Sleep, Wake and DarkWake entries since 2026-11-05 | None |
+| Restart | `uptime`; `last reboot` | Up 1 day 8 h 16 m; last boot 2026-11-05 09:05 UTC (the panic recovery, before run 3 started) |
+| Frame gaps | Scan of every `recv_ns` in the 33 frame segments | 27,017,159 frames; longest gap 3.03 s; none over DEC-071's 15 s; last frame 2026-11-06 17:22:23 UTC |
+| Disconnects | `events.jsonl` | 11, all `WebSocketClosed` ("socket closed"); both books valid again 1.28–1.90 s later; 12 `connected` events in total including the start |
+| Parse errors | `events.jsonl` | 0 |
+| Venue status | `events.jsonl`, 201 `venue_status` events | `system` was `online` in all of them |
+| Announced maintenance | `upcoming_maintenance` items | One item, event 55, "WebSocket, FIX + REST API Maintenance.", services `spot_fix`, `spot_rest`, `spot_ws`, 2026-11-06 07:00–14:00 UTC. First seen 2026-11-05 14:31:21; last listed 07:00:09; first frame without it 07:00:18, 18 s after its start, so not withdrawn before its start. Frames kept flowing through the window |
+| Clock | `ntp` events | 3,834 samples, 3,699 with an offset; largest offset 1,552 ms; 1,707 over 100 ms. T-5 is judged in the analysis |
+| Disk | `du -sh`; `df -h` | Run 3 holds 14 GiB (frames 6.9 GiB, store 6.8 GiB), as `du -h` prints them; 265 GiB free |
+| 30-day job | `launchctl list`; `launchd.out.log` | `com.gladiator.rest-daily` loaded; last pull ran at 2026-11-06 00:15:00 UTC |
+
+Two observations for the G02 analysis, neither a failure:
+
+- **Event 55 is the second 07:00–14:00 window in two days** (event 54 on 2026-11-05 in run 2). Under DEC-074 each such window is excluded from R-4 in full, 7 h here, because the item left the list after its start. Frames continued through it; two disconnects (09:00:49 and 10:05:38 UTC) left each book invalid for about 3 s in total. So the excluded 7 h were mostly valid time, and on run 3 so far excluding them lowers R-4 slightly (reviewer's estimate from the events: 99.9849 % → 99.9840 % per pair) rather than raising it. A window holding a longer outage than the run's average would raise it. If Kraken announces one every day, 07:00–14:00 on 2026-11-06 to -11 and 07:00–09:16 on -12 come to about 44 h, so R-4 is computed over about three quarters (about 74 %) of run 3's 168 h.
+- **The feed is busier than in run 1.** Run 3's frame segments average 222 MB per hour against run 1's 94 MB. At that rate run 3 ends at about 75 GB, frames plus store, well within the free space.
+
+The daily read-only check (rerun plan step 5) continues until run 3 ends; its results are recorded with run 3's analysis by TASK-P02-012.

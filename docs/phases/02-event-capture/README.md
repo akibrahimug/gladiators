@@ -68,6 +68,8 @@ On 2026-11-05 at 00:02 UTC the first run had ended cleanly and the watcher start
 
 On 2026-11-05 the user added announced WebSocket maintenance windows to R-4's exclusion (DEC-074), before any run used for R-4 contained one. Run 1's final analysis gives R-4 92.43 % for both pairs, a fail because of the 13.5 h sleep. R-3 p95 is 2.44 s, Q-5 passes, R-5 is 103 MB per pair per day, and store integrity is clean ([live analysis](../../evidence/P02/live-analysis.md#run-1-dec-064-final-2026-11-05)).
 
-**Exact next step:** check run 3 daily for sleep or restart, read-only (TASK-P02-010, from 2026-11-06 09:16 UTC). Run 3 ends about 2026-11-12 09:16 UTC if the Mac stays up; TASK-P02-003 analyses it once it has ended, and the 30-day pull after 2026-11-27. The three runs then go to the user for the G02 review.
+On 2026-11-06 run 3's day-1 check was clean ([TASK-P02-011](../../tasks/TASK-P02-011.md); [day-1 check](../../evidence/P02/live-run-interruption.md#run-3-day-1-check-2026-11-06)).
+
+**Exact next step:** check run 3 daily for sleep or restart, read-only (rerun plan step 5); the checks are recorded by TASK-P02-012. Run 3 ends about 2026-11-12 09:16 UTC if the Mac stays up; TASK-P02-012 analyses it once it has ended, and the 30-day pull after 2026-11-27. The three runs then go to the user for the G02 review.
 
 **Implementation boundary:** capture code for held files exists (`src/gladiator_capture/`, DEC-058). Network transports, live capture and the DEC-057 retrievals are later tasks. Trading is out of scope.
