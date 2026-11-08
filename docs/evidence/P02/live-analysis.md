@@ -111,5 +111,5 @@ Command as above with `--run ~/gladiator-data/live-7d-run2 --out ~/gladiator-dat
 
 ### Still to do
 
-- Run 3 (DEC-070, DEC-073), after about 2026-11-12 09:16 UTC. R-4 is judged on it.
-- The 30-day pull after its last day, 2026-11-27, together with the archive/REST bar comparison over the window (a later slice).
+- Run 3 (DEC-070, DEC-073), after about 2026-11-12 09:16 UTC. R-4 is judged on it. Moved to TASK-P02-012 after #36 merged.
+- The 30-day pull after its last day, 2026-11-27 (TASK-P02-012), together with the archive/REST bar comparison over the window (a later slice).
