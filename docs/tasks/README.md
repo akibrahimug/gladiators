@@ -82,6 +82,7 @@ G01 passed on 2026-10-27 (DEC-047). Candidates become packets once they are expa
 | [TASK-P02-003](TASK-P02-003.md) | Capture integrity and recovery evidence (CV-12): read-only analysis of the live runs and the 30-day pull | Implementation/validation; TASK-P02-002; DEC-071, DEC-072, DEC-074; VAL-004 capture stage (VAL-002 only for segment provenance). **Verified** (run 1 final; run 3 and the 30-day pull moved to TASK-P02-012); Merged [#36](https://github.com/akibrahimug/gladiators/pull/36) |
 | [TASK-P02-011](TASK-P02-011.md) | Record run 3's day-1 check and the merges of #35 and #36 | Operations/documentation; TASK-P02-010, TASK-P02-003. **Verified**; Draft [#37](https://github.com/akibrahimug/gladiators/pull/37) |
 | TASK-P02-012 | Analyse run 3 and the 30-day pull with the TASK-P02-003 tool; record the report hashes (TASK-P02-003's two moved criteria) | Validation; TASK-P02-003; DEC-071, DEC-072 (assignment), DEC-074. Also records the daily read-only checks of run 3 (rerun plan step 5) until it ends. Waits for run 3's end (about 2026-11-12 09:16 UTC) and the 30-day pull's (2026-11-27) |
+| [TASK-P02-013](TASK-P02-013.md) | Correct the stale DEC-067 wording in `live_records.py` (docstring only) | Implementation; DEC-067. **In review** |
 
 ## P03
 
