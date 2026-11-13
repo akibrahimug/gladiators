@@ -2,7 +2,7 @@
 
 [Task](../../tasks/TASK-P03-005.md) · [P03 phase](../../phases/03-market-state-and-ledger/README.md) · [Baseline](../P00/baseline-decision.md) · [P02 event contract](../P02/event-contract.md) · [Capture and recovery](../P02/capture-and-recovery.md)
 
-**Status: preparation, 2026-11-13.**
+**Status: preparation, 2026-11-13; revised after review the same day.**
 - **What it is:** every statement in the accepted baseline that constrains the market-state and book-replay component (CMP-03) or the own-account ledger (CMP-04), and the open choices the two P03 contracts must settle.
 - **Scope limits:** it drafts neither contract and decides nothing. P03 stays Proposed, and cannot be accepted, until G02 passes and the event contract is accepted.
 - **How it was made:** `gladiator-spec-reader` read master `3a76174` read-only; the coordinator wrote this page.
@@ -34,8 +34,8 @@
 | B8 | Primitives: mid, relative spread, top-of-book imbalance; quote-currency notional; point-in-time FX; native precision stored | `c/27:32` | N |
 | B9 | Venue-local crypto books are never presented as global books; `NO_EVENT` and `SOURCE_UNAVAILABLE` are kept distinct | `c/09:29` | N |
 | B10 | Ordering per symbol and stream; idempotency; durable replay from raw events; a crash or restart resumes from a durable cursor; an unknown schema is quarantined | `c/08:9`, `:15`, `:18` | N |
-| B11 | Replay sorts by availability and sequence; late data go to a dead letter and are never backfilled into the past | `v4 c/08:30` (L-008) | N, reinstated |
-| B12 | Four distinct times; delayed events are not treated as current; an append-only journal; replay from immutable snapshots | `v5 c/08:28–30` (L-023) | N, reinstated |
+| B11 | Replay sorts by availability and sequence; invalid events are dead-lettered, and nothing is silently discarded or backfilled into the past | `v4 c/08:30` (L-008) | N, reinstated |
+| B12 | Four distinct times; events sequenced per order, with causation and correlation IDs recorded; delayed events are not treated as current; an append-only journal; replay from immutable snapshots | `v5 c/08:28–30` (L-023) | N, reinstated |
 | B13 | Replay in historical publication or availability order; a restart with missing segments must not claim continuous observation | `c/24:177`, `:204` | N |
 | B14 | `DATA_BLIND` when a critical feed is missing or stale; it cannot silently become `NORMAL`; the state machine is versioned | `c/24:164`, `:167` | N, owned by CMP-06 ([components](../../traceability/components.md)) |
 | B15 | Ingestion checkpoints are persisted; the state is `DATA_BLIND` until reconciliation | `c/26:35` | N |
@@ -76,6 +76,9 @@
 | L23 | VAL-006: duplicate fills, fees, adjustments and missing entries; ledger stage at G03 | [acceptance scenarios](../../validation/acceptance-scenarios.md) | P |
 | L24 | The quote currency is kept per source and never mixed: USD on Kraken, USDT on Binance | DEC-039 | D |
 | L25 | GBP 500 of simulated equity and the risk defaults are provisional, decided at G05 | [baseline](../P00/baseline-decision.md); DEC-017 | D, provisional |
+| L26 | An independent check of the accounting: "Executable independent ledger and deterministic event replay; adversarial fills"; "Independent accounting/metric reference fixtures" (an open mitigation); "Require independent metric reference implementations"; "independent reproduction of P&L from event ledger, including fees". The source's own G0 to G6 numbering is not the workspace's gates (C-032) | `c/18:54`, `c/18:22`, `c/17:10`, `d/14:64` | N |
+| L27 | Each challenger has its "own simulated cash/positions/ledger"; FR-05 "ten logically isolated paper challengers with separate ledgers"; "each with its own ledger and versioned policy" | `CORE:47`, `d/01:16`, `d/14:52` | N |
+| L28 | The event-driven simulator processes market events, signals, risk checks, orders, fills, cancellations, corporate actions and cash accounting in timestamp order; idempotent client order IDs, a durable order state machine, query-before-resubmit, and position and cash reconciliation after an outage | `d/14:59`, `d/14:83`, `ACC:12` | N; the broker parts apply to the paper broker only (P06), live is out of scope |
 
 **Phase and gate (P):**
 - **G03 passes only when:** the two contracts are kept separate; every invariant has an expected outcome; identical inputs and configuration give identical outputs; and any tolerance has a stated rationale and approval ([P03 phase](../../phases/03-market-state-and-ledger/README.md)).
@@ -115,15 +118,15 @@
 | # | Gap | Source |
 | --- | --- | --- |
 | G-1 | G02 has not passed, and the event contract is still a proposed contract. P03 needs an accepted one | [milestones](../../milestones.md); [event contract](../P02/event-contract.md) |
-| G-2 | Book validity is not a contract record. `book_invalid` and `book_valid` exist only in the capture's operational `events.jsonl`, stamped with the local clock rather than `recv_ns`. Only frame segments are stored in the raw store. `normalize()` emits book and trade records only: no `VenueStatus`, no live `GapInterval`, no validity record. DEC-071's invalid intervals exist only in analysis reports | `src/gladiator_capture/live.py`; `src/gladiator_capture/live_records.py`; [live analysis](../P02/live-analysis.md) |
+| G-2 | Book validity is not a contract record. `book_invalid` and `book_valid` exist only in the capture's operational `events.jsonl`, stamped at write time (`at_ns`), not with the triggering frame's `recv_ns`. Only frame segments are stored in the raw store. `normalize()` emits book and trade records only: no `VenueStatus`, no live `GapInterval`, no validity record. DEC-071's invalid intervals exist only in analysis reports | `src/gladiator_capture/live.py`; `src/gladiator_capture/live_records.py`; [live analysis](../P02/live-analysis.md) |
 | G-3 | The live sections of the event contract (§4.4, F-15) and capture mode C still read as "not authorised", although DEC-057, DEC-062 and DEC-064 authorised capture | [event contract](../P02/event-contract.md); [capture and recovery](../P02/capture-and-recovery.md) |
 | G-4 | The live ordering key is undecided: DEC-054 says live book ordering "is set when capture is authorised", and no decision records the implemented `recv_ns * 100 + index` key | DEC-054 |
 | G-5 | Live and archive instrument identity differ: live records use the WebSocket name `BTC/USD` (`instrument_id` `kraken:BTC/USD:1`), while archive and REST records use `XBTUSD`. The proposed `AssetPairs` alias table is not applied to live records | [event contract](../P02/event-contract.md) §3.2; `src/gladiator_capture/records.py` |
 | G-6 | Kraken books have no snapshot or update IDs, so `snapshot_update_id`, `latest_applied_update_id` and `sequence_integrity` (B1) have no source | [observability map](../P01/observability-map.md) |
-| G-7 | No numeric staleness limit exists for books (`observed_age_ms`); S-17's lag limit is for other records | [event contract](../P02/event-contract.md) |
+| G-7 | No book-scale staleness limit exists for `observed_age_ms`. S-17 covers context sources (TH-5) and, for live records, completeness 48 h after the covered period (TH-6); neither is a book-age threshold | [capture validation plan](../P02/capture-validation-plan.md); [event contract](../P02/event-contract.md) |
 | G-8 | No crossed-book check (B4) and no trade-correction semantics (B19). Whether Kraken v2 issues trade corrections is unverified | — |
 | G-9 | Price and quantity precisions come from a 2026-10-27 `AssetPairs` snapshot in code, not from records. Tick and lot sizes and fee tiers are not records either | `src/gladiator_capture/cli.py` |
-| G-10 | `causation_id` and `correlation_id` are reserved for internal events from P05 onward, but the P03 ledger fixtures need order and fill IDs before then (L2, L5) | [event contract](../P02/event-contract.md) |
+| G-10 | `causation_id` and `correlation_id` are reserved for internal events from P05 onward, but the reinstated envelope already carries them (B11, B12), and the P03 ledger fixtures need order and fill IDs before then (L2, L5) | [event contract](../P02/event-contract.md); `v4 c/08:30`; `v5 c/08:28` |
 
 ## 4. Open choices the contracts must settle
 
@@ -141,9 +144,9 @@
 | Q10 | **Account currency and FX.** Equity is GBP (provisional, DEC-017), while instruments are in USD or USDT and never converted (DEC-039), yet B8 requires point-in-time FX. No FX source is approved in P01 | REQ-006, REQ-009; CMP-04; DEC-017, DEC-039 |
 | Q11 | **Fees.** L5 requires maker/taker fees and minimum size, and L13 requires dated schedules, but no Kraken fee-schedule source is recorded in P01. Fixtures could use declared assumptions | REQ-010; CMP-04, CMP-10 |
 | Q12 | **Rounding.** Decimals or minor units (L10) and integer tick arithmetic (L8). The rounding direction for fees and lots is unstated (L22). Event values are decimal strings (C15, proposed) | REQ-006; CMP-04 |
-| Q13 | **Ledger cardinality.** One ledger, or one per challenger (`CORE:47`; FR-05 "refines CMP-04" in [reconciliation packet a](../P00/v1.0-reconciliation-a.md)) | REQ-006; CMP-04, CMP-14 |
+| Q13 | **Per-challenger ledgers.** v10 gives each challenger its own ledger (L27), and FR-05 "refines CMP-04" ([reconciliation packet a](../P00/v1.0-reconciliation-a.md)). But DEC-018 and REQ-006 name "per-challenger paper ledgers" as a ledger meaning separate from the own-account ledger. Open: are they instances of the CMP-04 contract, or a separately named ledger? | REQ-006; CMP-04, CMP-14; DEC-018 |
 | Q14 | **What reconciliation means.** A broker as the source of truth (`d/02:42`) is out of scope (DEC-021; DEC-028 excludes paper broker keys). P03 reconciliation can only compare the internal journal, replayed state and simulator fills | REQ-006, REQ-012; CMP-04; DEC-021, DEC-028 |
-| Q15 | **Dropped lineage.** A second, independent accounting implementation (L-019) and fee reference cases (L-013) were proposed in [reconciliation packet c](../P00/v1.0-reconciliation-c.md), but are not in the baseline. Only a new decision could add them | CMP-04; DEC-020 |
+| Q15 | **Form of the independent accounting check.** v10 requires an independent check (L26). What is open is its form: a second, full accounting implementation (L-019, proposed in [reconciliation packet c](../P00/v1.0-reconciliation-c.md) and not reinstated), or reference fixtures with independently computed results (v10). L-013's fee reference cases were not reinstated either | CMP-04; DEC-020 |
 | Q16 | **Traceability mismatch.** The P03 page lists REQ-002 and REQ-009, but the CMP-03 and CMP-04 rows do not. REQ-003 (provenance) is not listed for P03, although both contracts need raw lineage | REQ-002, REQ-003, REQ-009; CMP-03, CMP-04 |
 | Q17 | **Live ordering key and instrument join** (G-4, G-5) need decisions | DEC-054; event contract §3.2; CMP-02, CMP-03, CMP-04 |
 
