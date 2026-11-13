@@ -109,7 +109,34 @@ Command as above with `--run ~/gladiator-data/live-7d-run2 --out ~/gladiator-dat
 | R-5 | 157 MB per pair per day |
 | Integrity | 8 of 8 segment hashes match, SR-02/SA-03; store clean (8 `started`, 8 `stored`) |
 
+### Run 3 (DEC-073), final, 2026-11-13
+
+Command: `python3.12 -I -B analyse.py live --run ~/gladiator-data/live-7d-run3 --out ~/gladiator-data/analysis/live-7d-run3.json`, 16:23–17:16 UTC on 2026-11-13, code `master` `3a76174` (analysis code byte-identical to `cf03f00`). Report SHA-256 `c713a85de4268c9a91e3993a972a6e8091f5265fc57300896e38564a6edf74ff`; 3,187 s, 288 MB peak memory. Not provisional: the run wrote `live-summary.jsonl` at 2026-11-12 09:18 UTC. Window: `ran_at_utc` 2026-11-05 09:15:59.797 plus `duration_s` 604,819.9 s, so 168.01 h to 2026-11-12 09:16:19.704 UTC. 169 segments, 87,754,675 frames. The run directory's file list, sizes and mtimes (344 files) were identical before and after the analysis.
+
+| Check | BTC/USD | ETH/USD | Against |
+| --- | --- | --- | --- |
+| **R-4** valid share, DEC-071 and DEC-074 | **99.960 %** | **99.960 %** | ≥ 99 %: **passes** |
+| Invalid time: DEC-071 / capture events only | 203.1 s / 83.1 s | 203.1 s / 83.1 s | the capture's own summary gives 99.981 % |
+| Excluding the 1.36 s initial sync | 99.960 % | 99.960 % | |
+| Longest valid stretch | 21.38 h (11-07 07:32 to 11-08 04:55) | same | |
+| **R-3** recovery after a disconnect | n = 56; p50 1.61 s, p95 4.86 s, max 14.00 s | same | p95 ≤ 60 s: **passes**, 0 breaches |
+
+| Check | Result |
+| --- | --- |
+| Frames and events | 0 unreadable frame or `events.jsonl` lines. Events: 59 `disconnect` (48 `WebSocketClosed`, 8 receive timeouts, 2 `gaierror`, 1 `ConnectionError`), 57 `connected`, 118 `book_invalid`, 114 `book_valid`, **0 `parse_error`**, 4,947 `venue_status` (all `online`), 20,057 `ntp`. The summary agrees: 0 checksum failures, 0 resyncs. R-3 has 56 recoveries for 59 disconnects because consecutive disconnects before a valid book count once (from the first) |
+| Silences over 15 s (DEC-071) | 8, totalling 145.3 s; none over 60 s. Each ended in a receive timeout and a reconnect. The longest, 29.0 s from 11-08 04:55:10, was a local DNS failure (`gaierror`) and gives R-3's maximum of 14.0 s |
+| Maintenance (DEC-074) | **97,200 s (27 h, 16.1 % of the window)**, all from announced `spot_ws` windows; the status channel never reported `maintenance` (0 s). Counted in full: event 55, 11-06 07:00–14:00; event 57, 11-09 08:00–14:00; event 58, 11-10 07:00–14:00, with event 56 (10:00–11:00) inside it; event 62, 11-11 07:00–14:00, with event 59 (09:00–10:00) inside it. Each left the list 18–79 s after its start. **Event 61** ("Kraken Website and API Maintenance", 11-12 08:01–08:16) was unlisted on 11-11 at 16:57:47, before its start, so it is a withdrawal and is not excluded: the first in any run. Events 60 (`spot_trading` only) and 63–65 (futures) list no `spot_ws` and do not count. 0 items skipped |
+| **Q-5** | Every `book_valid` follows a fresh snapshot for its pair: **passes** |
+| **T-3** (offset-corrected p50 / p95 / p99, per day) | Book updates: 19–36 / 105–184 / 173–435 ms. Trades: 20–45 / 117–315 / 186–891 ms. Raw p50 is −35 to −73 ms (local clock behind). Reported, not required |
+| Items older than 15 s on receipt | 9 trades (7 BTC, 2 ETH); the largest are 17.0 s (BTC, 11-06) and 21.1 s (ETH, 11-11) old, raw |
+| **T-5** | 20,057 samples, 692 failed; 9,446 over 100 ms; maximum 1,552 ms; 295,080 s (82.0 h) with `timestamp_uncertainty_ms` set. Longest interval between good samples 222 s; none over 1 h |
+| **T-6** | One sample over 1 s (1,552 ms at 11-06 09:41:05); none over 60 s. Intraday abstention 4,384 s: 1.1 s before the first sample, 30.0 s with an offset over 1 s, 4,352.7 s with a sample over 60 s old. Daily abstention: 0 s |
+| **R-5** | 2.11 GB gzip for 23.6 GB of frames: **151 MB per pair per day**, against 2 GB: **passes**. The feed was busier than in run 1 (103 MB) |
+| Integrity and provenance | 169 of 169 segment hashes equal their index entries, all SR-02/SA-03; index 169 and journal 338 lines, all parse, no incomplete tail; 169 objects present with matching length and hash; 169 `started` and 169 `stored`; opens read-only. Summary consistent with the frames |
+
+**Effect of DEC-074 on run 3.** Inside the four excluded windows, the capture's events show 14 disconnects and about 33 s of invalid book per pair (longest 10.0 s; coordinator's count from `events.jsonl`, not the tool's interval logic). That is a lower invalid rate than the rest of the run, so excluding the windows lowers R-4 slightly: counting them in, the estimate is 99.961 % instead of 99.960 %. R-4 passes by a wide margin either way.
+
 ### Still to do
 
-- Run 3 (DEC-070, DEC-073), after about 2026-11-12 09:16 UTC. R-4 is judged on it. Moved to TASK-P02-012 after #36 merged.
+- Run 3: done (above, TASK-P02-012).
 - The 30-day pull after its last day, 2026-11-27 (TASK-P02-012), together with the archive/REST bar comparison over the window (a later slice).

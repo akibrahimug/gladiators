@@ -134,3 +134,18 @@ Two observations for the G02 analysis, neither a failure:
 - **The feed is busier than in run 1.** Run 3's frame segments average 222 MB per hour against run 1's 94 MB. At that rate run 3 ends at about 75 GB, frames plus store, well within the free space.
 
 The daily read-only check (rerun plan step 5) continues until run 3 ends; its results are recorded with run 3's analysis by TASK-P02-012.
+
+### Run 3 later checks and end (2026-11-07 to 2026-11-13)
+
+Read-only, like the day-1 check. The coordinator's notes are in `~/gladiator-data/analysis/run3-daily-checks.md` (DEC-030).
+
+| When (UTC) | Observed |
+| --- | --- |
+| Day 2, 11-07 12:39 (51.4 h) | Alive; no sleep or reboot. 12 disconnects since day 1, recovered in 1.30–1.82 s. Two silences just over the 15 s receive timeout (16.30 s from 04:00:27 and 16.32 s from 04:03:43), each ending in a `timeout` disconnect, valid again within 1.8 s. No network log entries 03:59–04:05; cause unknown. Item 56 announced (11-10 10:00–11:00) |
+| Interim, 11-07 18:39 (57.4 h) | Alive; no disconnects since 12:39 |
+| Day 3, 11-08 10:22 (73.1 h) | Alive; no sleep or reboot. A local outage at about 04:55: SNTP failed at 04:54:52, the last frame was at 04:55:10, then a `timeout` disconnect and two `gaierror` disconnects ("nodename nor servname provided", a DNS failure on this side); connected 04:55:39.0 and valid 04:55:39.5. A 16.23 s silence at 05:07:01 recovered in 1.65 s. All four silences over 15 s so far fell between 04:00 and 05:10 UTC |
+| Days 4 to 7 (11-09 to 11-12) | **Not checked daily**: no coordinator session ran on those days. The checks below, made after the end, cover the same items for the whole run |
+| End, 11-12 09:16:19 | Last frame 09:16:19.705; `live-summary.jsonl` written 09:18 (`duration_s` 604,819.9; 59 disconnects; 0 parse errors; 0 checksum failures); the process exited |
+| After the end, 11-13 16:21 | `uptime` 8 d 7 h; last boot 2026-11-05 09:05, so no restart during the run. `pmset -g log`: no Sleep, Wake or DarkWake entry from 2026-11-05 until **2026-11-12 09:20:55**, an idle sleep 2.5 min after the run ended and `caffeinate` released the Mac. The 30-day job pulled every day through 11-13 00:15 on the first attempt |
+
+The whole run ran without a sleep or a restart. Its analysis is in the [live analysis](live-analysis.md#run-3-dec-073-final-2026-11-13).
