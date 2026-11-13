@@ -44,6 +44,8 @@ Pass only when the market-state and own-account contracts remain explicitly sepa
 
 **Failure and rework:** mark affected state invalid or unreconciled, revise the relevant contract, and repeat its cases. Return to G02 for capture or ordering defects and reopen impacted downstream gates.
 
-**Exact next step:** after G02 acceptance, draft the market-state contract from the approved event semantics and enumerate unavailable state explicitly.
+**Preparation (2026-11-13):** [TASK-P03-005](../../tasks/TASK-P03-005.md) maps the accepted baseline onto P03 in the [source map](../../evidence/P03/source-map.md): constraints, what P02 does not yet provide, and the open choices.
+
+**Exact next step:** the user decides the source map's open choices for the contracts; the market-state and ledger contracts can then be drafted as preparation. They are accepted only after G02.
 
 **Implementation boundary:** state engines and account ledgers are not implemented by this documentation setup. Real accounts and live orders remain outside scope.
