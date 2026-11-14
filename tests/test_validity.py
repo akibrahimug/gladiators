@@ -208,6 +208,27 @@ class TestVenueStatus(unittest.TestCase):
         self.assertEqual([r.raw_locator for r in res.venue_status], ["line:0#data[0]", "line:0#data[1]"])
         self.assertEqual(len({r.record_id for r in res.venue_status}), 2)
 
+    def test_status_without_connection_id_is_not_a_reconnect(self):
+        no_id = json.dumps({"channel": "status", "type": "update", "data": [{"system": "online"}]})
+        seq = healthy() + [(10 * S, no_id), (20 * S, status(111)), (30 * S, upd("BTC/USD")),
+                           (40 * S, status(222)), (41 * S, snap("BTC/USD"))]
+        self.assertEqual(ivs(res := derive(seq)), [(0, 1, "start", 1), (30 * S, 41 * S, "reconnect", 41 * S)])
+        self.assertEqual(len(res.venue_status), 4)
+
+    def test_non_dict_status_items_skipped(self):
+        text = json.dumps({"channel": "status", "type": "update", "data": ["x", {"system": "online", "connection_id": 1}]})
+        res = derive([(0, text)])
+        self.assertEqual([r.raw_locator for r in res.venue_status], ["line:0#data[1]"])
+
+    def test_two_reconnects_before_a_snapshot_keep_the_earliest_start(self):
+        seq = healthy() + [(10 * S, upd("BTC/USD")), (20 * S, status(222)), (21 * S, upd("ETH/USD")),
+                           (30 * S, status(333)), (31 * S, snap("BTC/USD"))]
+        self.assertEqual(ivs(derive(seq))[-1], (10 * S, 31 * S, "reconnect", 31 * S))
+
+    def test_reconnect_during_start_interval_keeps_start(self):
+        seq = [(0, status(111)), (5 * S, status(222)), (6 * S, snap("BTC/USD"))]
+        self.assertEqual(ivs(derive(seq)), [(0, 6 * S, "start+reconnect", 6 * S)])
+
     def test_non_status_frames_give_no_status_records(self):
         res = derive(healthy()[1:] + [(5, HB), (6, json.dumps({"method": "subscribe", "result": {"channel": "status"}}))])
         self.assertEqual(res.venue_status, [])
@@ -252,7 +273,8 @@ class TestMaintenance(unittest.TestCase):
         m = w[0]
         self.assertEqual((m.event_id, m.announced_start, m.announced_end, m.excluded_start, m.excluded_end),
                          (55, a, b, a, b))
-        self.assertEqual((m.first_listed, m.unlisted_at, m.withdrawn, m.available_at), (T0, T0 + 150 * S, False, T0))
+        self.assertEqual((m.first_listed, m.unlisted_at, m.withdrawn, m.available_at, m.open_at_end),
+                         (T0, T0 + 150 * S, False, T0 + 150 * S, False))
         self.assertEqual(m.title, "WS maintenance")
 
     def test_announced_item_unlisted_before_start_is_withdrawn(self):
@@ -263,6 +285,13 @@ class TestMaintenance(unittest.TestCase):
         self.assertIsNone(m.excluded_start)
         self.assertIsNone(m.excluded_end)
         self.assertEqual((m.announced_start, m.unlisted_at), (a, T0 + 50 * S))
+        self.assertEqual(m.available_at, T0 + 50 * S)  # the withdrawal is not visible before it happens
+
+    def test_announced_item_still_listed_at_end_is_available_there(self):
+        a, b = T0 + 100 * S, T0 + 200 * S
+        res = derive([(0, status(maint=[item(70, a, b)])), (30 * S, HB)])
+        m = [m for m in res.maintenance if m.source == "announced"][0]
+        self.assertEqual((m.unlisted_at, m.available_at - T0, m.open_at_end), (None, 30 * S, True))
 
     def test_announced_non_spot_ws_ignored_and_no_services_kept(self):
         a, b = T0 + 100 * S, T0 + 200 * S

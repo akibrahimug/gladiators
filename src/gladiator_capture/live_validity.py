@@ -51,7 +51,10 @@ RULES = ("start", "silence>15s", "reconnect", "resync", "open_at_end")  # eviden
 class MaintenanceWindow:
     """A venue maintenance period excluded from R-4 (DEC-074). `source` is `status` (the `status`
     channel reported `maintenance`) or `announced` (an `upcoming_maintenance` item for `spot_ws`).
-    `excluded_start`/`excluded_end` are None when the item was withdrawn (unlisted before start)."""
+    `excluded_start`/`excluded_end` are None when the item was withdrawn (unlisted before start).
+    An announced window's `available_at` is its `unlisted_at`, when its final times and whether it
+    was withdrawn are known; one still listed at the run's last frame is available there, flagged
+    `open_at_end`. Nothing about an item is visible before its final state is known."""
     source: str
     event_id: object
     title: Optional[str]
@@ -145,7 +148,7 @@ def derive_live_validity(frames: Iterable[tuple], symbols: list, *, ingested_at:
         last_frame = prev
         prev = recv
         res.last_recv = recv
-        if '"status"' not in text and '"book"' not in text:
+        if not isinstance(text, str) or ('"status"' not in text and '"book"' not in text):
             continue
         try:
             msg = json.loads(text)
@@ -209,7 +212,9 @@ def derive_live_validity(frames: Iterable[tuple], symbols: list, *, ingested_at:
             source="announced", event_id=w["event_id"], title=w["title"], announced_start=w["start"],
             announced_end=w["end"], excluded_start=None if withdrawn else w["excluded"][0],
             excluded_end=None if withdrawn else w["excluded"][1], first_listed=w["first_listed"],
-            unlisted_at=w["unlisted_at"], withdrawn=withdrawn, available_at=w["first_listed"]))
+            unlisted_at=w["unlisted_at"], withdrawn=withdrawn,
+            available_at=w["unlisted_at"] if w["unlisted_at"] is not None else end,
+            open_at_end=w["unlisted_at"] is None))
     res.maintenance.sort(key=lambda m: (m.announced_start if m.announced_start is not None else m.excluded_start,
                                         m.source, str(m.event_id)))
     return res
@@ -240,6 +245,8 @@ def segment_raw_ids(run: Path) -> dict:
                 continue
             req = d.get("request") or ""
             if "#segment:" in req and d.get("member_path") is None:
+                # The first entry per segment wins; run 3 has exactly one each. A superseding entry
+                # (`supersedes_raw_id`) is not handled: the capture never writes one for a segment.
                 out.setdefault(req.split("#segment:")[1], d.get("raw_id"))
     return out
 
@@ -258,6 +265,8 @@ def run_frames(run: Path, malformed: Optional[list] = None) -> Iterable[tuple]:
                 try:
                     r = json.loads(line)
                     recv, text = int(r["recv_ns"]), r["frame"]
+                    if not isinstance(text, str):
+                        raise TypeError("frame is not a string")
                 except (ValueError, KeyError, TypeError):
                     if malformed is not None:
                         malformed.append(f"{seg.name}:{n}")
