@@ -44,6 +44,10 @@ Pass only when the market-state and own-account contracts remain explicitly sepa
 
 **Failure and rework:** mark affected state invalid or unreconciled, revise the relevant contract, and repeat its cases. Return to G02 for capture or ordering defects and reopen impacted downstream gates.
 
-**Exact next step:** after G02 acceptance, draft the market-state contract from the approved event semantics and enumerate unavailable state explicitly.
+**Preparation (2026-11-13):** [TASK-P03-005](../../tasks/TASK-P03-005.md) maps the accepted baseline onto P03 in the [source map](../../evidence/P03/source-map.md): constraints, what P02 does not yet provide, and the open choices.
+
+On 2026-11-13 and -14 the user decided eight of its open choices (DEC-075 to DEC-082): P02 records book validity; a double-entry ledger; L-028's order states plus `unknown`; per-challenger ledgers as CMP-04 instances; marks at the exit side of a valid book; USD ledgers with no FX in P03; reference fixtures as the independent check; Kraken's published fees.
+
+**Exact next step:** draft the market-state and own-account ledger contracts as preparation, record Kraken's published fee schedule, and add the DEC-075 validity records to P02. The contracts are accepted only after G02.
 
 **Implementation boundary:** state engines and account ledgers are not implemented by this documentation setup. Real accounts and live orders remain outside scope.
