@@ -57,7 +57,7 @@ The diagram is a proposed logical relationship, not an implemented service topol
 | --- | --- | --- |
 | CMP-01 / CMP-02 | Source catalog, capture, raw provenance and normalized events | Which asset/venue, rights and feed semantics? |
 | CMP-03 | Reconstruct only the market state supported by each feed; replay it | Price-level or order-level data? Recovery guarantees? |
-| CMP-04 | Account for simulated cash, positions, fills and fees separately | What did “ledger” mean in original v1.0? Which accounting convention? |
+| CMP-04 | Account for simulated cash, positions, fills and fees separately | Answered: the own-account ledger is the simulated cash, position, order and fee journal (DEC-018). The accounting convention is being drafted in P03 preparation (TASK-P03-008, PR #43) |
 | CMP-05 / CMP-06 | Track context knowledge time, features and regime uncertainty | Which contexts and hypotheses have measurable relevance? |
 | CMP-13 / CMP-14 | Gladiators forecast; the Arena compares them fairly | Which baselines, pools and leakage controls (reinstated L-018)? |
 | CMP-07 / CMP-12 | Core decides and sizes; the Gatekeeper alone approves | Which decision maths and which policy values (DEC-017 defaults, not accepted)? |
