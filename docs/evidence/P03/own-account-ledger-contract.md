@@ -80,11 +80,11 @@ The envelope follows the P02 contract (§3) and the reinstated L-008 and L-023 e
 | `Fill`, buy (qty q at price p, fee f) | USD: `cash_reserved` −(p·q + f); `cost_basis` +p·q; `fees` +f. Base: `position` +q; `trade_clearing` −q |
 | `Fill`, sell | USD: `cash` +(p·q − f); `cost_basis` −c, where c is the average cost × q, or the whole remaining basis at zero; `realised_pnl` −(p·q − c); `fees` +f. Base: `position_reserved` −q; `trade_clearing` +q |
 | Order ends `FILLED`, `CANCELLED` or `REJECTED` after its reservation | The remaining reservation goes back: `cash_reserved` −x and `cash` +x, or `position_reserved` −x and `position` +x |
-| `FillCorrection(fill_id, new price, qty or liquidity)` from the simulator (L23) | A reversing set of the original fill's postings, then the replacement set, both linked by `causation_id`; earlier events are never edited. **The reservation legs of both sets are settled against `cash`, not `cash_reserved`**, because the order may already be closed. If `cash` would go negative, the correction is applied and the instance is quarantined (L3). A correction to a fill whose holding has since been partly or wholly sold is **not supported in P03**: it quarantines the instance until G03 defines how later sells are recomputed |
-| `Adjustment(reason, causation_id)` | Corrective postings for a reconciliation failure (§5), linked to the event they repair. It is the **only** event allowed to be unbalanced on its own: it posts exactly the missing legs, so that the cumulative balance is restored |
+| `FillCorrection(fill_id, new price, qty or liquidity)` from the simulator (L23) | A reversing set of the original fill's postings, then the replacement set, both linked by `causation_id`; earlier events are never edited. **The reservation legs of both sets are settled against the unreserved account**, because the order may already be closed: `cash` for a buy fill, and `position` (base) for a sell fill, whose `cash`, `cost_basis` and `realised_pnl` legs are re-derived in the replacement set. In a multi-fill order, the fee running total is recomputed with the corrected fill, and the replacement fee is that total minus the other fills' fees. If `cash` would go negative, the correction is applied and the instance is quarantined (L3). A correction to a fill whose holding has since been partly or wholly sold is **not supported in P03**: it quarantines the instance until G03 defines how later sells are recomputed |
+| `Adjustment(reason, causation_id)` | Repairs an event that failed reconciliation (§5). It **voids** the failing event, whose postings are kept for audit but no longer count in any balance, and posts the correct set, linked by `causation_id`. The correct set is itself balanced, so DEC-076 holds for every event that counts. **Proposed** |
 | `Mark(book_state)` | No postings. Equity is recomputed |
 
-Every row sums to zero in each currency. For example, the buy fill's USD legs are −(p·q + f) + p·q + f = 0, and its base legs are +q − q = 0.
+Every row sums to zero in each currency; a voided event's postings do not count. For example, the buy fill's USD legs are −(p·q + f) + p·q + f = 0, and its base legs are +q − q = 0.
 
 **Cost reporting (L5).** Each fill record carries these as **report lines, not postings**:
 - the reference mid at decision time and at submission time, taken from CMP-03;
@@ -107,9 +107,9 @@ Funding and FX are 0 in P03, since there is no margin and no FX (DEC-080), and b
 | `NEW`, `ACCEPTED`, `PARTIAL` | `Fill`, nothing left | `FILLED` | Fill; release any residual (a maker fee or a better price) |
 | `NEW`, `ACCEPTED`, `PARTIAL` | `OrderCancelled` | `CANCELLED` | Release the remainder |
 | any open state | No acknowledgement or status within the simulator's timeout, or conflicting reports | `UNKNOWN` | **The reservation is kept** |
-| `UNKNOWN` | A simulator status query (query before resubmit, L28; T06) answers `ACCEPTED`, `PARTIAL`, `FILLED`, `CANCELLED` or `REJECTED` | That state | As that state's row |
+| `UNKNOWN` | A simulator status query (query before resubmit, L28; T06) answers `ACCEPTED`, `PARTIAL`, `FILLED`, `CANCELLED` or `REJECTED` | That state, **once the applied fills match it**. If the query runs ahead of the fills (for example `FILLED` before every fill has arrived), the order stays `UNKNOWN` until they do, so no late fill can meet a released reservation | As that state's row |
 | `UNKNOWN` | `Fill` | Stays `UNKNOWN` | The fill is applied, so the order can be reconciled. When the order resolves, the state implied by the applied fills wins over a query answer that lags behind it. For example, if fills cover the whole quantity it is `FILLED`, whatever the query says, and the residual is released then |
-| `ACCEPTED`, `PARTIAL` | The simulator's `FillDeferred(no_liquidity)`: a sell with no bids, or a buy with no asks (L15) | Unchanged, flagged `pending_liquidity` | None; no fictitious fill |
+| `NEW`, `ACCEPTED`, `PARTIAL`, `UNKNOWN` | The simulator's `FillDeferred(no_liquidity)`: a sell with no bids, or a buy with no asks (L15) | Unchanged, flagged `pending_liquidity` | None; no fictitious fill |
 
 **Rules:**
 - **While any order is `UNKNOWN`,** the instance submits **no new order for that instrument**, and a resubmit with the same `client_order_id` is ignored. This is a **Proposed** reading of L5, "cancellation races and retries reconcile before further entry". The account-wide reading would block every instrument.
@@ -121,7 +121,7 @@ Funding and FX are 0 in P03, since there is no margin and no FX (DEC-080), and b
 
 These checks run after every event, per instance:
 
-1. **Balance:** postings sum to zero per currency, in USD, BTC and ETH. This holds cumulatively, and for every event except an `Adjustment` (§4.1).
+1. **Balance:** postings sum to zero per currency, in USD, BTC and ETH, for every event that is not voided, and therefore cumulatively.
 2. **Mark-free identity** (always run): `cash + cash_reserved + cost_basis = −capital − realised_pnl − fees`. This follows from check 1 in USD, so it holds without a mark.
 3. **Equity, when a valid mark exists:**
    - `equity = cash + cash_reserved + Σ (position + position_reserved) × mark − liabilities`. In P03, liabilities = 0.
@@ -133,7 +133,7 @@ These checks run after every event, per instance:
 **Failure and quarantine:**
 - **On a failure** (L6, T14 by analogy), the failing event is kept, with its postings, and flagged.
 - **What stops:** the instance stops accepting new orders, while open orders and fills continue to be booked.
-- **Lifting it:** only an `Adjustment` that restores the checks, with its reason and causation, lifts the quarantine. It is recorded.
+- **Lifting it:** only an `Adjustment` that voids the flagged event and posts its correct set lifts the quarantine, once every check passes again. Replay (check 5) applies the void too, so it gives the same balances.
 
 ## 6. Interface and outputs (L2, L21)
 
@@ -154,7 +154,7 @@ Every output carries:
 
 ## 7. Reference fixtures (DEC-081)
 
-Every fixture is hand-computed. Values are USD unless marked BTC, and they are exact; trailing zeros beyond 8 decimals are omitted. Every order goes `NEW` → fill without an `OrderAccepted` step unless the fixture says otherwise, since a fill implies acceptance (§4.2).
+Every fixture is hand-computed. Values are USD unless marked BTC, and they are exact at 10 decimals; trailing zeros are omitted. Every order goes `NEW` → fill without an `OrderAccepted` step unless the fixture says otherwise, since a fill implies acceptance (§4.2).
 
 | Fixture | Steps | Expected after each step |
 | --- | --- | --- |
@@ -164,10 +164,10 @@ Every fixture is hand-computed. Values are USD unless marked BTC, and they are e
 | LF-04 | Deposit 500; limit buy 0.002 at 60,000.0; taker fill of 0.001; cancel | r = 120.96000000, so cash 379.04. After the fill: reserved 60.48, BTC 0.001, fees 0.48. After the cancel: reserved 0, cash 439.52, state `CANCELLED` |
 | LF-05 | Deposit 500; limit buy 0.01 at 60,000.0 | r = 604.80000000 > 500, so `REJECTED`, no postings; cash 500 (L3) |
 | LF-06 | Deposit 500; limit buy 0.00005 BTC at 60,000.0 | Below `ordermin` 0.00006, so `REJECTED` (a backstop; T17 abstention is upstream) |
-| LF-07 | As LF-01 to step 2; the acknowledgement is lost | `UNKNOWN`; cash 439.52 and reserved 60.48 are kept. A resubmit with the same key is refused, and so is any new BTC order. The query answers `ACCEPTED`, so the state is `ACCEPTED`. The fill then gives LF-01 step 3 |
+| LF-07 | As LF-01 to step 2; the acknowledgement is lost | `UNKNOWN`; cash 439.52 and reserved 60.48 are kept. A resubmit with the same key is ignored (the existing order is returned), and any new BTC order is refused. The query answers `ACCEPTED`, so the state is `ACCEPTED`. The fill then gives LF-01 step 3 |
 | LF-08 | LF-01 to step 3, then a mark while the book is `INVALID` | Equity `stale`, with no number. The mark-free identity holds: 439.52 + 0 + 60 = 499.52 = 500 − 0.48 |
 | LF-09 | The journals of LF-01, LF-02 and LF-04, each replayed separately from empty | Identical balances at every step (check 5) |
-| LF-10 | LF-01 with the `cost_basis` posting of step 3 removed; then an `Adjustment` posting `cost_basis` +60 | After step 3: check 1 fails in USD by −60 (−60.48 + 0.48). The instance is quarantined and a new order is refused. After the `Adjustment`: check 1 holds, cost basis 60, cash 439.52, and the quarantine is lifted |
+| LF-10 | LF-01 with the `cost_basis` posting of step 3 removed; then an `Adjustment` voiding that fill and posting its full correct set | After step 3: check 1 fails in USD by −60 (−60.48 + 0.48). The instance is quarantined and a new order is refused. After the `Adjustment`: the faulty fill is voided and the correct set posted (`cash_reserved` −60.48, `cost_basis` +60, `fees` +0.48; BTC `position` +0.001, `trade_clearing` −0.001). Balances are as LF-01 step 3, check 1 holds for every counted event, and the quarantine is lifted |
 | LF-11 | Two instances, A runs LF-01 and B runs LF-05 | A as LF-01; B cash 500. No posting crosses instances (DEC-078) |
 | LF-12 | Deposit 500; limit buy 0.001 at 60,000.0; **maker** fill at 60,000.0 | r = 60.48. Fill fee 0.24, so the reserved balance is 60.48 − 60.24 = 0.24 and the residual is released when filled. Cash 439.76, reserved 0, fees 0.24, cost basis 60.00 |
 | LF-13 | Deposit 500; limit buy 0.003 at 60,000.0, filled as taker in three fills of 0.001 | Fees 0.48 each; running total 1.44 = 0.8 % of 180.00. r = 181.44, all used; cash 318.56 |
@@ -182,6 +182,7 @@ Every fixture is hand-computed. Values are USD unless marked BTC, and they are e
 | Scales (USD at 10 decimals), the tick rule, fee rounding on the running total, the reservation ceiling, average cost | Proposed; approval at G03 |
 | The instrument-level `UNKNOWN` block (against an account-wide one) | Proposed reading of L5 |
 | Corrections after a later sell of the same holding | Not supported in P03; G03 |
+| The `Adjustment` void mechanism (§4.1) | Proposed; it keeps DEC-076 (every counted event balances) |
 | Fee currency (USD assumption) | Checked against Kraken's order documentation before G03 |
 | Whether BTC/USD and ETH/USD get the −0.02 % pair discount | Unknown; the fixtures use the undiscounted rate |
 | The reservation rule for market orders | CMP-10 (simulator), P06 |
