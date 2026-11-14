@@ -4,7 +4,7 @@
 
 **Status: recorded for the P03 ledger fixtures, 2026-11-14.** This record is published terms only. Nobody contacted Kraken, and nothing waits on a reply.
 
-**Basis:** DEC-082 says the fixtures use Kraken's published schedule, with its date, at the base maker/taker tier. The P03 source map ([#40](https://github.com/akibrahimug/gladiators/pull/40)) lists the related constraints: L5 (crypto maker/taker fees and minimum size) and L13 (no hardcoded fees; use dated official schedules).
+**Basis:** DEC-082 ([#40](https://github.com/akibrahimug/gladiators/pull/40)) says the fixtures use Kraken's published schedule, with its date, at the base maker/taker tier. The P03 source map ([#40](https://github.com/akibrahimug/gladiators/pull/40)) lists the related constraints: L5 (crypto maker/taker fees and minimum size) and L13 (no hardcoded fees; use dated official schedules).
 
 ## Source and method
 
@@ -37,7 +37,7 @@ The columns are: tier, spot 30-day volume, futures 30-day volume or assets, spot
 | 10 | $2.5M+ | 0.04 % | 0.15 % |
 | 11 | $5M+ | 0.02 % | 0.12 % |
 | 12 | $10M+ | 0.00 % | 0.10 % |
-| 13 to 17 | $50M+ to $500M+ | 0.00 % | 0.09 % to 0.05 % |
+| 13 to 17 | $50M+, $100M+, $250M+, $400M+, $500M+ | 0.00 % | 0.09 %, 0.08 %, 0.07 %, 0.06 %, 0.05 % |
 
 Only rows 1 and 2 were quoted raw; rows 3 to 17 come from the tool's first, summarised read.
 
@@ -46,10 +46,18 @@ Only rows 1 and 2 were quoted raw; rows 3 to 17 come from the tool's first, summ
 ## What the page does not say
 
 - **Pair discounts.** A section "Eligible discounted pairs" offers "-0.02% off the selected spot pairs below". Its list ("Show all 634 pairs") was not in the page content, so **whether BTC/USD or ETH/USD is discounted is unknown.**
-- **How fees are charged.** The page gives no fee currency or rounding rule, and no minimum order size. Minimum order size and precision come from `AssetPairs` (`ordermin`, `lot_decimals`, `pair_decimals`). The 30-day pull already records it daily (DEC-057).
+- **How fees are charged.** The page gives no fee currency, rounding rule or minimum order size.
+- **`AssetPairs`, as stored by the 30-day pull (DEC-057).** All 17 daily snapshots, 2026-10-29 to 2026-11-14, have **empty** `fees` and `fees_maker` arrays for `XXBTZUSD` and `XETHZUSD`, so they cannot confirm the rates or the pair discount. They do give, unchanged over the period, the following values (snapshot `9b33e378…195f`, 2026-11-14):
+
+  | Pair | `ordermin` (base) | `costmin` (USD) | `tick_size` | `pair_decimals` | `lot_decimals` |
+  | --- | --- | --- | --- | --- | --- |
+  | XBT/USD | 0.00006 | 0.5 | 0.1 | 1 | 8 |
+  | ETH/USD | 0.002 | 0.5 | 0.01 | 2 | 8 |
 
 ## Values for the P03 fixtures (DEC-082)
 
 - **Rates:** maker 0.40 %, taker 0.80 %, the undiscounted tier 1. This is the conservative choice, since a discount, if it applies, would only lower the fee.
-- **Arithmetic:** the fee is charged in the quote currency (USD), on the fill's quote notional. The ledger contract decides the rounding (source map Q12); the fixtures state theirs explicitly.
+- **Fee currency — a declared fixture assumption, not a published term:** the fixtures charge the fee in the quote currency (USD), on the fill's quote notional. The page does not say which currency Kraken charges. Kraken's order API may charge fees in the base currency in some cases, which was not checked here. The ledger contract states the convention as its own choice and keeps the fee currency an explicit field (source map L5, Q12).
+- **Rounding:** the ledger contract decides it (Q12); the fixtures state theirs explicitly.
+- **Minimum size:** the `AssetPairs` values above.
 - **Versioning:** the fee schedule is versioned by its read date, 2026-11-14. A later schedule is a new version, never an edit to this one (L13).
