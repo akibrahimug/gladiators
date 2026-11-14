@@ -49,6 +49,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/evidence/P02/network-capture.md](<evidence/P02/network-capture.md>) |
 | [docs/evidence/P02/recovery-results.md](<evidence/P02/recovery-results.md>) |
 | [docs/evidence/P02/review-fixes.md](<evidence/P02/review-fixes.md>) |
+| [docs/evidence/P03/kraken-fee-schedule.md](<evidence/P03/kraken-fee-schedule.md>) |
 | [docs/evidence/README.md](<evidence/README.md>) |
 | [docs/evidence/gate-record-template.md](<evidence/gate-record-template.md>) |
 | [docs/ide-guide.md](<ide-guide.md>) |
@@ -526,6 +527,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P02-009.md](<tasks/TASK-P02-009.md>) |
 | [docs/tasks/TASK-P02-010.md](<tasks/TASK-P02-010.md>) |
 | [docs/tasks/TASK-P02-011.md](<tasks/TASK-P02-011.md>) |
+| [docs/tasks/TASK-P03-006.md](<tasks/TASK-P03-006.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
 | [docs/traceability/components.md](<traceability/components.md>) |
 | [docs/traceability/requirements-matrix.md](<traceability/requirements-matrix.md>) |
