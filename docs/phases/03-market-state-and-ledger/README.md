@@ -48,6 +48,8 @@ Pass only when the market-state and own-account contracts remain explicitly sepa
 
 On 2026-11-13 and -14 the user decided eight of its open choices (DEC-075 to DEC-082): P02 records book validity; a double-entry ledger; L-028's order states plus `unknown`; per-challenger ledgers as CMP-04 instances; marks at the exit side of a valid book; USD ledgers with no FX in P03; reference fixtures as the independent check; Kraken's published fees.
 
-**Exact next step:** draft the market-state and own-account ledger contracts as preparation, record Kraken's published fee schedule, and add the DEC-075 validity records to P02. The contracts are accepted only after G02.
+The market-state contract is drafted by [TASK-P03-007](../../tasks/TASK-P03-007.md) ([draft](../../evidence/P03/market-state-contract.md)).
+
+**Exact next step:** finish the market-state contract's review, draft the own-account ledger contract as preparation, record Kraken's published fee schedule, and add the DEC-075 validity records to P02. The contracts are accepted only after G02.
 
 **Implementation boundary:** state engines and account ledgers are not implemented by this documentation setup. Real accounts and live orders remain outside scope.

@@ -90,6 +90,7 @@ Candidates are Draft pending G02 and accepted [P03 boundaries](../phases/03-mark
 | Candidate ID | Bounded outcome | Type / dependency |
 | --- | --- | --- |
 | [TASK-P03-005](TASK-P03-005.md) | P03 source map: baseline constraints, P02 gaps and open choices for CMP-03 and CMP-04 | Documentation (preparation); G00. **Verified**; Draft [#40](https://github.com/akibrahimug/gladiators/pull/40) |
+| [TASK-P03-007](TASK-P03-007.md) | Draft the market-state contract (preparation) | Documentation (preparation); TASK-P03-005. **In progress** |
 | TASK-P03-001 | Book-state/replay contract, fixtures and invariants for selected feed semantics | Documentation; G02 |
 | TASK-P03-002 | Separate simulated-account ledger contract, accounting convention and fixtures | Documentation; G02; independent of book editing after shared event IDs settle |
 | TASK-P03-003 | One book/replay implementation slice with deterministic fixture results | Implementation/validation; accepted TASK-P03-001 contract; VAL-003/005 |
