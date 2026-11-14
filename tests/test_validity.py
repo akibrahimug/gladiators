@@ -334,6 +334,21 @@ class TestRunDirectory(unittest.TestCase):
             self.assertEqual((res.frames, res.first_recv, res.last_recv), (6, T0, T0 + 31 * S))
 
 
+class TestNonStringFrames(unittest.TestCase):
+    def test_derive_skips_a_non_string_frame(self):
+        res = derive([(0, None), (1, status(111)), (2, snap("BTC/USD", "ETH/USD"))])
+        self.assertEqual((res.frames, len(res.venue_status)), (3, 1))
+
+    def test_run_frames_reports_a_non_string_frame_as_malformed(self):
+        with tempfile.TemporaryDirectory() as d:
+            run = Path(d)
+            (run / "frames-1.jsonl").write_text(json.dumps({"recv_ns": 1, "frame": 5}) + "\n"
+                                                + json.dumps({"recv_ns": 2, "frame": HB}) + "\n")
+            bad = []
+            fr = list(V.run_frames(run, bad))
+            self.assertEqual(([f[0] for f in fr], bad), ([2], ["frames-1.jsonl:0"]))
+
+
 class TestDeterminism(unittest.TestCase):
     def seq(self):
         m = [item(55, T0 + 100 * S, T0 + 200 * S), item(61, T0 + 300 * S, T0 + 400 * S)]
