@@ -178,7 +178,7 @@
 
 ## 7. Proposed follow-ups
 
-Items 1, 2 and 5 are partly settled by the decisions in section 8.
+Items 1 and 2 are settled by the decisions in section 8, and item 5 partly: fees are decided (DEC-082), FX is deferred to G05 (DEC-080).
 
 The coordinator owns the cards; none of them passes a gate.
 
@@ -189,6 +189,7 @@ The coordinator owns the cards; none of them passes a gate.
 5. **Source research** for a Kraken fee schedule and an FX source under published terms (Q10, Q11), without waiting on vendors.
 
 ## 8. Decisions asked 2026-11-13 and 2026-11-14
+
 The user answered two rounds of questions after the review: DEC-075 to DEC-078 on 2026-11-13 and DEC-079 to DEC-082 on 2026-11-14 (UTC). Each question, its options and the choice are quoted verbatim.
 
 **DEC-075 (Q3).** "Where should the order book's valid/invalid state come from for P03? Today it exists only in the capture's own log and the analysis reports, not as replayable records (source map G-2, Q3)."
