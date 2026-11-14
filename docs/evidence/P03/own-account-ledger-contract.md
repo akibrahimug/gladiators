@@ -27,15 +27,15 @@
 All of these rules are **Proposed**.
 
 - **Representation:** exact decimals, never binary floats (L10). They are stored as decimal strings at a fixed scale:
-  - USD journal amounts: 8 decimals;
+  - USD journal amounts: **10 decimals**. A fill's notional p·q has `pair_decimals` + `lot_decimals` places, 9 for BTC/USD and 10 for ETH/USD, so at this scale it is always exact;
   - BTC and ETH: 8 decimals (`lot_decimals`, `AssetPairs`).
 - **Prices:** each price must be a multiple of the pair's `tick_size`, which is 0.1 for BTC/USD and 0.01 for ETH/USD. Prices are kept at `pair_decimals`. An off-tick price is `REJECTED`. This is L8's integer tick arithmetic: a price is held as ticks × `tick_size`.
 - **Minimums:** below `ordermin` (BTC 0.00006, ETH 0.002) or `costmin` (USD 0.5), an order is `REJECTED`. This is a backstop only: sizing and abstention happen upstream in CMP-07 and CMP-12 (L9, T17), and they should not send such an order.
-- **Fees, rounded on the running total:** after fill *k* of an order, the fee charged so far is `round_half_up(rate × cumulative notional, 8)`. Each fill's fee is that total minus the fees already charged. So the fee total equals the fee on the order's whole notional, and splitting a fill cannot change it. A fee that rounds to 0 below 5 × 10⁻⁹ USD of fee is recorded as 0.
-- **Buy reservation:** `r = ceil_8(limit price × qty × (1 + taker rate))`, the worst case. The running-total rounding keeps fees within it.
+- **Fees, rounded on the running total:** after fill *k* of an order, the fee charged so far is `round_half_up(Σᵢ≤ₖ rateᵢ × notionalᵢ, 10)`, where each fill has its own rate (maker or taker). Each fill's fee is that total minus the fees already charged. Splitting a fill therefore cannot change the total. A fee below 0.5 × 10⁻¹⁰ USD rounds to 0 and is recorded as 0.
+- **Buy reservation:** `r = ceil_10(limit price × qty × (1 + taker rate))`, the worst case. Its notional part lies on the 10-decimal grid, and every fill is at or below the limit. Fees are at most the taker rate on at most that notional, so fills plus fees never exceed r.
 - **Order types:** the ledger accepts **limit orders only** in P03. A market order's reservation rule belongs to the simulator (CMP-10, P06) and is listed in §8.
 - **Fee currency:** a **declared assumption**. The fee is charged in USD on the fill's quote notional. Kraken's page does not say which currency is charged, and Kraken's order API may charge in the base currency (fee record, #41). `fee_currency` is an explicit field, so a later change is a new convention version.
-- **Cost basis:** average cost. On a partial sell, `cost_basis` is reduced by `round_half_up(average cost × qty, 8)`. When a position reaches zero, the whole remaining `cost_basis` is released, so no rounding residue stays behind.
+- **Cost basis:** average cost. On a partial sell, `cost_basis` is reduced by `round_half_up(average cost × qty, 10)`. When the holding reaches zero (`position + position_reserved = 0`), the whole remaining `cost_basis` is released, so no rounding residue stays behind.
 
 ## 3. Accounts (chart)
 
@@ -51,7 +51,6 @@ These accounts exist in each instance. A posting names an account, a currency an
 | `cost_basis:<asset>` | USD | The average-cost basis of current holdings |
 | `fees` | USD | Trading fees paid (`trade_costs`, L11) |
 | `realised_pnl` | USD | Realised P&L, excluding fees. Its balance is minus the realised total |
-| `adjustments` | USD or base | Corrections, each with a reason (§4.1) |
 | `capital` | USD | Deposits and withdrawals of simulated capital (`capital_flows`, L11), kept apart from P&L (L1). Its balance is minus the net capital paid in |
 
 **Not in this chart:**
@@ -80,8 +79,9 @@ The envelope follows the P02 contract (§3) and the reinstated L-008 and L-023 e
 | `OrderSubmitted`, sell | `position` −q; `position_reserved` +q. Refused if `position` < q |
 | `Fill`, buy (qty q at price p, fee f) | USD: `cash_reserved` −(p·q + f); `cost_basis` +p·q; `fees` +f. Base: `position` +q; `trade_clearing` −q |
 | `Fill`, sell | USD: `cash` +(p·q − f); `cost_basis` −c, where c is the average cost × q, or the whole remaining basis at zero; `realised_pnl` −(p·q − c); `fees` +f. Base: `position_reserved` −q; `trade_clearing` +q |
-| Order ends `FILLED`, `CANCELLED` or `REJECTED` after acceptance | The remaining reservation goes back: `cash_reserved` −x and `cash` +x, or `position_reserved` −x and `position` +x |
-| `Adjustment(reason, causation_id)` | A reversing set for the corrected postings, then the replacement set, both linked to the original by `causation_id`. A correction never edits an earlier event. It also covers a fill correction from the simulator (L23) |
+| Order ends `FILLED`, `CANCELLED` or `REJECTED` after its reservation | The remaining reservation goes back: `cash_reserved` −x and `cash` +x, or `position_reserved` −x and `position` +x |
+| `FillCorrection(fill_id, new price, qty or liquidity)` from the simulator (L23) | A reversing set of the original fill's postings, then the replacement set, both linked by `causation_id`; earlier events are never edited. **The reservation legs of both sets are settled against `cash`, not `cash_reserved`**, because the order may already be closed. If `cash` would go negative, the correction is applied and the instance is quarantined (L3). A correction to a fill whose holding has since been partly or wholly sold is **not supported in P03**: it quarantines the instance until G03 defines how later sells are recomputed |
+| `Adjustment(reason, causation_id)` | Corrective postings for a reconciliation failure (§5), linked to the event they repair. It is the **only** event allowed to be unbalanced on its own: it posts exactly the missing legs, so that the cumulative balance is restored |
 | `Mark(book_state)` | No postings. Equity is recomputed |
 
 Every row sums to zero in each currency. For example, the buy fill's USD legs are −(p·q + f) + p·q + f = 0, and its base legs are +q − q = 0.
@@ -92,26 +92,27 @@ Every row sums to zero in each currency. For example, the buy fill's USD legs ar
 - the paid spread (fill price against the mid);
 - slippage (fill price against the limit price, and against the decision mid).
 
-Funding is 0 in P03, since there is no margin, and it is reported as 0.
+Funding and FX are 0 in P03, since there is no margin and no FX (DEC-080), and both are reported as 0.
 
 ### 4.2 Order transitions
 
 | From | Event | To | Postings |
 | --- | --- | --- | --- |
 | — | `OrderSubmitted`, checks pass | `NEW` | Reserve (§4.1) |
-| — | `OrderSubmitted`, a check fails (cash, position, tick, minimum, duplicate key) | `REJECTED` | None |
+| — | `OrderSubmitted`, a check fails (cash, position, tick, minimum) | `REJECTED` | None |
+| — | `OrderSubmitted` with a `client_order_id` already used | **Ignored**: the existing order is returned, and nothing is posted (L2, T05) | None |
 | `NEW` | `OrderAccepted` | `ACCEPTED` | — |
 | `NEW`, `ACCEPTED` | `OrderRejected` | `REJECTED` | Release the reservation |
-| `ACCEPTED`, `PARTIAL` | `Fill`, quantity left | `PARTIAL` | Fill |
-| `ACCEPTED`, `PARTIAL` | `Fill`, nothing left | `FILLED` | Fill; release any residual (a maker fee or a better price) |
+| `NEW`, `ACCEPTED`, `PARTIAL` | `Fill`, quantity left | `PARTIAL`. A fill implies acceptance, so a fill on a `NEW` order skips `ACCEPTED` | Fill |
+| `NEW`, `ACCEPTED`, `PARTIAL` | `Fill`, nothing left | `FILLED` | Fill; release any residual (a maker fee or a better price) |
 | `NEW`, `ACCEPTED`, `PARTIAL` | `OrderCancelled` | `CANCELLED` | Release the remainder |
 | any open state | No acknowledgement or status within the simulator's timeout, or conflicting reports | `UNKNOWN` | **The reservation is kept** |
 | `UNKNOWN` | A simulator status query (query before resubmit, L28; T06) answers `ACCEPTED`, `PARTIAL`, `FILLED`, `CANCELLED` or `REJECTED` | That state | As that state's row |
-| `UNKNOWN` | `Fill` | Stays `UNKNOWN` | The fill is applied, so the order can be reconciled |
-| `ACCEPTED`, `PARTIAL` | A fill due when no bids exist (L15) | Unchanged, flagged `pending_liquidity` | None; no fictitious fill |
+| `UNKNOWN` | `Fill` | Stays `UNKNOWN` | The fill is applied, so the order can be reconciled. When the order resolves, the state implied by the applied fills wins over a query answer that lags behind it. For example, if fills cover the whole quantity it is `FILLED`, whatever the query says, and the residual is released then |
+| `ACCEPTED`, `PARTIAL` | The simulator's `FillDeferred(no_liquidity)`: a sell with no bids, or a buy with no asks (L15) | Unchanged, flagged `pending_liquidity` | None; no fictitious fill |
 
 **Rules:**
-- **While any order is `UNKNOWN`,** the instance submits **no new order for that instrument**, and a resubmit with the same `client_order_id` is refused (L5: cancellation races and retries reconcile before further entry).
+- **While any order is `UNKNOWN`,** the instance submits **no new order for that instrument**, and a resubmit with the same `client_order_id` is ignored. This is a **Proposed** reading of L5, "cancellation races and retries reconcile before further entry". The account-wide reading would block every instrument.
 - **Duplicate fills:** a fill whose fill ID was already applied changes nothing (T05).
 - **Failed orders:** a rejected or failed order never becomes a position (L3).
 - **Same-bar take-profit and stop-loss, and gap losses:** these are the simulator's rules (CMP-10, P06). The ledger books the fills it receives at their prices.
@@ -120,12 +121,12 @@ Funding is 0 in P03, since there is no margin, and it is reported as 0.
 
 These checks run after every event, per instance:
 
-1. **Balance:** postings sum to zero per currency, in USD, BTC and ETH.
+1. **Balance:** postings sum to zero per currency, in USD, BTC and ETH. This holds cumulatively, and for every event except an `Adjustment` (§4.1).
 2. **Mark-free identity** (always run): `cash + cash_reserved + cost_basis = −capital − realised_pnl − fees`. This follows from check 1 in USD, so it holds without a mark.
 3. **Equity, when a valid mark exists:**
    - `equity = cash + cash_reserved + Σ (position + position_reserved) × mark − liabilities`. In P03, liabilities = 0.
    - Equivalently, `equity = (−capital) + (−realised_pnl) − fees + unrealised`, where `unrealised = Σ (position + position_reserved) × mark − cost_basis`.
-   - With no valid mark, equity is reported as `stale` and no number is given.
+   - If any **held** asset (`position + position_reserved > 0`) has no valid mark, equity is reported as `stale` and no number is given. An asset that is not held needs no mark.
 4. **Positions:** for each asset, `position + position_reserved = −trade_clearing`.
 5. **Replay:** replaying the journal from empty gives exactly the same balances (L3).
 
@@ -153,7 +154,7 @@ Every output carries:
 
 ## 7. Reference fixtures (DEC-081)
 
-Every fixture is hand-computed. Its values are USD unless marked BTC, and all are at 8 decimals.
+Every fixture is hand-computed. Values are USD unless marked BTC, and they are exact; trailing zeros beyond 8 decimals are omitted. Every order goes `NEW` → fill without an `OrderAccepted` step unless the fixture says otherwise, since a fill implies acceptance (§4.2).
 
 | Fixture | Steps | Expected after each step |
 | --- | --- | --- |
@@ -165,18 +166,22 @@ Every fixture is hand-computed. Its values are USD unless marked BTC, and all ar
 | LF-06 | Deposit 500; limit buy 0.00005 BTC at 60,000.0 | Below `ordermin` 0.00006, so `REJECTED` (a backstop; T17 abstention is upstream) |
 | LF-07 | As LF-01 to step 2; the acknowledgement is lost | `UNKNOWN`; cash 439.52 and reserved 60.48 are kept. A resubmit with the same key is refused, and so is any new BTC order. The query answers `ACCEPTED`, so the state is `ACCEPTED`. The fill then gives LF-01 step 3 |
 | LF-08 | LF-01 to step 3, then a mark while the book is `INVALID` | Equity `stale`, with no number. The mark-free identity holds: 439.52 + 0 + 60 = 499.52 = 500 − 0.48 |
-| LF-09 | Replay of LF-01 to LF-04 from empty | Identical balances at every step (check 5) |
-| LF-10 | LF-01 with the `cost_basis` posting of step 3 removed | Check 1 fails in USD by −60. The instance is quarantined, a new order is refused, and open fills are still booked |
+| LF-09 | The journals of LF-01, LF-02 and LF-04, each replayed separately from empty | Identical balances at every step (check 5) |
+| LF-10 | LF-01 with the `cost_basis` posting of step 3 removed; then an `Adjustment` posting `cost_basis` +60 | After step 3: check 1 fails in USD by −60 (−60.48 + 0.48). The instance is quarantined and a new order is refused. After the `Adjustment`: check 1 holds, cost basis 60, cash 439.52, and the quarantine is lifted |
 | LF-11 | Two instances, A runs LF-01 and B runs LF-05 | A as LF-01; B cash 500. No posting crosses instances (DEC-078) |
 | LF-12 | Deposit 500; limit buy 0.001 at 60,000.0; **maker** fill at 60,000.0 | r = 60.48. Fill fee 0.24, so the reserved balance is 60.48 − 60.24 = 0.24 and the residual is released when filled. Cash 439.76, reserved 0, fees 0.24, cost basis 60.00 |
 | LF-13 | Deposit 500; limit buy 0.003 at 60,000.0, filled as taker in three fills of 0.001 | Fees 0.48 each; running total 1.44 = 0.8 % of 180.00. r = 181.44, all used; cash 318.56 |
-| LF-14 | LF-01, then an `Adjustment` correcting the fill price to 59,990.0 (a simulator correction) | Reversal of step 3, then a replacement fill: fee 0.47992000, cost basis 59.99. The 0.00008 fee difference and the 0.01 price difference go back to `cash_reserved` and are released, so cash 439.53008000. All checks hold |
+| LF-14 | LF-01 to step 3, then a `FillCorrection` to price 59,990.0 | Reversal, settled against cash: `cash` +60.48, `cost_basis` −60, `fees` −0.48. Replacement: fee 0.47992; `cash` −60.46992, `cost_basis` +59.99, `fees` +0.47992. Net cash +0.01008, so cash 439.53008; cost basis 59.99; fees 0.47992; reserved 0. Identity: 439.53008 + 0 + 59.99 = 499.52008 = 500 − 0.47992 |
+| LF-15 | Deposit 500; limit buy 0.003 at 60,000.0; a taker fill of 0.001, then a maker fill of 0.002 | r = 181.44, cash 318.56. Running fee totals 0.48, then 0.48 + 0.48 = 0.96 (0.4 % of 120). Fills plus fees 180.96; residual 0.48 released when filled; cash 319.04, fees 0.96, cost basis 180 |
+| LF-16 | As LF-07; then, while `UNKNOWN`, a taker fill of the whole 0.001; then a query answering `ACCEPTED` | The fill is applied (balances as LF-01 step 3); the order resolves to `FILLED`, the state implied by its fills, and the residual 0 is released |
 
 ## 8. Still open
 
 | Item | Owner / gate |
 | --- | --- |
-| Scales, tick rule, fee rounding on the running total, the reservation ceiling, average cost | Proposed; approval at G03 |
+| Scales (USD at 10 decimals), the tick rule, fee rounding on the running total, the reservation ceiling, average cost | Proposed; approval at G03 |
+| The instrument-level `UNKNOWN` block (against an account-wide one) | Proposed reading of L5 |
+| Corrections after a later sell of the same holding | Not supported in P03; G03 |
 | Fee currency (USD assumption) | Checked against Kraken's order documentation before G03 |
 | Whether BTC/USD and ETH/USD get the −0.02 % pair discount | Unknown; the fixtures use the undiscounted rate |
 | The reservation rule for market orders | CMP-10 (simulator), P06 |
