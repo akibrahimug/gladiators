@@ -4,7 +4,7 @@
 
 [Project home](../README.md) · [Full file catalog](catalog.md) · [Roadmap](roadmap.md)
 
-**Status:** provisional planning documents pending recovery of the original v1.0 specifications.
+**Status:** planning documents for an accepted baseline: the v1.0 specifications were recovered and reconciled, and G00 passed on 2026-10-24. Phase and gate states are in the [phase index](phases/README.md) and the [milestone register](milestones.md). *Updated 2026-11-14 (TASK-P03-009).*
 
 ## Read in this order
 
