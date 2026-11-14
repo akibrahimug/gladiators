@@ -178,6 +178,8 @@
 
 ## 7. Proposed follow-ups
 
+Items 1, 2 and 5 are partly settled by the decisions in section 8.
+
 The coordinator owns the cards; none of them passes a gate.
 
 1. **Decision requests before the ledger contract:** convention (Q8), order state machine (Q7), marking price (Q9), account currency and FX (Q10), cardinality (Q13).
@@ -185,3 +187,48 @@ The coordinator owns the cards; none of them passes a gate.
 3. **P02 documentation fix:** mark §4.4, F-15 and mode C as authorised; record the live ordering key and the WebSocket-name alias (G-3 to G-5), each after a decision.
 4. **Documentation hygiene:** the stale lines in section 6.
 5. **Source research** for a Kraken fee schedule and an FX source under published terms (Q10, Q11), without waiting on vendors.
+
+## 8. Decisions asked 2026-11-13 and 2026-11-14
+The user answered two rounds of questions after the review: DEC-075 to DEC-078 on 2026-11-13 and DEC-079 to DEC-082 on 2026-11-14 (UTC). Each question, its options and the choice are quoted verbatim.
+
+**DEC-075 (Q3).** "Where should the order book's valid/invalid state come from for P03? Today it exists only in the capture's own log and the analysis reports, not as replayable records (source map G-2, Q3)."
+
+- Chosen: **"P02 records it (Recommended)"** — "Add validity, venue-status and gap records to P02's normalised output, derived from the raw frames with DEC-071/074. Replay then reads them like any other event; one source of truth."
+- Not chosen: "P03 re-derives it" — "The book builder re-derives validity from the raw frames each replay. No P02 change, but the rules live in two places (analysis and book builder)."
+
+**DEC-076 (Q8).** "Which accounting convention should the own-account ledger use (Q8)?"
+
+- Chosen: **"Double-entry (Recommended)"** — "Every event posts balanced entries per currency (cash, position, fees, P&L). The identity cash + marked holdings − liabilities = equity then holds by construction and is also checked after each event."
+- Not chosen: "Single-entry + identity" — "Simpler journal of cash and position changes; the accounting identity is checked after every event instead of holding by construction."
+
+**DEC-077 (Q7).** "The sources give three different order state machines (Q7). Which should the ledger contract use?"
+
+- Chosen: **"L-028 plus unknown (Recommended)"** — "NEW → ACCEPTED → PARTIAL → FILLED / CANCELLED / REJECTED from the reinstated v5 section, plus CORE's explicit `unknown` state so a lost acknowledgement is never assumed filled or cancelled."
+- Not chosen: "L-028 only" — "Exactly the reinstated v5 machine, without an unknown state."
+- Not chosen: "docs/03 lifecycle" — "proposed → … → reconciled from v10 docs/03, which also covers the pre-order and reconciliation steps."
+
+**DEC-078 (Q13).** "v10 gives each paper challenger its own ledger, but DEC-018/REQ-006 name per-challenger paper ledgers separately from the own-account ledger (Q13). How should they relate?"
+
+- Chosen: **"Instances of CMP-04 (Recommended)"** — "One CMP-04 contract; each challenger gets its own isolated instance with its own ID. DEC-018's naming stays: 'per-challenger paper ledger' means a CMP-04 instance."
+- Not chosen: "Separate ledger type" — "Per-challenger ledgers get their own contract, separate from the own-account ledger."
+
+**DEC-079 (Q9).** "Which price should mark open positions for unrealised P&L (Q9)?"
+
+- Chosen: **"Exit side of book (Recommended)"** — "Longs at best bid, shorts at best ask, from a valid book only; with no valid book the mark is 'unknown' and equity is flagged stale. Conservative: what the position could actually be sold at."
+- Not chosen: "Mid price" — "Mark at (bid + ask) / 2. Common, but overstates what a long could realise by half the spread."
+- Not chosen: "Last daily bar close" — "Mark at the latest completed daily bar. Stable, but up to a day stale."
+
+**DEC-080 (Q10).** "Simulated equity is GBP 500 (provisional, DEC-017), but Kraken instruments are in USD and DEC-039 forbids mixing quote currencies. How should P03 handle account currency (Q10)?"
+
+- Chosen: **"USD ledgers, FX later (Recommended)"** — "Each ledger is kept in its venue's quote currency (USD on Kraken); no FX in P03. GBP reporting and an FX source are decided with the risk defaults at G05."
+- Not chosen: "GBP ledger with FX now" — "Keep the ledger in GBP; add a research card now for a point-in-time GBP/USD source under published terms."
+
+**DEC-081 (Q15).** "v10 requires an independent check of the accounting (source map L26). What form should it take (Q15)?"
+
+- Chosen: **"Reference fixtures (Recommended)"** — "Hand-computed expected results for fixed scenarios (fills, fees, partial fills, duplicates), checked against the ledger. Matches v10's 'reference fixtures'."
+- Not chosen: "Second implementation" — "A separate, independently written accounting engine whose results must match (the dropped L-019). Stronger, but doubles the ledger work."
+
+**DEC-082 (Q11).** "Fees need dated official schedules, and none is recorded yet (Q11). What should the ledger fixtures use?"
+
+- Chosen: **"Kraken's published fees (Recommended)"** — "A small research card reads Kraken's public fee schedule (published terms only, no vendor contact), records it dated, and the fixtures use its base maker/taker tier."
+- Not chosen: "Declared assumptions" — "Fixtures use stated round-number fee rates, marked as assumptions; the real schedule is recorded later."
