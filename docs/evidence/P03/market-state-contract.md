@@ -7,7 +7,7 @@
 - Every value marked **Proposed** needs approval before anything is measured against it (G03).
 - `B` and `Q` numbers refer to the [source map](source-map.md).
 
-**Precondition.** The validity, venue-status and maintenance records this contract consumes are specified in [TASK-P02-014](https://github.com/akibrahimug/gladiators/blob/5a8ddbe/docs/tasks/TASK-P02-014.md). They are in the event contract §4.4 only on that task's branch, at `5a8ddbe`. Until that task is merged and Verified, this contract cites the branch.
+**Precondition.** The validity, venue-status and maintenance records this contract consumes are specified in [TASK-P02-014](https://github.com/akibrahimug/gladiators/blob/a67c414/docs/tasks/TASK-P02-014.md). They are in the event contract §4.4 only on that task's branch (#44, reviewed at `a67c414`). Until that task is merged and Verified, this contract cites the branch.
 
 **Scope.** This contract covers the state that CMP-03 rebuilds from Kraken WebSocket v2 `book` records, for BTC/USD and ETH/USD at depth 10, as captured under DEC-057. It also covers the replay checkpoints, and what CMP-03 hands to CMP-04, CMP-06, CMP-10 and CMP-11.
 - It is a view of one venue's displayed top 10 levels. It is not the market's money ledger, and it is not a consolidated book. A displayed order is revocable intent (`c/27:7`; B9, B17; REQ-002, REQ-020).
@@ -20,7 +20,7 @@
 | Book messages | `NativeMarketEvent` `book`, `message_type` `snapshot` or `update` (event contract §4.4). Decimal strings, exactly as received | Levels and checksum |
 | Trades | `NativeMarketEvent` `trade` | Advance `as_of` only |
 | Validity | Book-validity `GapInterval`s per pair (DEC-075). **Each is known only at its `available_at`, the receive time of the frame that ends it** | The retrospective view (§3.2); a correction marker in the as-known stream (§3.1) |
-| Venue status | `VenueStatus` (DEC-075), one per `status` frame | A new `connection_id` invalidates at once in the as-known stream. `system` is carried on the state |
+| Venue status | `VenueStatus` (DEC-075), one per `data` item of each `status` frame (Kraken sends one per frame) | A new `connection_id` invalidates at once in the as-known stream. `system` is carried on the state |
 | Maintenance windows | `MaintenanceWindow` (DEC-074, DEC-075) | Carried for R-4 accounting only, from its `available_at`. It **does not invalidate the book** |
 | Clock | `quality_flags` and `timestamp_uncertainty_ms` on each record (T-5, T-6, DEC-067) | Carried on the state. These come from the capture's SNTP offsets in `events.jsonl` (`normalize()`'s `offsets`), so they are a dependency outside DEC-075's "raw frames alone" |
 | Precision | Price and quantity decimals per pair (BTC/USD 1 and 8; ETH/USD 2 and 8) | The checksum. Today these are constants in `cli.py`, set from the `AssetPairs` snapshot of 2026-10-27, not records (source map G-9) |
@@ -34,7 +34,7 @@
 5. `source_event_time`, compared in ns (`event_time_ns()`); live records store µs;
 6. native sequence or row index;
 7. `version`, the record's version (an integer, default 1). It is not Kraken's `version` string in `VenueStatus.fields`;
-8. for a `MaintenanceWindow` only, `event_id` as an integer.
+8. for a `MaintenanceWindow` only: `source`, then `event_id` as a string (empty if none), then `excluded_start` or, for a withdrawn item, `announced_start`. This matches TASK-P02-014's own sort, and makes the key total.
 
 For live records the native sequence is the live key, `recv_ns × 100 + index`. That key, the inserted `record_rank` and the derived-record keys below are **Proposed** for recording as one decision (G-4, Q17), since they extend DEC-054.
 
@@ -65,7 +65,7 @@ There is one `BookState` per instrument (`kraken:BTC/USD:1`, `kraken:ETH/USD:1`)
 | `depth_by_level` | Ten slots per side; an empty slot is `null` |
 | `best_bid`, `best_ask` | Level 1 of each side, or `null` |
 | `book_health` | `UNINITIALISED`, `VALID` or `INVALID` (§3). There is no separate `SYNCING` state: an invalid book waiting for a snapshot is `INVALID` with its reason |
-| `invalid_reason` | When `INVALID`: `reconnect`, `checksum`, `bad_level`, `crossed`, `stale`, `venue_maintenance`. For a validity interval, the reason follows the restrictiveness rule (§3.1); the full `evidence` is kept on the state |
+| `invalid_reason` | When `INVALID`: `reconnect`, `checksum`, `bad_level`, `crossed`, `silence`, `venue_maintenance`. `stale` appears only in `state_at(t)` and in the retrospective view (§3.2); it is never an emitted reason. For a validity interval, the reason follows the restrictiveness rule (§3.1); the full `evidence` is kept on the state |
 | `sequence_integrity` | `checksum_verified` if the last message's CRC32 matched; `checksum_failed`; `unverified` before the first snapshot. Kraken has no sequence numbers, so integrity means the checksum (Q1) |
 | `connection_id` | From the latest `VenueStatus` |
 | `gap_count`, `resync_count`, `dropped_updates`, `quarantined_count` | Counts since the replay start. `dropped_updates` counts the updates not applied while `INVALID`: they are counted, never silently discarded (B11) |
@@ -95,16 +95,17 @@ Each record is applied at its own `available_at`, so nothing is backfilled (B3, 
 
 | From | Event | To |
 | --- | --- | --- |
-| `UNINITIALISED` or `INVALID` | Snapshot that passes the checks below | `VALID` |
+| `UNINITIALISED` or `INVALID` | Snapshot that passes the checks below | `VALID`, or `INVALID(venue_maintenance)` while the venue reports maintenance (check 5) |
 | `VALID` | Snapshot (a resync or reconnect snapshot while still valid) | The book is replaced, as the capture does, then checked |
 | `VALID` | Update that passes the checks below | `VALID` |
 | `UNINITIALISED` | Update | Not applied; `dropped_updates` + 1 |
+| `UNINITIALISED` | `VenueStatus` | Stays `UNINITIALISED`; `connection_id` and `venue_status` are updated, so a later snapshot sees maintenance (check 5) |
 | `VALID` or `INVALID` | `VenueStatus` with a new `connection_id` | `INVALID(reconnect)` **at once**, combined with any current reason by the restrictiveness rule below. A new connection means the previous one ended, and its book is not reused |
 | `VALID` or `INVALID` | `VenueStatus` `system = maintenance` | `INVALID(venue_maintenance)`, combined in the same way. **Proposed.** This is CMP-03's own rule: the capture only measures maintenance time |
 | `VALID` | `state_at(t)` with `observed_age_ms > STALE_MS` | `INVALID(stale)` at `t` (query only; never an emitted state) |
 | `INVALID` with a **snapshot-only** reason: `checksum`, `reconnect`, `resync`, `start` or `bad_level` | Update | Not applied; `dropped_updates` + 1. Recovery is by a snapshot that passes the checks (B2, Q-5). For `bad_level`, the held book no longer matches the venue's, so no later checksum can be trusted until a snapshot arrives |
-| `INVALID` with an **update-recoverable** reason: `crossed` or `silence`, or the first book record after a `stale` point | Update | **Applied** to the held book, then checked. It passes, so `VALID`; or the reason changes as the checks below say. **Proposed.** The capture never resyncs for staleness, silence or a crossed book, so snapshot-only recovery could leave the book invalid for hours. The CRC32 still verifies the whole top 10, so B2's "no silent reuse" holds |
-| `INVALID(venue_maintenance)` | Update | **Applied** and checked, as above. `VALID` again only once a `VenueStatus` reports `online` **and** a later message passes the checks |
+| `INVALID` with an **update-recoverable** reason: `crossed` or `silence`. (The first book record after a `stale` point is an update on a `VALID` book, covered by the `VALID` rows: `stale` is never emitted) | Update | **Applied** to the held book, then checked. It passes, so `VALID`; or the reason changes as the checks below say. **Proposed.** The capture never resyncs for staleness, silence or a crossed book, so snapshot-only recovery could leave the book invalid for hours. The CRC32 still verifies the whole top 10, so B2's "no silent reuse" holds |
+| `INVALID(venue_maintenance)` | Update | **Applied** and checked, as above. By check 5 it is `VALID` only once the latest `VenueStatus` reports a system other than `maintenance` |
 | Any | Validity `GapInterval`, which sorts after every record of the frame that ends it | A **correction marker** naming the interval `[start, end)`. Earlier emitted states are not rewritten. The marker leaves the book `VALID` only if the last book message for this pair at or before `end` was received at `end` and left the book `VALID`. Otherwise the reason becomes the **most restrictive** of the current reason and the interval's rules |
 
 **Checks, in order, for every applied snapshot or update** (**Proposed** precedence):
@@ -112,9 +113,10 @@ Each record is applied at its own `available_at`, so nothing is backfilled (B3, 
 2. **Apply** the message, as described below.
 3. **Checksum.** The CRC32 of the held top 10 must match the message's `checksum`; a mismatch makes the state `INVALID(checksum)`. This applies from any state, including the update-recoverable ones.
 4. **Crossed.** `best_bid ≥ best_ask` makes the state `INVALID(crossed)` (B4).
-5. Otherwise the state is `VALID`.
+5. **Maintenance.** If the latest `VenueStatus.system` is `maintenance`, the state is `INVALID(venue_maintenance)`. Maintenance is a **standing condition** taken from `venue_status`, not only a stored reason, so it is applied again after recovery from any other reason (**Proposed**).
+6. Otherwise the state is `VALID`.
 
-**Restrictiveness.** Whenever two reasons combine, the more restrictive one wins: snapshot-only (`checksum`, `bad_level`, `reconnect`, `resync`, `start`), then `venue_maintenance`, then update-recoverable (`crossed`, `silence`). An interval's evidence names its rules, and each maps to a reason: `start` to `start`, `silence>15s` to `silence`, `reconnect` to `reconnect` and `resync` to `resync`. `open_at_end` is a flag, not a cause: the reason is the underlying rule.
+**Restrictiveness.** Whenever two reasons combine, the more restrictive one wins: snapshot-only, then `venue_maintenance`, then update-recoverable. Within a class, the order of precedence is `checksum`, `bad_level`, `reconnect`, `resync`, `start`; and `crossed`, `silence`. Because maintenance is a standing condition (check 5), it is never lost when a more restrictive reason replaces it. An interval's evidence names its rules, and each maps to a reason: `start` to `start`, `silence>15s` to `silence`, `reconnect` to `reconnect` and `resync` to `resync`. `open_at_end` is a flag, not a cause: the reason is the underlying rule.
 
 **Applying a message (as the capture does, `live.py` `_apply_book`):**
 - **Snapshot:** both sides are cleared, then the bids and asks are applied. A snapshot is **not truncated**.
