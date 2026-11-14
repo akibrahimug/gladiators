@@ -26,13 +26,14 @@
 | Precision | Price and quantity decimals per pair (BTC/USD 1 and 8; ETH/USD 2 and 8) | The checksum. Today these are constants in `cli.py`, set from the `AssetPairs` snapshot of 2026-10-27, not records (source map G-9) |
 | Quarantined records | `quality_state = quarantined`, or an unknown schema | Never applied. They are counted on the state (`quarantined_count`) and kept for audit (B10, L-008) |
 
-**Order (DEC-054).** Records are replayed by the full DEC-054 key:
+**Order (DEC-054).** Records are replayed by the full DEC-054 key, plus one added tie-breaker:
 1. `available_at`;
 2. `source_id`;
 3. `instrument_id`;
-4. `source_event_time`;
+4. `source_event_time`, compared in ns (`event_time_ns()`), since live records store µs;
 5. native sequence or row index;
-6. `version`.
+6. `version`;
+7. `record_rank` (**Proposed**, added after DEC-054's six fields): 0 for a market record, 1 for `VenueStatus`, 2 for a validity `GapInterval`, 3 for a `MaintenanceWindow`.
 
 For live records the native sequence is the live key, `recv_ns × 100 + index`. That key is **Proposed** for recording as a decision (G-4, Q17).
 
@@ -40,11 +41,11 @@ For live records the native sequence is the live key, `recv_ns × 100 + index`. 
 
 | Record | `available_at` | `source_id` | `instrument_id` | `source_event_time` | Sequence |
 | --- | --- | --- | --- | --- | --- |
-| Validity `GapInterval` | receive time of its ending frame | `SR-02` | the pair | `interval_start` | `recv_ns × 100 + 99`, so it sorts **after** the frame that ends it |
+| Validity `GapInterval` | receive time of its ending frame | `SR-02` | the pair | **the ending frame's** `source_event_time` | **the ending frame's** native sequence. With `record_rank` 2, the interval sorts immediately **after** the frame that ends it |
 | `VenueStatus` | receive time | `SR-02` | `kraken:status` | receive time | `recv_ns × 100 + index` |
-| `MaintenanceWindow` | `first_listed`, revised at `unlisted_at` (a new version) | `SR-02` | `kraken:status` | announced start | `event_id` |
+| `MaintenanceWindow` | the receive time of the status frame that first lists it; revised at `unlisted_at` (a new version) | `SR-02` | `kraken:status` | that frame's receive time | that frame's native sequence. `record_rank` 3, then `event_id` as an integer, breaks a tie with the frame's `VenueStatus` |
 
-**Intervals are half-open, `[start, end)`.** The snapshot that ends an interval lies at `end`, so it is outside the interval and can restore `VALID`.
+**Intervals are half-open, `[start, end)`.** The frame that ends an interval lies at `end`, outside the interval, and it is applied before the interval record (rank 2 after rank 0). The key needs no assumption about how many items a frame carries, which can exceed 99 for a batch of trades.
 
 ## 2. State
 
@@ -54,6 +55,7 @@ There is one `BookState` per instrument (`kraken:BTC/USD:1`, `kraken:ETH/USD:1`)
 | --- | --- |
 | `instrument_id`, `venue` | As the input records |
 | `as_of` | The `available_at` of the last input applied, on any channel for this venue: book, trade or `VenueStatus`. This is the state's watermark (B16) |
+| `observed_age_ms` | Only in `state_at(t)`: `(t − last_book_received_at) / 10⁶` |
 | `last_record_id`, `last_sort_key` | The last input applied, and its full DEC-054 key |
 | `last_book_received_at`, `last_book_source_event_time` | Taken from the last `book` record (B3) |
 | `snapshot_record_id` | The `record_id` of the snapshot the current book was built from. It **replaces** v10's `snapshot_update_id`, because Kraken books carry no update IDs (G-6) |
@@ -102,10 +104,11 @@ Each record is applied at its own `available_at`, so nothing is backfilled (B3, 
 | `VALID` | `VenueStatus` with a new `connection_id` | `INVALID(reconnect)` **at once**. A new connection means the previous one ended, and its book is not reused |
 | `VALID` | `VenueStatus` `system = maintenance` | `INVALID(venue_maintenance)`. **Proposed.** This is CMP-03's own rule: the capture only measures maintenance time and does not invalidate on it |
 | `VALID` | `state_at(t)` with `observed_age_ms > STALE_MS` | `INVALID(stale)` at `t` (query only) |
-| `INVALID(checksum)`, `INVALID(reconnect)`, `INVALID(initial)` | Update | Not applied; `dropped_updates` + 1 (B2, Q-5) |
-| `INVALID(stale)`, `INVALID(crossed)` | Update | **Applied** to the held book. The state becomes `VALID` again if the checksum matches and the book is not crossed. **Proposed.** The capture never resyncs for staleness or a crossed book, so snapshot-only recovery could leave the book invalid for hours. The CRC32 still verifies the whole top 10, so B2's "no silent reuse" holds |
-| `INVALID(venue_maintenance)` | `VenueStatus` `system = online`, then a matching snapshot or update | `VALID` |
-| Any | Validity `GapInterval` arrives, at its `available_at` | A **correction marker** naming the interval `[start, end)`. Earlier emitted states are not rewritten. If the book is still `VALID` at the marker, it stays `VALID` only if a snapshot has arrived at or after the interval's end. Otherwise it becomes `INVALID` with the interval's reason |
+| `INVALID` with `checksum`, `reconnect`, `initial`, `resync`, `start` or `bad_level` | Update | Not applied; `dropped_updates` + 1. Recovery is by a matching snapshot only (B2, Q-5). For `bad_level`, the held book no longer matches the venue's, so no later checksum can be trusted until a snapshot arrives |
+| `INVALID` with `crossed`, `silence` or `open_at_end`; or the first book record after a `stale` point (`stale` exists only in `state_at(t)`) | Update | **Applied** to the held book. The state becomes `VALID` again if the checksum matches and the book is not crossed. **Proposed.** The capture never resyncs for staleness, silence or a crossed book, so snapshot-only recovery could leave the book invalid for hours. The CRC32 still verifies the whole top 10, so B2's "no silent reuse" holds |
+| `INVALID(venue_maintenance)` | Update | **Applied**, as above. `VALID` again only once a `VenueStatus` reports `online` **and** a later snapshot or update matches its checksum |
+| Any | An update or snapshot whose checksum mismatches **and** that is also crossed or has a bad level | `INVALID(checksum)`. **The checksum takes precedence**, so recovery is by snapshot only |
+| Any | Validity `GapInterval`, which sorts immediately after the frame that ends it | A **correction marker** naming the interval `[start, end)`. Earlier emitted states are not rewritten. The marker leaves the book `VALID` only if the frame at `end` was this pair's snapshot or update, and it left the book `VALID` with its checksum verified. Otherwise the book becomes `INVALID` with the interval's first rule as the reason, and recovers by that reason's row |
 
 **Applying a message (as the capture does, `live.py` `_apply_book`):**
 - **Snapshot:** both sides are cleared, then the bids and asks are applied. A snapshot is **not truncated**.
@@ -142,11 +145,11 @@ These are computed only when `book_health = VALID`, and are `null` otherwise. Ea
 ## 5. Replay checkpoints (Q4)
 
 **Proposed.** A checkpoint is the **full replay state**, not only the `BookState`s. It holds:
-- per instrument: `BookState`, `last_book_received_at`, any validity interval known to be open, and the counters;
+- per instrument: `BookState`, `last_book_received_at` and the counters. Nothing about open intervals is stored: in the as-known stream an interval is known only at its end;
 - for the venue: the last `connection_id`, the latest `VenueStatus`, and all `MaintenanceWindow`s known so far, including their versions;
 - **the cursor:** the full DEC-054 sort key of the last record applied. Records share an `available_at`, since one frame can carry both pairs, so a watermark alone is ambiguous (B10);
 - **identity:**
-  - a content hash of the inputs: SHA-256 over the canonical `to_json(include_clock=False)` of each replayed record in replay order;
+  - a content hash of the inputs: SHA-256 over each replayed record in replay order, serialised as §6's canonical JSON (sorted keys, `(",", ":")` separators, decimal strings). `Record`s are serialised with `to_json(include_clock=False)`, and derived records (`GapInterval`, `MaintenanceWindow`) with all their dataclass fields;
   - the set of `raw_id`s;
   - the normaliser version and the contract version;
   - the config hash (`STALE_MS`, depth, precision, arithmetic);
@@ -174,15 +177,16 @@ No `BookState` field comes from the replay's own clock, so no field is excluded 
 | P3-01 | A snapshot, then updates with matching checksums | `VALID` throughout; the levels equal the capture's | No invalid time after the snapshot |
 | P3-02 | One update dropped (v10 experiment 3), chosen so that its loss changes the next message's top 10 | The next checksum mismatches: `INVALID(checksum)`, no primitives, `dropped_updates` counts until the next snapshot | Invalid from the mismatch to the snapshot |
 | P3-03 | A displayed bid wall at level 1, then cancelled (v10 experiment 1) | The level disappears; no inflow or outflow is inferred (B7, `c/27:7`) | — |
-| P3-04 | A silence of more than 15 s | `state_at(t)` is `INVALID(stale)` once 15 s have passed. The `GapInterval` marker arrives at the end; the state is `VALID` only after a matching snapshot or update | Invalid over the interval `[start, end)` |
+| P3-04 | A **synthetic** silence of more than 15 s, ending with a matching update on the same connection. In captured data a silence over 15 s almost always ends in a receive timeout and a reconnect, so it merges with P3-05 | `state_at(t)` is `INVALID(stale)` once 15 s have passed. The ending update is applied and verifies the book, so the marker that follows leaves it `VALID` | Invalid over the interval `[start, end)` |
 | P3-05 | A reconnect (a new `connection_id`) | `INVALID(reconnect)` at the `VenueStatus`; `VALID` at the pair's next matching snapshot | Invalid from the last frame before the reconnect to that snapshot (P02-014 rule c) |
-| P3-06 | A resync snapshot within one connection | The book is replaced at the snapshot; the interval marker follows it | Invalid from the pair's last book frame before the snapshot (P02-014 rule d) |
+| P3-06 | A resync snapshot within one connection | The book is replaced at the snapshot. The interval marker sorts after it and leaves the book `VALID`, because the snapshot verified it | Invalid from the pair's last book frame before the snapshot (P02-014 rule d) |
 | P3-07 | An update making `best_bid ≥ best_ask`, then one that uncrosses it with a matching checksum | `INVALID(crossed)`, then `VALID` (Proposed) | Invalid between the two |
-| P3-08 | `VenueStatus` `maintenance`; separately, an announced `MaintenanceWindow` with data flowing | `INVALID(venue_maintenance)` (Proposed); inside the announced window the state stays `VALID` and `in_maintenance_window` is set | The window is excluded from R-4 (DEC-074), not counted as invalid |
+| P3-08a | `VenueStatus` `maintenance`, then `online`, then a matching update | `INVALID(venue_maintenance)` (Proposed), then `VALID` at the update | Invalid (`venue_maintenance`), **and** excluded from R-4 (RC-11; the capture's `invalid_in_maintenance_ns`) |
+| P3-08b | An announced `MaintenanceWindow` with data flowing | The state stays `VALID`, with `in_maintenance_window` set | Not invalid; excluded from R-4 (DEC-074) |
 | P3-09 | Checkpoint, then resume | Identical to a replay from the start | Identical |
-| P3-10 | The same inputs twice; then two updates' `native_seq` swapped; then two rows swapped in a file with keys unchanged | Identical; then detected (as §6); then unchanged | Same |
+| P3-10 | The same inputs twice; then the `available_at` (`recv_ns`) of two same-pair update frames swapped, choosing ones whose order changes the next top 10; then two rows swapped in a file with keys unchanged | Identical; then `INVALID(checksum)` at the first affected update; then unchanged | Same |
 | P3-11 | As-of replay at a decision time `t` inside a silence (v10 experiment 9) | Only records with `available_at ≤ t` are used. The state is the last emitted one, and `state_at(t)` gives `stale` once 15 s have passed. The later `GapInterval` is not visible at `t` | — |
-| P3-12 | Run 3, replayed from its start, or from a checkpoint taken at the end of the preceding segment; one hour compared | — | CMP-03's invalid time for that hour is at least P02-014's, and each difference is attributed to a named CMP-03 reason (§3.2) |
+| P3-12 | Run 3, replayed from its start or from the latest checkpoint before the chosen hour; one hour compared | — | CMP-03's invalid time for that hour is at least P02-014's, and each difference is attributed to a named CMP-03 reason (§3.2) |
 | P3-13 | Updates that add a level, change it, then remove it (VAL-005) | Levels as expected after each; checksums match | — |
 | P3-14 | An update with a negative quantity | `INVALID(bad_level)`; the update is not applied (Proposed) | Invalid until recovery |
 | P3-15 | A quarantined book record | Not applied; `quarantined_count` + 1 | — |
@@ -198,7 +202,7 @@ No `BookState` field comes from the replay's own clock, so no field is excluded 
 | Item | Status |
 | --- | --- |
 | TASK-P02-014 merged and Verified | Precondition. Until then this contract cites its branch |
-| The live ordering key, and how derived records fill the DEC-054 key (§1) | Proposed; needs a decision (G-4) |
+| The live ordering key, how derived records fill the DEC-054 key, and the added `record_rank` (§1) | Proposed; needs a decision (G-4) |
 | The instrument join: live `BTC/USD` against REST and archive `XBTUSD`. The stored `AssetPairs` gives `wsname` `XBT/USD` for `XXBTZUSD` (snapshot `9b33e378…195f`, 2026-11-14, read for [#41](https://github.com/akibrahimug/gladiators/pull/41)), so an alias table needs all three names | Open; needs a decision before any cross-source join (G-5) |
 | Precision as a record, not a constant (G-9) | Open |
 | `STALE_MS`; the crossed, `bad_level` and `venue_maintenance` rules; recovery from `stale` and `crossed` by update | Proposed; need approval before measurement (G03) |
