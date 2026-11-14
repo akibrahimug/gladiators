@@ -202,7 +202,7 @@ No `BookState` field comes from the replay's own clock, so no field is excluded 
 | Item | Status |
 | --- | --- |
 | TASK-P02-014 merged and Verified | Precondition. Until then this contract cites its branch |
-| The live ordering key, how derived records fill the DEC-054 key, and the added `record_rank` (§1) | Proposed; needs a decision (G-4) |
+| The live ordering key, how derived records fill the DEC-054 key, and the added `record_rank` (§1) | Proposed; needs a decision (G-4). TASK-P02-014's derived records (#44) do not yet carry `source_event_time`, a sequence or `record_rank`; once decided, P02 adds them |
 | The instrument join: live `BTC/USD` against REST and archive `XBTUSD`. The stored `AssetPairs` gives `wsname` `XBT/USD` for `XXBTZUSD` (snapshot `9b33e378…195f`, 2026-11-14, read for [#41](https://github.com/akibrahimug/gladiators/pull/41)), so an alias table needs all three names | Open; needs a decision before any cross-source join (G-5) |
 | Precision as a record, not a constant (G-9) | Open |
 | `STALE_MS`; the crossed, `bad_level` and `venue_maintenance` rules; recovery from `stale` and `crossed` by update | Proposed; need approval before measurement (G03) |
