@@ -139,4 +139,4 @@ Command: `python3.12 -I -B analyse.py live --run ~/gladiator-data/live-7d-run3 -
 ### Still to do
 
 - Run 3: done (above, TASK-P02-012).
-- The 30-day pull after its last day, 2026-11-27 (TASK-P02-012), together with the archive/REST bar comparison over the window (a later slice).
+- The 30-day pull after its last day, 2026-11-27 ([TASK-P02-015](../../tasks/TASK-P02-015.md), moved from TASK-P02-012 after #38 merged), together with the archive/REST bar comparison over the window (a later slice).
