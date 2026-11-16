@@ -34,7 +34,7 @@
 5. `source_event_time`, compared in ns (`event_time_ns()`); live records store µs;
 6. native sequence or row index;
 7. `version`, the record's version (an integer, default 1). It is not Kraken's `version` string in `VenueStatus.fields`;
-8. for a `MaintenanceWindow` only: `source`, then `event_id` as a string (empty if none), then `excluded_start` or, for a withdrawn item, `announced_start`. This matches TASK-P02-014's own sort, and makes the key total.
+8. for a `MaintenanceWindow` only: `source`, then `event_id` as a string (empty if none), then `excluded_start` or, for a withdrawn item, `announced_start`. This makes the key total. It is not TASK-P02-014's list order for `maintenance`, which sorts by start, then `source`, then `event_id`; replay uses this key (`live_validity.replay_key`).
 
 For live records the native sequence is the live key, `recv_ns × 100 + index`. That key, the inserted `record_rank` and the derived-record keys below were recorded as one decision, DEC-083, on 2026-11-16 (G-4, Q17).
 

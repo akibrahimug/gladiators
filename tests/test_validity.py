@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -410,7 +411,7 @@ class TestReplayKey(unittest.TestCase):
         self.assertEqual(kinds(V.replay_order(reversed(recs))), [("K", t), ("G", "kraken:BTC/USD:1", t)])
         self.assertLess(gap[0].available_at // 1000 * 1000, recs[0].event_time_ns())  # field 5 alone would misorder
 
-    def test_status_sorts_after_market_and_before_gap_and_maintenance(self):
+    def test_status_sorts_before_gap_and_maintenance(self):
         seq = healthy() + [(5 * S, status(111, system="maintenance")), (40 * S, status(111))]
         res = derive(seq)
         at = [r for r in V.all_records(res) if r.available_at == T0 + 40 * S]
@@ -462,6 +463,35 @@ class TestReplayKey(unittest.TestCase):
         self.assertEqual(len(set(keys)), len(keys))
         self.assertEqual([V.replay_key(r) for r in V.replay_order(reversed(recs))], sorted(keys))
 
+    def test_all_records_is_in_key_order(self):
+        # Inserted as status, gaps, maintenance; the status-period window (available at 20 s) must
+        # come before the status record at 40 s.
+        res = derive(healthy() + [(10 * S, status(111, system="maintenance")), (20 * S, status(111)), (40 * S, status(111))])
+        out = V.all_records(res)
+        self.assertEqual([V.replay_key(r) for r in out], sorted(V.replay_key(r) for r in out))
+        self.assertLess(out.index(res.maintenance[0]), out.index(res.venue_status[-1]))
+
+    def test_market_key_is_the_full_tuple(self):
+        r = replace(market([(30 * S, upd_at("BTC/USD", T0 + 31 * S))])[0], source_id="SR-99", version=2,
+                    available_at=T0 + 30 * S + 7)
+        self.assertEqual(V.replay_key(r), (T0 + 30 * S + 7, V.RANK_MARKET, "SR-99", "kraken:BTC/USD:1",
+                                           (T0 + 31 * S) // 1000 * 1000, (T0 + 30 * S) * 100, 2, ()))
+
+    def test_status_key_is_the_full_tuple(self):
+        r = replace(derive(healthy()).venue_status[0], source_id="SR-99", version=3, available_at=T0 + 9)
+        self.assertEqual(V.replay_key(r), (T0 + 9, V.RANK_STATUS, "SR-99", "kraken:status", T0 // 1000 * 1000,
+                                           T0 * 100, 3, ()))
+
+    def test_source_id_sorts_before_instrument(self):
+        a = replace(market([(30 * S, upd("ETH/USD"))])[0], source_id="SR-01")
+        b = replace(market([(30 * S, upd("BTC/USD"))])[0], source_id="SR-02")
+        self.assertEqual(V.replay_order([b, a]), [a, b])
+
+    def test_version_breaks_a_tie(self):
+        r = market([(30 * S, upd("BTC/USD"))])[0]
+        r2 = replace(r, version=2)
+        self.assertEqual(V.replay_order([r2, r]), [r, r2])
+
     def test_quarantined_market_records_are_left_out(self):
         recs = market(healthy())
         recs[0].quality_state = "quarantined"
@@ -470,6 +500,13 @@ class TestReplayKey(unittest.TestCase):
     def test_unknown_record_type_is_refused(self):
         with self.assertRaises(TypeError):
             V.replay_key(object())
+
+    def test_archive_records_are_refused(self):
+        g = derive(healthy()).gaps["BTC/USD"][0]
+        for bad in (replace(g, gap_class="no_trade"), replace(g, feed_id="kraken:rest:ohlc"),
+                    replace(market(healthy())[0], available_at_basis="archive_publication")):
+            with self.assertRaises(TypeError):
+                V.replay_key(bad)
 
 
 if __name__ == "__main__":

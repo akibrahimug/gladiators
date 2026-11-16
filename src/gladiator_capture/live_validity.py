@@ -235,21 +235,23 @@ def replay_key(rec) -> tuple:
     (available_at, record_rank, source_id, instrument_id, source_event_time in ns, sequence, version,
     field 8). `record_rank` is 0 for a market record, 1 `VenueStatus`, 2 validity `GapInterval`,
     3 `MaintenanceWindow`, so a frame's market records sort before anything derived at its receive
-    time. Field 8 is empty except for a `MaintenanceWindow`: (`source`, `event_id` as a string, empty
+    time. Only live records are keyed: a `GapInterval` must be a book-validity `data_gap`, and a
+    `Record` must have `available_at_basis` `live_receive`; anything else raises TypeError. Field 8 is empty except for a `MaintenanceWindow`: (`source`, `event_id` as a string, empty
     if none, `excluded_start` or, for a withdrawn item, `announced_start`)."""
     if isinstance(rec, MaintenanceWindow):
         start = rec.excluded_start if rec.excluded_start is not None else rec.announced_start
         return (rec.available_at, RANK_MAINTENANCE, rec.source_id, STATUS_INSTRUMENT, _us_as_ns(rec.available_at),
                 0, 1, (rec.source, "" if rec.event_id is None else str(rec.event_id), -1 if start is None else start))
-    if isinstance(rec, GapInterval):
+    if isinstance(rec, GapInterval) and rec.feed_id == BOOK_FEED and rec.gap_class == "data_gap":
         return (rec.available_at, RANK_GAP, rec.source_id, rec.instrument_id, _us_as_ns(rec.available_at), 0, 1, ())
-    if isinstance(rec, Record):
+    if isinstance(rec, Record) and rec.available_at_basis == "live_receive":
         if rec.record_type == "VenueStatus":
             return (rec.available_at, RANK_STATUS, rec.source_id, STATUS_INSTRUMENT, rec.event_time_ns(),
                     rec.native_seq, rec.version, ())
         return (rec.available_at, RANK_MARKET, rec.source_id, rec.instrument_id, rec.event_time_ns(),
                 rec.native_seq, rec.version, ())
-    raise TypeError(f"no DEC-083 replay key for {type(rec).__name__}")
+    raise TypeError(f"no DEC-083 replay key for {type(rec).__name__}: only live records and their derived "
+                    "validity, status and maintenance records have one (archive records use analysis.replay_order)")
 
 
 def replay_order(records: Iterable) -> list:

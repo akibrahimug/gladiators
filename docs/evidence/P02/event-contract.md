@@ -321,7 +321,7 @@ Live capture is authorised: DEC-057 (W-J), DEC-062 (the capture code) and DEC-06
 ## 6. Replay
 
 - **Inputs:** the `RawObject`s, the era tables, the alias table, the `InstrumentEpoch` records, and this contract's `schema_version`.
-- **Order:** by `available_at`, then `source_id`, `instrument_id`, `source_event_time`, native sequence or row index, and `version` (DEC-054). For live and derived records DEC-083 inserts `record_rank` as the 2nd field and fixes the live sequence as `recv_ns × 100 + index` (see the [market-state contract](../P03/market-state-contract.md) §1); `live_validity.replay_key` computes it, TASK-P02-016). This follows "sorts by *availability* and sequence, not vendor bar close alone" (v4 08:30).
+- **Order:** by `available_at`, then `source_id`, `instrument_id`, `source_event_time`, native sequence or row index, and `version` (DEC-054). For live and derived records DEC-083 inserts `record_rank` as the 2nd field and fixes the live sequence as `recv_ns × 100 + index` (see the [market-state contract](../P03/market-state-contract.md) §1); `live_validity.replay_key` computes it (TASK-P02-016). This follows "sorts by *availability* and sequence, not vendor bar close alone" (v4 08:30).
 - **As-of rule:** a replay at decision time *t* sees only records with `available_at` ≤ *t*. For each `record_key`, it sees only the highest `version` whose `available_at` ≤ *t* ("enforce `available_at <= decision_time`", v10 10:18).
 - **Determinism:** the same raw objects and contract version produce byte-identical normalized output (27:63; VAL-003 at G03).
 - **Checks:**
