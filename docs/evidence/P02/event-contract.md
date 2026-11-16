@@ -145,7 +145,7 @@ A file whose digit count contradicts its era is quarantined as a schema mismatch
 
 *Proposed; it resolves C10 and F-5e.*
 - **`native_symbol`** is the venue's name for the instrument, as used in the request: `LUNAUSDT`, or `XBTUSD` for Kraken.
-- **Kraken REST** returns its own key (`XXBTZUSD` for the `XBTUSD` request). It is kept as `native_response_key`. An alias table built from `AssetPairs` (`altname` ↔ key ↔ `wsname`), retrieved with each REST pull, joins REST and archive records on `native_symbol`.
+- **Kraken REST** returns its own key (`XXBTZUSD` for the `XBTUSD` request). It is kept as `native_response_key`. An alias table built from `AssetPairs` (`altname` ↔ key ↔ `wsname`), retrieved with each REST pull, joins REST and archive records on `native_symbol`. DEC-084 (2026-11-16) confirms this table and extends it to live records, whose `native_symbol` is the WebSocket name (`BTC/USD`); it is applied when a task first joins live with REST or archive data.
 - **`instrument_id`** is `{venue}:{native_symbol}:{epoch}`, with the epoch starting at 1.
 - **New epoch.** A new epoch starts when the series has a gap of more than *G* days and its first price after the gap differs from the last price before it by more than a factor *K*, or when a listing record states an asset change.
 - *G* and *K* are **placeholders**. Example values of 7 days and 10× are for P02 task 5 to set.
