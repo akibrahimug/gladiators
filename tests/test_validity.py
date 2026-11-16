@@ -431,6 +431,9 @@ class TestReplayKey(unittest.TestCase):
         self.assertEqual([V.replay_key(r)[5] for r in V.replay_order(reversed(res.venue_status))],
                          [T0 * 100, T0 * 100 + 1])
 
+    def test_rank_values_are_dec_083s(self):
+        self.assertEqual((V.RANK_MARKET, V.RANK_STATUS, V.RANK_GAP, V.RANK_MAINTENANCE), (0, 1, 2, 3))
+
     def test_gap_key_fields(self):
         res = derive(healthy())
         g = res.gaps["BTC/USD"][0]
@@ -504,7 +507,9 @@ class TestReplayKey(unittest.TestCase):
     def test_archive_records_are_refused(self):
         g = derive(healthy()).gaps["BTC/USD"][0]
         for bad in (replace(g, gap_class="no_trade"), replace(g, feed_id="kraken:rest:ohlc"),
-                    replace(market(healthy())[0], available_at_basis="archive_publication")):
+                    replace(market(healthy())[0], available_at_basis="archive_published"),
+                    # REST bars are live_receive too:
+                    replace(market(healthy())[0], source_id="SR-05", feed_id="kraken:rest:ohlc")):
             with self.assertRaises(TypeError):
                 V.replay_key(bad)
 

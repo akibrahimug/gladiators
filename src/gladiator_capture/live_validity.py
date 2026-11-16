@@ -45,7 +45,8 @@ from .records import Record
 SOURCE_ID = "SR-02"
 RIGHTS_ID = "SA-03"
 VENUE = "kraken"
-STATUS_FEED = "kraken:ws2:status"
+WS2_PREFIX = "kraken:ws2:"
+STATUS_FEED = WS2_PREFIX + "status"
 BOOK_FEED = "kraken:ws2:book"
 RULES = ("start", "silence>15s", "reconnect", "resync", "open_at_end")  # evidence order
 STATUS_INSTRUMENT = "kraken:status"  # DEC-083: the replay instrument of VenueStatus and MaintenanceWindow
@@ -235,16 +236,18 @@ def replay_key(rec) -> tuple:
     (available_at, record_rank, source_id, instrument_id, source_event_time in ns, sequence, version,
     field 8). `record_rank` is 0 for a market record, 1 `VenueStatus`, 2 validity `GapInterval`,
     3 `MaintenanceWindow`, so a frame's market records sort before anything derived at its receive
-    time. Only live records are keyed: a `GapInterval` must be a book-validity `data_gap`, and a
-    `Record` must have `available_at_basis` `live_receive`; anything else raises TypeError. Field 8 is empty except for a `MaintenanceWindow`: (`source`, `event_id` as a string, empty
-    if none, `excluded_start` or, for a withdrawn item, `announced_start`)."""
+    time. Only live WebSocket records are keyed: a `GapInterval` must be a book-validity `data_gap`,
+    and a `Record` must have `available_at_basis` `live_receive` and a `kraken:ws2:` feed (REST bars
+    also use `live_receive`); anything else raises TypeError. Field 8 is empty except for a
+    `MaintenanceWindow`: (`source`, `event_id` as a string, empty if none, `excluded_start` or, for
+    a withdrawn item, `announced_start`)."""
     if isinstance(rec, MaintenanceWindow):
         start = rec.excluded_start if rec.excluded_start is not None else rec.announced_start
         return (rec.available_at, RANK_MAINTENANCE, rec.source_id, STATUS_INSTRUMENT, _us_as_ns(rec.available_at),
                 0, 1, (rec.source, "" if rec.event_id is None else str(rec.event_id), -1 if start is None else start))
     if isinstance(rec, GapInterval) and rec.feed_id == BOOK_FEED and rec.gap_class == "data_gap":
         return (rec.available_at, RANK_GAP, rec.source_id, rec.instrument_id, _us_as_ns(rec.available_at), 0, 1, ())
-    if isinstance(rec, Record) and rec.available_at_basis == "live_receive":
+    if isinstance(rec, Record) and rec.available_at_basis == "live_receive" and rec.feed_id.startswith(WS2_PREFIX):
         if rec.record_type == "VenueStatus":
             return (rec.available_at, RANK_STATUS, rec.source_id, STATUS_INSTRUMENT, rec.event_time_ns(),
                     rec.native_seq, rec.version, ())
