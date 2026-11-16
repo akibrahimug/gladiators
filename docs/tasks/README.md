@@ -84,7 +84,7 @@ G01 passed on 2026-10-27 (DEC-047). Candidates become packets once they are expa
 | [TASK-P02-012](TASK-P02-012.md) | Analyse run 3 and the 30-day pull with the TASK-P02-003 tool; record the report hashes (TASK-P02-003's two moved criteria) and run 3's later checks | Validation; TASK-P02-003; DEC-071, DEC-072 (assignment), DEC-074. **Verified** (run 3: R-4 99.960 %, passes; the 30-day pull moved to TASK-P02-015); Merged [#38](https://github.com/akibrahimug/gladiators/pull/38) |
 | [TASK-P02-013](TASK-P02-013.md) | Correct the stale DEC-067 wording in `live_records.py` (docstring only) | Implementation; DEC-067. **Verified**; Merged [#39](https://github.com/akibrahimug/gladiators/pull/39) |
 | [TASK-P02-014](TASK-P02-014.md) | Book validity, venue status and maintenance as P02 records derived from raw frames (DEC-075) | Implementation/validation; TASK-P02-003; DEC-071, DEC-074, DEC-075. **Verified**; Merged [#44](https://github.com/akibrahimug/gladiators/pull/44) |
-| [TASK-P02-015](TASK-P02-015.md) | Analyse the 30-day pull after its last day and record the report hash (moved from TASK-P02-012); record the merges of #38 and #43 to #45 | Validation; TASK-P02-012; DEC-068, DEC-071, DEC-072 (assignment). **In progress** (the pull ends 2026-11-27); Draft PR |
+| [TASK-P02-015](TASK-P02-015.md) | Analyse the 30-day pull after its last day and record the report hash (moved from TASK-P02-012); record the merges of #38 and #43 to #45 | Validation; TASK-P02-012; DEC-068, DEC-071, DEC-072 (assignment). **In progress** (the pull ends 2026-11-27); Draft [#46](https://github.com/akibrahimug/gladiators/pull/46) |
 
 ## P03
 
