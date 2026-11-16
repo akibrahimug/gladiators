@@ -53,7 +53,8 @@ These were identified by `gladiator-spec-reader` on 2026-10-28.
 | `TradeEvent` | Binance Vision `trades` (SA-01) | In the approved baseline (H-OF3) | [§4.2](#42-tradeevent) |
 | `ObservationEnvelope` | FOMC, CPI, COT, GDELT, FRED/ALFRED and Coin Metrics (SA-04 to SA-09) | In the approved baseline; envelope only (DEC-055) | [§4.3](#43-observationenvelope-context) |
 | `GapInterval`, `InstrumentEpoch` | Derived from all of the above | Proposed | [§4.5](#45-derived-records) |
-| `NativeMarketEvent` (`book`, `trade`), `VenueStatus` | Kraken WebSocket v2 and REST `SystemStatus` (SA-03) | **Conditional**: capture not authorised | [§4.4](#44-live-types-conditional) |
+| `NativeMarketEvent` (`book`, `trade`), `VenueStatus` | Kraken WebSocket v2 and REST `SystemStatus` (SA-03) | Live capture authorised (DEC-057, DEC-062, DEC-064); captured since 2026-10-28 | [§4.4](#44-live-types-conditional) |
+| `MaintenanceWindow`; book-validity `GapInterval` | Derived from live `status` and `book` frames (DEC-075) | Proposed (TASK-P02-014) | [§4.4](#44-live-types-conditional) |
 | `OnChainEvent` | None (F-3; DEC-043) | Out of scope | — |
 
 ## 2. Raw preservation and versioning
@@ -238,16 +239,18 @@ This is the envelope only (DEC-055); the meaning of the values belongs to P04 (C
 
 ### 4.4 Live types (Conditional)
 
-These are specified so the contract is complete. **No capture is authorised.**
+Live capture is authorised: DEC-057 (W-J), DEC-062 (the capture code) and DEC-064 (the 7-day run). Kraken WebSocket v2 has been captured since 2026-10-28. *Updated 2026-11-14 (TASK-P02-014); this section was first written before capture was authorised.*
 - Field names follow 27:50 and the Kraken WebSocket v2 documentation read in P01 (SR-02).
-- The integrity details below come from that documentation, not from file 27. They must be checked again when capture is authorised.
+- The integrity details below come from that documentation, not from file 27. The captured runs confirm the checksum and the snapshot without a timestamp (TASK-P02-005, TASK-P02-006).
 - F-4a (Kraken's §9 and its retention ambiguity) applies, under SA-02 and SA-03.
 
 | Type | Fields (27:50 and the Kraken documentation) | Integrity | Open |
 | --- | --- | --- | --- |
 | `NativeMarketEvent` `book` | `message_type` (snapshot/update). **Snapshots carry no venue timestamp**, so `source_event_time` = the receive time, flagged `source_time_is_receive_time` (an exception to §3; TASK-P02-006); `native_symbol`, price levels (`price`, `qty`), `size_unit` (venue-declared), `quote_currency`, `checksum`, `timestamp` (RFC3339 µs, kept native), `native_sequence` = null, `source_version` = the API version | The documented CRC32 over the top 10 levels. On a mismatch the book is invalidated and rebuilt. "invalidate and rebuild on gaps", 27:60 | There is no documented sequence (observability map), so events are ordered by receive order, with the checksum as the check |
 | `NativeMarketEvent` `trade` | `message_type`, `trade_id` (as `native_sequence`), `price`, `qty`, `size_unit`, `side` (taker), `ord_type`, `timestamp`, `quote_currency`, `source_version` | `trade_id` continuity | F-4a |
-| `VenueStatus` | `system` (`online`, `maintenance`, `cancel_only`, `post_only`, …), `api_version`, `connection_id`, `version`; REST `SystemStatus` `status` and `timestamp` | — | History begins only at capture (SA-03) |
+| `VenueStatus` | `system` (`online`, `maintenance`, `cancel_only`, `post_only`, …), `api_version`, `connection_id`, `version`, and `upcoming_maintenance` as received; REST `SystemStatus` `status` and `timestamp`. One record per `data` item of each `status` frame; Kraken sends one per frame (DEC-075). `native_symbol` is null, and the record carries no clock flags | — | History begins only at capture (SA-03) |
+| `MaintenanceWindow` (derived, DEC-075) | `source` (`status` for a `maintenance` system state; `announced` for an `upcoming_maintenance` item listing `spot_ws` or no services), `event_id`, `title`, announced start and end, `excluded` interval (or none), `first_listed`, `unlisted_at`, `withdrawn`, `open_at_end`, `available_at`. **`available_at`** is the end of a `status` period, or an announced item's `unlisted_at`, when its final times and its withdrawal are known; an item still listed at the run's last frame is available there, flagged `open_at_end`. It has no `raw_id` (its source is a sequence of status frames) | DEC-074: an announced window counts in full unless unlisted before its start. It is an R-4 exclusion, **not** book invalidity: data can be valid inside it | — |
+| Book-validity `GapInterval` (derived, DEC-075) | As §4.5, per pair, `gap_class` `data_gap`, `availability_state` `SOURCE_UNAVAILABLE`, `evidence` naming the rules, `available_at` = receive time of the frame that ends it | Invalid over: (a) the start, until the pair's first snapshot; (b) a silence over 15 s on all channels (DEC-071), last frame to next; (c) a reconnect, marked by a `status` frame with a new `connection_id`, from the last frame before it to the pair's next snapshot; (d) a resync, a snapshot without a new connection, from the pair's last book frame before it to the snapshot. This is a **lower bound**: the capture invalidated the book at the mismatched update, and Kraken may send further updates before it handles the unsubscribe. Only a checksum recompute (CMP-03) finds the true start, and a capped resync, or a snapshot whose own checksum fails, is visible only that way; (e) an interval open at the last frame ends there, flagged `open_at_end`. Overlapping or adjacent intervals merge. Derived from raw frames alone, so replay never needs the capture's operational log | — |
 
 ### 4.5 Derived records
 
@@ -306,7 +309,7 @@ These are specified so the contract is complete. **No capture is authorised.**
 | F-12 | S-12 | `ohlc_XBTUSD_1440.json` (`6144e5f8…`) | None | The last bar (2026-10-27) is dropped; 57 bars kept |
 | F-13 | S-13 | `BTCUSDT-1d-2024-12.csv` | Remove column 12 from every row | The file is quarantined |
 | F-14 | S-14 | A recorded retrieval with `http_status` 403. The BLS header capture `bls_cpi.nr0.htm.hdr` serves as the example | Simulated: the failure is injected at the retrieval layer, not by editing a file | 1 `GapInterval` with `SOURCE_UNAVAILABLE`, and no retry by another route |
-| F-15 | S-15 | Defined when capture is authorised | — | — |
+| F-15 | S-15 | `tests/test_network.py` `test_checksum_failure_resubscribes` (a synthetic Kraken v2 session); the live runs recorded 0 checksum failures | Constructed: a book update whose checksum does not match | The book is invalidated and resubscribed; a fresh snapshot makes it valid again (Q-5). Under DEC-075 the resync also gives a book-validity `GapInterval` (rule d), from the last book frame before the snapshot: a lower bound (§4.4). The test checks `checksum_fail` and `resyncs` and the unsubscribe; it does not check the "valid again" half |
 | F-16 | S-16 | `BTCUSDT-1d-2024-12.zip` (`82ec9021…`); `Last-Modified` 2025-01-08 00:50:27 UTC | None. Replay at the decision time 2025-01-07 00:00 UTC | All 31 rows are invisible, since their `available_at` is after the decision time |
 | F-17 | S-17 | `cftc_deacmesf.htm` (`0078b0e7…`), positions as of 2026-10-20 | Constructed: replay the same report as the latest COT observation at a decision time more than 14 days after its `available_at` (TH-5) | Flagged `stale` |
 
