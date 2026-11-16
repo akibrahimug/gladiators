@@ -2,7 +2,7 @@
 
 [Documentation index](README.md) · [Detailed phases](phases/README.md) · [Gates](milestones.md)
 
-**Status:** proposed work breakdown; reconcile against the original v1.0 architecture at G00. The current task creates documentation only. No development phase has been executed.
+**Status:** proposed work breakdown. It was reconciled against the original v1.0 architecture in P00, and G00 passed on 2026-10-24 ([baseline decision](evidence/P00/baseline-decision.md)). P01 is complete (G01, 2026-10-27), and P02 has been in progress since 2026-10-28; see the [phase index](phases/README.md) for current states. *Updated 2026-11-14 (TASK-P03-009).*
 
 | Phase | Objective | Prerequisite | Exit gate | Main components |
 | --- | --- | --- | --- | --- |

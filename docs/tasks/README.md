@@ -95,6 +95,7 @@ Candidates are Draft pending G02 and accepted [P03 boundaries](../phases/03-mark
 | [TASK-P03-006](TASK-P03-006.md) | Record Kraken's published fee schedule for the P03 ledger fixtures (DEC-082) | Research (published terms); DEC-082. **Verified**; Merged [#41](https://github.com/akibrahimug/gladiators/pull/41) |
 | [TASK-P03-007](TASK-P03-007.md) | Draft the market-state contract (preparation) | Documentation (preparation); TASK-P03-005. **Verified**; Merged [#42](https://github.com/akibrahimug/gladiators/pull/42) |
 | [TASK-P03-008](TASK-P03-008.md) | Draft the own-account ledger contract (preparation) | Documentation (preparation); TASK-P03-005. **Verified**; Draft [#43](https://github.com/akibrahimug/gladiators/pull/43) |
+| [TASK-P03-009](TASK-P03-009.md) | Correct stale phase and architecture status text (source map §6) | Documentation (hygiene); merge after #40. **Verified**; Draft [#45](https://github.com/akibrahimug/gladiators/pull/45) |
 | TASK-P03-001 | Book-state/replay contract, fixtures and invariants for selected feed semantics | Documentation; G02 |
 | TASK-P03-002 | Separate simulated-account ledger contract, accounting convention and fixtures | Documentation; G02; independent of book editing after shared event IDs settle |
 | TASK-P03-003 | One book/replay implementation slice with deterministic fixture results | Implementation/validation; accepted TASK-P03-001 contract; VAL-003/005 |
