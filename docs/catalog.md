@@ -528,6 +528,7 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P02-009.md](<tasks/TASK-P02-009.md>) |
 | [docs/tasks/TASK-P02-010.md](<tasks/TASK-P02-010.md>) |
 | [docs/tasks/TASK-P02-011.md](<tasks/TASK-P02-011.md>) |
+| [docs/tasks/TASK-P02-012.md](<tasks/TASK-P02-012.md>) |
 | [docs/tasks/TASK-P03-005.md](<tasks/TASK-P03-005.md>) |
 | [docs/tasks/TASK-P03-007.md](<tasks/TASK-P03-007.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
