@@ -13,8 +13,8 @@ Thresholds in this file are of two kinds:
 | Mode | Sources | Authorised? | Trigger |
 | --- | --- | --- | --- |
 | **A. Archive pull** | Binance Vision files; Kraken OHLCVT ZIPs | Only the P01 sample plan's files (DEC-035). Further pulls need a task that names them and their authorisation, and run under DEC-044 | Explicit invocation only |
-| **B. REST pull** | Kraken `OHLC`, `AssetPairs`, `SystemStatus` | Only the sample plan's three calls (DEC-035). Further REST calls need a task that names them, and run under DEC-044. A **scheduled** pull is not authorised; see the [validation plan](capture-validation-plan.md#4-f-4h-closure-route) | Explicit invocation |
-| **C. Live stream** | Kraken WebSocket v2 `book`, `trade` and `status` (W-4) | **No.** Sample step 2 needs its own authorisation | — |
+| **B. REST pull** | Kraken `OHLC`, `AssetPairs`, `SystemStatus` | Only the sample plan's three calls (DEC-035). Further REST calls need a task that names them, and run under DEC-044. The **scheduled** 30-day pull is authorised (DEC-057) and runs from a launchd job (DEC-061, DEC-068) since 2026-10-29; see the [validation plan](capture-validation-plan.md#4-f-4h-closure-route). *Updated 2026-11-14 (TASK-P02-014)* | Explicit invocation; the scheduled pull is triggered by launchd daily at 00:15 UTC (DEC-061) |
+| **C. Live stream** | Kraken WebSocket v2 `book`, `trade` and `status` (W-4) | **Yes**, within W-J's scope (`book` depth 10 plus `trade` and `status`, BTC/USD and ETH/USD), since 2026-10-28: DEC-057, DEC-062, DEC-064; reruns DEC-070, DEC-073. *Updated 2026-11-14 (TASK-P02-014)* | Explicit invocation; each run is a recorded decision |
 | **D. Context pull** | FOMC, COT, GDELT, FRED/ALFRED, Coin Metrics | As mode A or B. A source that returns HTTP 403 is not read (DEC-050, DEC-051) | Explicit invocation |
 
 **All modes:** DEC-044's conditions apply: reasonable load, respect for robot-exclusion headers (`robots.txt` is checked before the first pull from a host and recorded), and verification of every published checksum.
