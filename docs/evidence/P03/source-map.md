@@ -121,7 +121,7 @@
 | G-2 | Book validity is not a contract record. `book_invalid` and `book_valid` exist only in the capture's operational `events.jsonl`, stamped at write time (`at_ns`), not with the triggering frame's `recv_ns`. Only frame segments are stored in the raw store. `normalize()` emits book and trade records only: no `VenueStatus`, no live `GapInterval`, no validity record. DEC-071's invalid intervals exist only in analysis reports | `src/gladiator_capture/live.py`; `src/gladiator_capture/live_records.py`; [live analysis](../P02/live-analysis.md) |
 | G-3 | The live sections of the event contract (§4.4, F-15) and capture mode C still read as "not authorised", although DEC-057, DEC-062 and DEC-064 authorised capture | [event contract](../P02/event-contract.md); [capture and recovery](../P02/capture-and-recovery.md) |
 | G-4 | The live ordering key is undecided: DEC-054 says live book ordering "is set when capture is authorised", and no decision records the implemented `recv_ns * 100 + index` key. Decided by DEC-083 (2026-11-16) | DEC-054; DEC-083 |
-| G-5 | Live and archive instrument identity differ: live records use the WebSocket name `BTC/USD` (`instrument_id` `kraken:BTC/USD:1`), while archive and REST records use `XBTUSD`. The proposed `AssetPairs` alias table is not applied to live records. Decided by DEC-084 (2026-11-16): the table covers live names too | DEC-084; [event contract](../P02/event-contract.md) §3.2; `src/gladiator_capture/records.py` |
+| G-5 | Live and archive instrument identity differ: live records use the WebSocket name `BTC/USD` (`instrument_id` `kraken:BTC/USD:1`), while archive and REST records use `XBTUSD`. The proposed `AssetPairs` alias table is not applied to live records. Decided by DEC-084 (2026-11-16): the table is the join for live records too; matching the v2 name `BTC/USD` to `wsname` `XBT/USD` is set when the join is first applied | DEC-084; [event contract](../P02/event-contract.md) §3.2; `src/gladiator_capture/records.py` |
 | G-6 | Kraken books have no snapshot or update IDs, so `snapshot_update_id`, `latest_applied_update_id` and `sequence_integrity` (B1) have no source | [observability map](../P01/observability-map.md) |
 | G-7 | No book-scale staleness limit exists for `observed_age_ms`. S-17 covers context sources (TH-5) and, for live records, completeness 48 h after the covered period (TH-6); neither is a book-age threshold | [capture validation plan](../P02/capture-validation-plan.md); [event contract](../P02/event-contract.md) |
 | G-8 | No crossed-book check (B4) and no trade-correction semantics (B19). Whether Kraken v2 issues trade corrections is unverified | — |
@@ -184,7 +184,7 @@ The coordinator owns the cards; none of them passes a gate.
 
 1. **Decision requests before the ledger contract:** convention (Q8), order state machine (Q7), marking price (Q9), account currency and FX (Q10), cardinality (Q13).
 2. **Decision request on where validity comes from (Q3),** before the market-state contract.
-3. **P02 documentation fix:** mark §4.4, F-15 and mode C as authorised; record the live ordering key and the WebSocket-name alias (G-3 to G-5), each after a decision.
+3. **P02 documentation fix:** mark §4.4, F-15 and mode C as authorised; record the live ordering key and the WebSocket-name alias (G-3 to G-5), each after a decision (G-4 and G-5 decided 2026-11-16: DEC-083, DEC-084).
 4. **Documentation hygiene:** the stale lines in section 6.
 5. **Source research** for a Kraken fee schedule and an FX source under published terms (Q10, Q11), without waiting on vendors.
 
