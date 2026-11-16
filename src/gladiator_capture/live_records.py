@@ -12,7 +12,7 @@
   A latest sample older than 1 min also marks `clock_abstain_intraday`, because T-6 requires
   logging at least every minute for intraday-dependent decisions.
 - A record before the first sample is `clock_offset_unknown` and `clock_abstain_intraday`.
-  This is Proposed: conservative, but not yet confirmed by the user.
+  Confirmed by the user on 2026-10-29 (DEC-067).
 - `available_at` = `received_at` (`live_receive`).
 """
 
