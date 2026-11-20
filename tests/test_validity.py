@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -370,6 +371,147 @@ class TestDeterminism(unittest.TestCase):
                                   (6 * S, 160 * S, "silence>15s+reconnect+resync+open_at_end", 160 * S)])
         self.assertEqual(ivs(a, "ETH/USD"), [(0, 2, "start", 2), (8 * S, 150 * S, "silence>15s+reconnect", 150 * S)])
         self.assertEqual(len({r.native_seq for r in a.venue_status}), len(a.venue_status))
+
+
+def market(seq):
+    """live_records' market records for the same frames (book and trade updates)."""
+    from gladiator_capture.live_records import normalize
+    return normalize([(i, T0 + t, text) for i, (t, text) in enumerate(seq)], [], raw_id="raw-a", ingested_at=0)
+
+
+def upd_at(sym, venue_ns):
+    return json.dumps({"channel": "book", "type": "update",
+                       "data": [{"symbol": sym, "bids": [], "asks": [], "checksum": 1, "timestamp": ts(venue_ns)}]})
+
+
+def kinds(recs):
+    out = []
+    for r in recs:
+        if isinstance(r, V.MaintenanceWindow):
+            out.append(("M", r.available_at - T0))
+        elif isinstance(r, V.GapInterval):
+            out.append(("G", r.instrument_id, r.available_at - T0))
+        else:
+            out.append(("S" if r.record_type == "VenueStatus" else "K", r.available_at - T0))
+    return out
+
+
+class TestReplayKey(unittest.TestCase):
+    """DEC-083: record_rank as field 2, the live sequence, and how derived records fill the key."""
+
+    def test_market_record_of_a_frame_sorts_before_the_gap_it_ends(self):
+        # The update's venue time is 58 ms after its receive time (local clock behind). Without
+        # record_rank as field 2, field 5 would put the gap (event time = receive time) first.
+        t = 40 * S
+        seq = healthy() + [(t, upd_at("BTC/USD", T0 + t + 58_000_000))]
+        res = derive(seq)
+        gap = [g for g in res.gaps["BTC/USD"] if g.available_at == T0 + t]
+        self.assertEqual(len(gap), 1)
+        recs = [r for r in market(seq) if r.available_at == T0 + t] + gap
+        self.assertEqual(kinds(V.replay_order(reversed(recs))), [("K", t), ("G", "kraken:BTC/USD:1", t)])
+        self.assertLess(gap[0].available_at // 1000 * 1000, recs[0].event_time_ns())  # field 5 alone would misorder
+
+    def test_status_sorts_before_gap_and_maintenance(self):
+        seq = healthy() + [(5 * S, status(111, system="maintenance")), (40 * S, status(111))]
+        res = derive(seq)
+        at = [r for r in V.all_records(res) if r.available_at == T0 + 40 * S]
+        self.assertEqual(kinds(at), [("S", 40 * S), ("G", "kraken:BTC/USD:1", 40 * S),
+                                     ("G", "kraken:ETH/USD:1", 40 * S), ("M", 40 * S)])
+
+    def test_status_records_use_the_status_instrument_and_live_sequence(self):
+        res = derive(healthy())
+        k = V.replay_key(res.venue_status[0])
+        self.assertEqual(k[:4], (T0, V.RANK_STATUS, "SR-02", "kraken:status"))
+        self.assertEqual((k[4], k[5]), (T0 // 1000 * 1000, T0 * 100))
+
+    def test_two_items_of_one_status_frame_keep_frame_order(self):
+        two = json.dumps({"channel": "status", "type": "update", "data": [
+            {"system": "online", "connection_id": 111}, {"system": "online", "connection_id": 111}]})
+        res = derive([(0, two)])
+        self.assertEqual([V.replay_key(r)[5] for r in V.replay_order(reversed(res.venue_status))],
+                         [T0 * 100, T0 * 100 + 1])
+
+    def test_rank_values_are_dec_083s(self):
+        self.assertEqual((V.RANK_MARKET, V.RANK_STATUS, V.RANK_GAP, V.RANK_MAINTENANCE), (0, 1, 2, 3))
+
+    def test_gap_key_fields(self):
+        res = derive(healthy())
+        g = res.gaps["BTC/USD"][0]
+        self.assertEqual(V.replay_key(g), (g.available_at, V.RANK_GAP, "SR-02", "kraken:BTC/USD:1",
+                                           g.available_at // 1000 * 1000, 0, 1, ()))
+
+    def test_maintenance_windows_with_one_available_at_are_ordered_by_field_8(self):
+        a, b = T0 + 100 * S, T0 + 200 * S
+        m = [item(61, a, b), item(55, a + S, b), item(7, T0 + 500 * S, T0 + 600 * S)]
+        res = derive([(0, status(maint=m)), (150 * S, status(maint=[]))])  # all three unlisted at once
+        w = V.replay_order(reversed(res.maintenance))
+        self.assertEqual({x.available_at for x in w}, {T0 + 150 * S})
+        self.assertEqual([V.replay_key(x)[7] for x in w],
+                         [("announced", "55", a + S), ("announced", "61", a), ("announced", "7", T0 + 500 * S)])
+        self.assertTrue(w[2].withdrawn)  # unlisted before its start: field 8 uses announced_start
+
+    def test_status_window_field_8(self):
+        res = derive(healthy() + [(10 * S, status(111, system="maintenance")), (20 * S, status(111))])
+        w = [x for x in res.maintenance if x.source == "status"][0]
+        self.assertEqual(V.replay_key(w)[3:], ("kraken:status", (T0 + 20 * S) // 1000 * 1000, 0, 1,
+                                               ("status", "", T0 + 10 * S)))
+
+    def test_order_is_total_and_input_order_free(self):
+        m = [item(55, T0 + 100 * S, T0 + 200 * S)]
+        seq = healthy() + [(5 * S, status(111, maint=m)), (30 * S, upd("BTC/USD")), (31 * S, status(222, maint=[])),
+                           (32 * S, snap("BTC/USD", "ETH/USD")), (150 * S, status(222, system="maintenance")),
+                           (160 * S, status(222))]
+        recs = market(seq) + V.all_records(derive(seq))
+        keys = [V.replay_key(r) for r in recs]
+        self.assertEqual(len(set(keys)), len(keys))
+        self.assertEqual([V.replay_key(r) for r in V.replay_order(reversed(recs))], sorted(keys))
+
+    def test_all_records_is_in_key_order(self):
+        # Inserted as status, gaps, maintenance; the status-period window (available at 20 s) must
+        # come before the status record at 40 s.
+        res = derive(healthy() + [(10 * S, status(111, system="maintenance")), (20 * S, status(111)), (40 * S, status(111))])
+        out = V.all_records(res)
+        self.assertEqual([V.replay_key(r) for r in out], sorted(V.replay_key(r) for r in out))
+        self.assertLess(out.index(res.maintenance[0]), out.index(res.venue_status[-1]))
+
+    def test_market_key_is_the_full_tuple(self):
+        r = replace(market([(30 * S, upd_at("BTC/USD", T0 + 31 * S))])[0], source_id="SR-99", version=2,
+                    available_at=T0 + 30 * S + 7)
+        self.assertEqual(V.replay_key(r), (T0 + 30 * S + 7, V.RANK_MARKET, "SR-99", "kraken:BTC/USD:1",
+                                           (T0 + 31 * S) // 1000 * 1000, (T0 + 30 * S) * 100, 2, ()))
+
+    def test_status_key_is_the_full_tuple(self):
+        r = replace(derive(healthy()).venue_status[0], source_id="SR-99", version=3, available_at=T0 + 9)
+        self.assertEqual(V.replay_key(r), (T0 + 9, V.RANK_STATUS, "SR-99", "kraken:status", T0 // 1000 * 1000,
+                                           T0 * 100, 3, ()))
+
+    def test_source_id_sorts_before_instrument(self):
+        a = replace(market([(30 * S, upd("ETH/USD"))])[0], source_id="SR-01")
+        b = replace(market([(30 * S, upd("BTC/USD"))])[0], source_id="SR-02")
+        self.assertEqual(V.replay_order([b, a]), [a, b])
+
+    def test_version_breaks_a_tie(self):
+        r = market([(30 * S, upd("BTC/USD"))])[0]
+        r2 = replace(r, version=2)
+        self.assertEqual(V.replay_order([r2, r]), [r, r2])
+
+    def test_quarantined_market_records_are_left_out(self):
+        recs = market(healthy())
+        recs[0].quality_state = "quarantined"
+        self.assertEqual(len(V.replay_order(recs)), len(recs) - 1)
+
+    def test_unknown_record_type_is_refused(self):
+        with self.assertRaises(TypeError):
+            V.replay_key(object())
+
+    def test_archive_records_are_refused(self):
+        g = derive(healthy()).gaps["BTC/USD"][0]
+        for bad in (replace(g, gap_class="no_trade"), replace(g, feed_id="kraken:rest:ohlc"),
+                    replace(market(healthy())[0], available_at_basis="archive_published"),
+                    # REST bars are live_receive too:
+                    replace(market(healthy())[0], source_id="SR-05", feed_id="kraken:rest:ohlc")):
+            with self.assertRaises(TypeError):
+                V.replay_key(bad)
 
 
 if __name__ == "__main__":

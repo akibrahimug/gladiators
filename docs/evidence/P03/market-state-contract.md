@@ -26,24 +26,24 @@
 | Precision | Price and quantity decimals per pair (BTC/USD 1 and 8; ETH/USD 2 and 8) | The checksum. Today these are constants in `cli.py`, set from the `AssetPairs` snapshot of 2026-10-27, not records (source map G-9) |
 | Quarantined records | `quality_state = quarantined`, or an unknown schema | Never applied. They are counted on the state (`quarantined_count`) and kept for audit (B10, L-008) |
 
-**Order (DEC-054, Proposed extension).** Records are replayed by DEC-054's key, with `record_rank` inserted after `available_at`:
+**Order (DEC-054, extended by DEC-083).** Records are replayed by DEC-054's key, with `record_rank` inserted after `available_at`:
 1. `available_at`;
-2. `record_rank` (**Proposed**): 0 for a market record, 1 for `VenueStatus`, 2 for a validity `GapInterval`, 3 for a `MaintenanceWindow`. A frame is the only source of records at its `available_at`, so every market record of a frame sorts before any record derived at that time, whatever its other fields say. Putting the rank last would not be enough: a venue timestamp can be later than the receive time, since the local clock runs about 58 ms behind (run 3 raw p50), so field 5 could otherwise put a derived record before its frame;
+2. `record_rank` (DEC-083): 0 for a market record, 1 for `VenueStatus`, 2 for a validity `GapInterval`, 3 for a `MaintenanceWindow`. A frame is the only source of records at its `available_at`, so every market record of a frame sorts before any record derived at that time, whatever its other fields say. Putting the rank last would not be enough: a venue timestamp can be later than the receive time, since the local clock runs about 58 ms behind (run 3 raw p50), so field 5 could otherwise put a derived record before its frame;
 3. `source_id`;
 4. `instrument_id`;
 5. `source_event_time`, compared in ns (`event_time_ns()`); live records store µs;
 6. native sequence or row index;
 7. `version`, the record's version (an integer, default 1). It is not Kraken's `version` string in `VenueStatus.fields`;
-8. for a `MaintenanceWindow` only: `source`, then `event_id` as a string (empty if none), then `excluded_start` or, for a withdrawn item, `announced_start`. This matches TASK-P02-014's own sort, and makes the key total.
+8. for a `MaintenanceWindow` only: `source`, then `event_id` as a string (empty if none), then `excluded_start` or, for a withdrawn item, `announced_start`. This makes the key total. It is not TASK-P02-014's list order for `maintenance`, which sorts by start, then `source`, then `event_id`; replay uses this key (`live_validity.replay_key`).
 
-For live records the native sequence is the live key, `recv_ns × 100 + index`. That key, the inserted `record_rank` and the derived-record keys below are **Proposed** for recording as one decision (G-4, Q17), since they extend DEC-054.
+For live records the native sequence is the live key, `recv_ns × 100 + index`. That key, the inserted `record_rank` and the derived-record keys below were recorded as one decision, DEC-083, on 2026-11-16 (G-4, Q17).
 
-**Derived records** fill the key as follows (**Proposed**):
+**Derived records** fill the key as follows (DEC-083):
 
 | Record | `available_at` | `source_id` | `instrument_id` | `source_event_time` (µs) | Sequence |
 | --- | --- | --- | --- | --- | --- |
 | Validity `GapInterval` | the receive time of the frame that ends it, of any kind (a book, trade, status or heartbeat frame, or the run's last frame) | `SR-02` | the pair | `available_at` in µs | 0 |
-| `VenueStatus` | receive time | `SR-02` | `kraken:status`. TASK-P02-014's records give `kraken:None:1` today (`native_symbol` null), which sorts the same | receive time | `recv_ns × 100 + index` |
+| `VenueStatus` | receive time | `SR-02` | `kraken:status`. The records keep `native_symbol` null (`instrument_id` `kraken:None:1`); `live_validity.replay_key` (TASK-P02-016) uses `kraken:status` | receive time | `recv_ns × 100 + index` |
 | `MaintenanceWindow` | as TASK-P02-014 (#44) defines it: the end of a `status` period, or an announced item's `unlisted_at`, or the last frame (`open_at_end`). It is one record per window, available once its final state is known | `SR-02` | `kraken:status` | `available_at` in µs | 0, then `event_id` (field 8) |
 
 **Intervals are half-open, `[start, end)`.** The frame that ends an interval lies at `end`, outside the interval. With `record_rank` it is applied before the interval record.
@@ -209,9 +209,9 @@ No `BookState` field comes from the replay's own clock, so no field is excluded 
 
 | Item | Status |
 | --- | --- |
-| TASK-P02-014 merged and Verified | Precondition. Until then this contract cites its branch |
-| The live ordering key, how derived records fill the DEC-054 key, and the added `record_rank` (§1) | Proposed; needs a decision (G-4). TASK-P02-014's derived records (#44) do not yet carry `source_event_time`, a sequence or `record_rank`, and its `VenueStatus` `instrument_id` reads `kraken:None:1`; once decided, P02 adds the fields |
-| The instrument join: live `BTC/USD` against REST and archive `XBTUSD`. The stored `AssetPairs` gives `wsname` `XBT/USD` for `XXBTZUSD` (snapshot `9b33e378…195f`, 2026-11-14, read for [#41](https://github.com/akibrahimug/gladiators/pull/41)), so an alias table needs all three names | Open; needs a decision before any cross-source join (G-5) |
+| TASK-P02-014 merged and Verified | Done: merged 2026-11-16 as `ced2b85` ([#44](https://github.com/akibrahimug/gladiators/pull/44)). Citations of its branch still name the reviewed revision |
+| The live ordering key, how derived records fill the DEC-054 key, and the added `record_rank` (§1) | Decided: DEC-083, 2026-11-16 (G-4). Implemented for TASK-P02-014's derived records and `live_records`' market records by `live_validity.replay_key` and `replay_order` ([TASK-P02-016](../../tasks/TASK-P02-016.md)); the records themselves are unchanged |
+| The instrument join: live `BTC/USD` against REST and archive `XBTUSD`. The stored `AssetPairs` gives `wsname` `XBT/USD` for `XXBTZUSD` (snapshot `9b33e378…195f`, 2026-11-14, read for [#41](https://github.com/akibrahimug/gladiators/pull/41)), so an alias table needs all three names | Decided: DEC-084, 2026-11-16 (G-5). Applied when a task first joins live with REST or archive data. Open detail: the v2 name `BTC/USD` is not the `wsname` `XBT/USD`, so how it is matched is set then |
 | Precision as a record, not a constant (G-9) | Open |
 | `STALE_MS`; the crossed, `bad_level` and `venue_maintenance` rules; recovery from `stale` and `crossed` by update | Proposed; need approval before measurement (G03) |
 | Decimal precision and rounding for the primitives | Proposed |

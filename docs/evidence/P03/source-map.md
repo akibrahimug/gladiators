@@ -120,8 +120,8 @@
 | G-1 | G02 has not passed, and the event contract is still a proposed contract. P03 needs an accepted one | [milestones](../../milestones.md); [event contract](../P02/event-contract.md) |
 | G-2 | Book validity is not a contract record. `book_invalid` and `book_valid` exist only in the capture's operational `events.jsonl`, stamped at write time (`at_ns`), not with the triggering frame's `recv_ns`. Only frame segments are stored in the raw store. `normalize()` emits book and trade records only: no `VenueStatus`, no live `GapInterval`, no validity record. DEC-071's invalid intervals exist only in analysis reports | `src/gladiator_capture/live.py`; `src/gladiator_capture/live_records.py`; [live analysis](../P02/live-analysis.md) |
 | G-3 | The live sections of the event contract (§4.4, F-15) and capture mode C still read as "not authorised", although DEC-057, DEC-062 and DEC-064 authorised capture | [event contract](../P02/event-contract.md); [capture and recovery](../P02/capture-and-recovery.md) |
-| G-4 | The live ordering key is undecided: DEC-054 says live book ordering "is set when capture is authorised", and no decision records the implemented `recv_ns * 100 + index` key | DEC-054 |
-| G-5 | Live and archive instrument identity differ: live records use the WebSocket name `BTC/USD` (`instrument_id` `kraken:BTC/USD:1`), while archive and REST records use `XBTUSD`. The proposed `AssetPairs` alias table is not applied to live records | [event contract](../P02/event-contract.md) §3.2; `src/gladiator_capture/records.py` |
+| G-4 | The live ordering key is undecided: DEC-054 says live book ordering "is set when capture is authorised", and no decision records the implemented `recv_ns * 100 + index` key. Decided by DEC-083 (2026-11-16) | DEC-054; DEC-083 |
+| G-5 | Live and archive instrument identity differ: live records use the WebSocket name `BTC/USD` (`instrument_id` `kraken:BTC/USD:1`), while archive and REST records use `XBTUSD`. The proposed `AssetPairs` alias table is not applied to live records. Decided by DEC-084 (2026-11-16): the table is the join for live records too; matching the v2 name `BTC/USD` to `wsname` `XBT/USD` is set when the join is first applied | DEC-084; [event contract](../P02/event-contract.md) §3.2; `src/gladiator_capture/records.py` |
 | G-6 | Kraken books have no snapshot or update IDs, so `snapshot_update_id`, `latest_applied_update_id` and `sequence_integrity` (B1) have no source | [observability map](../P01/observability-map.md) |
 | G-7 | No book-scale staleness limit exists for `observed_age_ms`. S-17 covers context sources (TH-5) and, for live records, completeness 48 h after the covered period (TH-6); neither is a book-age threshold | [capture validation plan](../P02/capture-validation-plan.md); [event contract](../P02/event-contract.md) |
 | G-8 | No crossed-book check (B4) and no trade-correction semantics (B19). Whether Kraken v2 issues trade corrections is unverified | — |
@@ -148,7 +148,7 @@
 | Q14 | **What reconciliation means.** A broker as the source of truth (`d/02:42`) is out of scope (DEC-021; DEC-028 excludes paper broker keys). P03 reconciliation can only compare the internal journal, replayed state and simulator fills | REQ-006, REQ-012; CMP-04; DEC-021, DEC-028 |
 | Q15 | **Form of the independent accounting check.** v10 requires an independent check (L26). What is open is its form: a second, full accounting implementation (L-019, proposed in [reconciliation packet c](../P00/v1.0-reconciliation-c.md) and not reinstated), or reference fixtures with independently computed results (v10). L-013's fee reference cases were not reinstated either | CMP-04; DEC-020 |
 | Q16 | **Traceability mismatch.** The P03 page lists REQ-002 and REQ-009, but the CMP-03 and CMP-04 rows do not. REQ-003 (provenance) is not listed for P03, although both contracts need raw lineage | REQ-002, REQ-003, REQ-009; CMP-03, CMP-04 |
-| Q17 | **Live ordering key and instrument join** (G-4, G-5) need decisions | DEC-054; event contract §3.2; CMP-02, CMP-03, CMP-04 |
+| Q17 | **Live ordering key and instrument join** (G-4, G-5): decided 2026-11-16 as DEC-083 and DEC-084 (§9) | DEC-054; event contract §3.2; CMP-02, CMP-03, CMP-04 |
 
 ## 5. Scope boundaries
 
@@ -184,7 +184,7 @@ The coordinator owns the cards; none of them passes a gate.
 
 1. **Decision requests before the ledger contract:** convention (Q8), order state machine (Q7), marking price (Q9), account currency and FX (Q10), cardinality (Q13).
 2. **Decision request on where validity comes from (Q3),** before the market-state contract.
-3. **P02 documentation fix:** mark §4.4, F-15 and mode C as authorised; record the live ordering key and the WebSocket-name alias (G-3 to G-5), each after a decision.
+3. **P02 documentation fix:** mark §4.4, F-15 and mode C as authorised; record the live ordering key and the WebSocket-name alias (G-3 to G-5), each after a decision (G-4 and G-5 decided 2026-11-16: DEC-083, DEC-084).
 4. **Documentation hygiene:** the stale lines in section 6.
 5. **Source research** for a Kraken fee schedule and an FX source under published terms (Q10, Q11), without waiting on vendors.
 
@@ -233,3 +233,19 @@ The user answered two rounds of questions after the review: DEC-075 to DEC-078 o
 
 - Chosen: **"Kraken's published fees (Recommended)"** — "A small research card reads Kraken's public fee schedule (published terms only, no vendor contact), records it dated, and the fixtures use its base maker/taker tier."
 - Not chosen: "Declared assumptions" — "Fixtures use stated round-number fee rates, marked as assumptions; the real schedule is recorded later."
+
+## 9. Decisions asked 2026-11-16
+
+The user answered two questions on 2026-11-16 (UTC), after #40 to #45 merged. Each question, its options and the choice are quoted verbatim.
+
+**DEC-083 (G-4, Q17).** "Replay order for live data (G-4): DEC-054 fixes the order archived records are replayed in, and P03's market-state contract proposes three additions for live data. (1) For live records, the 'native sequence' field becomes the capture's own key, receive time × 100 + position in the frame. (2) A new 2nd field, record_rank, sorts a frame's market records before anything derived from that frame (status, validity gaps, maintenance windows). Without it, the ~58 ms local clock lag can put a derived record ahead of the frame that caused it. (3) Fixed rules for how derived records fill each key field. Record these as a new decision?"
+
+- Chosen: **"Record as proposed (Recommended)"** — "New DEC that extends DEC-054 with all three parts. It matches what the capture and #44's code already do, and P02 records then get the key fields on a later card."
+- Not chosen: "Rank last, not 2nd" — "Put record_rank as the final tie-break, closer to DEC-054's original order. The contract shows this can misorder records when the venue's timestamp is ahead of the local clock, so fixtures would need a guard."
+- Not chosen: "Wait until G02" — "Leave it Proposed. P03 contract work that depends on the order stays blocked until G02 is reviewed."
+
+**DEC-084 (G-5, Q17).** "Pair names (G-5): live data says BTC/USD, while Kraken's REST and archive data say XBTUSD (XBT/USD in AssetPairs). How should records from different sources be joined?"
+
+- Chosen: **"Alias table from AssetPairs (Recommended)"** — "Map each source's pair name to one instrument ID via the stored AssetPairs snapshot (wsname ↔ altname). The table is data, with a hash, and it's updated when Kraken renames a pair."
+- Not chosen: "Hand-written mapping" — "A fixed two-row mapping for BTC and ETH in the contract. Simpler, but it doesn't scale to more pairs."
+- Not chosen: "Decide later" — "Not needed until a task joins live and REST/archive data, such as the bar comparison after the quarterly archive in about January."

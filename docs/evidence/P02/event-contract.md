@@ -145,7 +145,7 @@ A file whose digit count contradicts its era is quarantined as a schema mismatch
 
 *Proposed; it resolves C10 and F-5e.*
 - **`native_symbol`** is the venue's name for the instrument, as used in the request: `LUNAUSDT`, or `XBTUSD` for Kraken.
-- **Kraken REST** returns its own key (`XXBTZUSD` for the `XBTUSD` request). It is kept as `native_response_key`. An alias table built from `AssetPairs` (`altname` ↔ key ↔ `wsname`), retrieved with each REST pull, joins REST and archive records on `native_symbol`.
+- **Kraken REST** returns its own key (`XXBTZUSD` for the `XBTUSD` request). It is kept as `native_response_key`. An alias table built from `AssetPairs` (`altname` ↔ key ↔ `wsname`), retrieved with each REST pull, joins REST and archive records on `native_symbol`. DEC-084 (2026-11-16) confirms this table and makes it the join for live records too. Their `native_symbol` is the WebSocket v2 name (`BTC/USD`), which is not an `AssetPairs` `wsname` (`XBT/USD`); how that name is matched to the table is set when a task first joins live with REST or archive data.
 - **`instrument_id`** is `{venue}:{native_symbol}:{epoch}`, with the epoch starting at 1.
 - **New epoch.** A new epoch starts when the series has a gap of more than *G* days and its first price after the gap differs from the last price before it by more than a factor *K*, or when a listing record states an asset change.
 - *G* and *K* are **placeholders**. Example values of 7 days and 10× are for P02 task 5 to set.
@@ -321,7 +321,7 @@ Live capture is authorised: DEC-057 (W-J), DEC-062 (the capture code) and DEC-06
 ## 6. Replay
 
 - **Inputs:** the `RawObject`s, the era tables, the alias table, the `InstrumentEpoch` records, and this contract's `schema_version`.
-- **Order:** by `available_at`, then `source_id`, `instrument_id`, `source_event_time`, native sequence or row index, and `version` (DEC-054). This follows "sorts by *availability* and sequence, not vendor bar close alone" (v4 08:30).
+- **Order:** by `available_at`, then `source_id`, `instrument_id`, `source_event_time`, native sequence or row index, and `version` (DEC-054). For live and derived records DEC-083 inserts `record_rank` as the 2nd field and fixes the live sequence as `recv_ns × 100 + index` (see the [market-state contract](../P03/market-state-contract.md) §1); `live_validity.replay_key` computes it (TASK-P02-016). This follows "sorts by *availability* and sequence, not vendor bar close alone" (v4 08:30).
 - **As-of rule:** a replay at decision time *t* sees only records with `available_at` ≤ *t*. For each `record_key`, it sees only the highest `version` whose `available_at` ≤ *t* ("enforce `available_at <= decision_time`", v10 10:18).
 - **Determinism:** the same raw objects and contract version produce byte-identical normalized output (27:63; VAL-003 at G03).
 - **Checks:**

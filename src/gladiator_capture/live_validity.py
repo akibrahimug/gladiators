@@ -26,6 +26,9 @@ across all of its segments and returns three kinds of record (event contract §4
 
 The derivation is pure: it reads nothing but the frames given, so the same frames give the same
 output. `run_frames(run)` builds the frame sequence from a run directory, reading only.
+
+`replay_key(record)` gives the DEC-083 replay key for these records and for `live_records`' market
+records; `replay_order(records)` sorts a mixed list by it (market-state contract §1).
 """
 
 from __future__ import annotations
@@ -42,9 +45,12 @@ from .records import Record
 SOURCE_ID = "SR-02"
 RIGHTS_ID = "SA-03"
 VENUE = "kraken"
-STATUS_FEED = "kraken:ws2:status"
+WS2_PREFIX = "kraken:ws2:"
+STATUS_FEED = WS2_PREFIX + "status"
 BOOK_FEED = "kraken:ws2:book"
 RULES = ("start", "silence>15s", "reconnect", "resync", "open_at_end")  # evidence order
+STATUS_INSTRUMENT = "kraken:status"  # DEC-083: the replay instrument of VenueStatus and MaintenanceWindow
+RANK_MARKET, RANK_STATUS, RANK_GAP, RANK_MAINTENANCE = 0, 1, 2, 3  # DEC-083 record_rank
 
 
 @dataclass
@@ -218,6 +224,48 @@ def derive_live_validity(frames: Iterable[tuple], symbols: list, *, ingested_at:
     res.maintenance.sort(key=lambda m: (m.announced_start if m.announced_start is not None else m.excluded_start,
                                         m.source, str(m.event_id)))
     return res
+
+
+def _us_as_ns(t_ns: int) -> int:
+    """A derived record's `source_event_time` is its `available_at` in µs (DEC-083), compared in ns."""
+    return t_ns // 1000 * 1000
+
+
+def replay_key(rec) -> tuple:
+    """DEC-083 replay key (DEC-054 extended; market-state contract §1):
+    (available_at, record_rank, source_id, instrument_id, source_event_time in ns, sequence, version,
+    field 8). `record_rank` is 0 for a market record, 1 `VenueStatus`, 2 validity `GapInterval`,
+    3 `MaintenanceWindow`, so a frame's market records sort before anything derived at its receive
+    time. Only live WebSocket records are keyed: a `GapInterval` must be a book-validity `data_gap`,
+    and a `Record` must have `available_at_basis` `live_receive` and a `kraken:ws2:` feed (REST bars
+    also use `live_receive`); anything else raises TypeError. Field 8 is empty except for a
+    `MaintenanceWindow`: (`source`, `event_id` as a string, empty if none, `excluded_start` or, for
+    a withdrawn item, `announced_start`)."""
+    if isinstance(rec, MaintenanceWindow):
+        start = rec.excluded_start if rec.excluded_start is not None else rec.announced_start
+        return (rec.available_at, RANK_MAINTENANCE, rec.source_id, STATUS_INSTRUMENT, _us_as_ns(rec.available_at),
+                0, 1, (rec.source, "" if rec.event_id is None else str(rec.event_id), -1 if start is None else start))
+    if isinstance(rec, GapInterval) and rec.feed_id == BOOK_FEED and rec.gap_class == "data_gap":
+        return (rec.available_at, RANK_GAP, rec.source_id, rec.instrument_id, _us_as_ns(rec.available_at), 0, 1, ())
+    if isinstance(rec, Record) and rec.available_at_basis == "live_receive" and rec.feed_id.startswith(WS2_PREFIX):
+        if rec.record_type == "VenueStatus":
+            return (rec.available_at, RANK_STATUS, rec.source_id, STATUS_INSTRUMENT, rec.event_time_ns(),
+                    rec.native_seq, rec.version, ())
+        return (rec.available_at, RANK_MARKET, rec.source_id, rec.instrument_id, rec.event_time_ns(),
+                rec.native_seq, rec.version, ())
+    raise TypeError(f"no DEC-083 replay key for {type(rec).__name__}: only live records and their derived "
+                    "validity, status and maintenance records have one (archive records use analysis.replay_order)")
+
+
+def replay_order(records: Iterable) -> list:
+    """Records sorted by `replay_key`. Quarantined `Record`s are left out, as they are never applied
+    (market-state contract §1); derived records carry no quality state and are all kept."""
+    return sorted((r for r in records if not (isinstance(r, Record) and r.quality_state != "valid")), key=replay_key)
+
+
+def all_records(res: LiveValidity) -> list:
+    """Every derived record of a `LiveValidity`, in DEC-083 replay order."""
+    return replay_order(list(res.venue_status) + [g for gs in res.gaps.values() for g in gs] + list(res.maintenance))
 
 
 def _status_window(a: int, b: int, open_at_end: bool) -> MaintenanceWindow:

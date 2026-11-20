@@ -72,6 +72,6 @@ On 2026-11-06 run 3's day-1 check was clean ([TASK-P02-011](../../tasks/TASK-P02
 
 On 2026-11-12 run 3 ended after 168 h without a sleep or restart. Its analysis gives R-4 99.960 % for both pairs, a pass; R-3 p95 4.86 s, Q-5 passes, R-5 151 MB per pair per day, store integrity clean ([TASK-P02-012](../../tasks/TASK-P02-012.md); [live analysis](../../evidence/P02/live-analysis.md#run-3-dec-073-final-2026-11-13)).
 
-**Exact next step:** TASK-P02-012 analyses the 30-day pull after its last day, 2026-11-27. The three runs and the pull then go to the user for the G02 review.
+**Exact next step:** [TASK-P02-015](../../tasks/TASK-P02-015.md) analyses the 30-day pull after its last day, 2026-11-27. The three runs and the pull then go to the user for the G02 review.
 
 **Implementation boundary:** capture code for held files exists (`src/gladiator_capture/`, DEC-058). Network transports, live capture and the DEC-057 retrievals are later tasks. Trading is out of scope.

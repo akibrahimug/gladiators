@@ -533,11 +533,14 @@ Original source files are preserved unchanged. Archive code is historical materi
 | [docs/tasks/TASK-P02-012.md](<tasks/TASK-P02-012.md>) |
 | [docs/tasks/TASK-P02-013.md](<tasks/TASK-P02-013.md>) |
 | [docs/tasks/TASK-P02-014.md](<tasks/TASK-P02-014.md>) |
+| [docs/tasks/TASK-P02-015.md](<tasks/TASK-P02-015.md>) |
+| [docs/tasks/TASK-P02-016.md](<tasks/TASK-P02-016.md>) |
 | [docs/tasks/TASK-P03-005.md](<tasks/TASK-P03-005.md>) |
 | [docs/tasks/TASK-P03-006.md](<tasks/TASK-P03-006.md>) |
 | [docs/tasks/TASK-P03-007.md](<tasks/TASK-P03-007.md>) |
 | [docs/tasks/TASK-P03-008.md](<tasks/TASK-P03-008.md>) |
 | [docs/tasks/TASK-P03-009.md](<tasks/TASK-P03-009.md>) |
+| [docs/tasks/TASK-P03-010.md](<tasks/TASK-P03-010.md>) |
 | [docs/tasks/task-template.md](<tasks/task-template.md>) |
 | [docs/traceability/components.md](<traceability/components.md>) |
 | [docs/traceability/requirements-matrix.md](<traceability/requirements-matrix.md>) |
