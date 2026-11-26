@@ -84,8 +84,8 @@ G01 passed on 2026-10-27 (DEC-047). Candidates become packets once they are expa
 | [TASK-P02-012](TASK-P02-012.md) | Analyse run 3 and the 30-day pull with the TASK-P02-003 tool; record the report hashes (TASK-P02-003's two moved criteria) and run 3's later checks | Validation; TASK-P02-003; DEC-071, DEC-072 (assignment), DEC-074. **Verified** (run 3: R-4 99.960 %, passes; the 30-day pull moved to TASK-P02-015); Merged [#38](https://github.com/akibrahimug/gladiators/pull/38) |
 | [TASK-P02-013](TASK-P02-013.md) | Correct the stale DEC-067 wording in `live_records.py` (docstring only) | Implementation; DEC-067. **Verified**; Merged [#39](https://github.com/akibrahimug/gladiators/pull/39) |
 | [TASK-P02-014](TASK-P02-014.md) | Book validity, venue status and maintenance as P02 records derived from raw frames (DEC-075) | Implementation/validation; TASK-P02-003; DEC-071, DEC-074, DEC-075. **Verified**; Merged [#44](https://github.com/akibrahimug/gladiators/pull/44) |
-| [TASK-P02-015](TASK-P02-015.md) | Analyse the 30-day pull after its last day and record the report hash (moved from TASK-P02-012); record the merges of #38 and #43 to #45 | Validation; TASK-P02-012; DEC-068, DEC-071, DEC-072 (assignment). **In progress** (the pull ends 2026-11-27); Draft [#46](https://github.com/akibrahimug/gladiators/pull/46) |
-| [TASK-P02-016](TASK-P02-016.md) | DEC-083 replay key for live market and derived records (`live_validity.replay_key`) | Implementation/validation; TASK-P02-014, TASK-P03-010; DEC-083. **Verified**; Draft [#48](https://github.com/akibrahimug/gladiators/pull/48) |
+| [TASK-P02-015](TASK-P02-015.md) | Analyse the 30-day pull after its last day and record the report hash (moved from TASK-P02-012); record the merges of #38 and #43 to #48 | Validation; TASK-P02-012; DEC-068, DEC-071, DEC-072 (assignment). **In progress** (the pull ends 2026-11-27); bookkeeping Merged [#46](https://github.com/akibrahimug/gladiators/pull/46); report in a second PR |
+| [TASK-P02-016](TASK-P02-016.md) | DEC-083 replay key for live market and derived records (`live_validity.replay_key`) | Implementation/validation; TASK-P02-014, TASK-P03-010; DEC-083. **Verified**; Merged [#48](https://github.com/akibrahimug/gladiators/pull/48) |
 
 ## P03
 
@@ -98,7 +98,7 @@ Candidates are Draft pending G02 and accepted [P03 boundaries](../phases/03-mark
 | [TASK-P03-007](TASK-P03-007.md) | Draft the market-state contract (preparation) | Documentation (preparation); TASK-P03-005. **Verified**; Merged [#42](https://github.com/akibrahimug/gladiators/pull/42) |
 | [TASK-P03-008](TASK-P03-008.md) | Draft the own-account ledger contract (preparation) | Documentation (preparation); TASK-P03-005. **Verified**; Merged [#43](https://github.com/akibrahimug/gladiators/pull/43) |
 | [TASK-P03-009](TASK-P03-009.md) | Correct stale phase and architecture status text (source map §6) | Documentation (hygiene); merge after #40. **Verified**; Merged [#45](https://github.com/akibrahimug/gladiators/pull/45) |
-| [TASK-P03-010](TASK-P03-010.md) | Record the live replay order and the instrument join (DEC-083, DEC-084) | Documentation (decision record); DEC-054, DEC-083, DEC-084. **Verified**; Draft [#47](https://github.com/akibrahimug/gladiators/pull/47) |
+| [TASK-P03-010](TASK-P03-010.md) | Record the live replay order and the instrument join (DEC-083, DEC-084) | Documentation (decision record); DEC-054, DEC-083, DEC-084. **Verified**; Merged [#47](https://github.com/akibrahimug/gladiators/pull/47) |
 | TASK-P03-001 | Book-state/replay contract, fixtures and invariants for selected feed semantics | Documentation; G02 |
 | TASK-P03-002 | Separate simulated-account ledger contract, accounting convention and fixtures | Documentation; G02; independent of book editing after shared event IDs settle |
 | TASK-P03-003 | One book/replay implementation slice with deterministic fixture results | Implementation/validation; accepted TASK-P03-001 contract; VAL-003/005 |
